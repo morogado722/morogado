@@ -1,0 +1,21 @@
+/* 사이트 안에 열렸을 때: 메이커 자체 헤더·건너뛰기 링크를 숨기고 사이트 헤더만 보이게 */
+html.is-site-embedded .header-shell,html.is-site-embedded .skip-link{display:none!important}
+html.is-site-embedded body{background:transparent}
+html.is-site-embedded .stage{padding-top:0}
+
+/* 위쪽 빈 공간 줄이기 (사이트 헤더가 이미 위에 있으니) */
+html.is-site-embedded .stage{margin-top:0}
+html.is-site-embedded main,html.is-site-embedded .workspace{padding-top:24px}
+/* 메이커 헤더를 숨겼으니 그 높이(156px)를 빼지 않고, 줄인 비율만큼 높이를 되돌려 왼쪽 메뉴가 잘리지 않게 */
+html.is-site-embedded{--header-visible-height:0px !important}
+@media (min-width:1024px){html.is-site-embedded .sidebar{max-height:calc(100dvh - 40px);top:24px}}
+html.is-site-embedded .stage{min-height:100svh}
+
+/* 파일 칸을 누른 뒤 생기던 굵은 검은 테두리 대신 옅은 민트, 마우스로 누를 땐 없음 */
+html.is-site-embedded .dropzone:focus-visible{outline:2px solid rgba(0,214,140,.55);outline-offset:3px}
+html.is-site-embedded .dropzone:focus:not(:focus-visible),html.is-site-embedded button:focus:not(:focus-visible){outline:none}
+
+/* 사이트 안에서는 이 칸이 사이트 헤더 아래(위에서 160u)부터 시작해서, 맨 아래 160u는 처음에 화면 밖이에요.
+   그만큼 아래 여백을 줘서 1단계 '다음으로'까지 안에서 내려 볼 수 있게 해요. 메이커 자체 간격은 그대로예요.
+   160u는 사이트 figma-home.css 의 업로드 iframe top 과 같은 값(--u = clamp(.72px, 100vw/1700, 1px)). (10/16) */
+@media (min-width:768px){html.is-site-embedded body{padding-bottom:calc(160 * clamp(.72px, 100vw / 1700, 1px))}}

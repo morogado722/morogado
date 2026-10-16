@@ -4,8 +4,12 @@
 > **`ut.upload` 저장소는 사용성 평가가 진행 중이라 절대 수정하지 마세요.** 모든 작업은 이 저장소에서만 해요.
 >
 > - 라이브 주소: https://morogado722.github.io/morogado/ (GitHub Pages, `main` 루트)
-> - 구성 계획: 루트 `index.html` = 홈 화면(아티팩트 JoShtS3VWTggDs8ueGuhcr 기준) → 바톤 메이커 → 상세페이지(`baton/`)
->   - 홈 화면이 들어오면 지금 루트의 바톤 메이커(`index.html`)는 `upload.html`로 옮겨요(상대 경로 그대로 쓰려고 같은 폴더에 둬요).
+> - 구성(10/16 반영): 루트 `index.html` = 팀원 홈 사이트(아티팩트 JoShtS3VWTggDs8ueGuhcr) → `#/upload`는 지아 메이커(`upload.html`) → `#/baton/아이디`는 지아 상세페이지(`baton/`)
+>   - 홈·커뮤니티·바톤센터·저장·작업성향은 팀원 코드: `site.js`·`site.css`·`store.js`(IndexedDB)·`figma-home.*`·`figma-log.*`·`log.*`·`*-samples.js`·`assets/previews|figma|director-*|ui`·`maker/`(팀원 사이트가 쓰는 파일 3개만).
+>   - 업로드: `upload.js`가 `upload.html?embedded=1`을 iframe으로 띄워요. 임베드일 땐 `site-embed.css`로 메이커 헤더를 숨기고, `site-bridge.js`가 "바톤 만들기" 결과를 사이트 저장소에 올린 뒤 `#/baton/아이디`로 보내요(`detail.js` finish). 임베드에선 사용성 평가 설문(`research.js`)은 꺼요(`MOROGARO_EMBEDDED`).
+>   - 상세: `jia-detail.js`·`jia-detail.css`가 `baton/index.html?embed=1&site=1`을 화면 전체 iframe으로 띄우고, 사이트 기록을 메이커 기록 모양으로 바꿔 보내요. 상세 헤더 메뉴·검색·저장·알림, 북마크, 파일 받기, 이어달리기(`#/upload?parent=`), 수정하기는 postMessage로 사이트에 연결돼요(`baton-render.js`의 `siteHost`). 헤더 "매거진"은 사이트에 맞춰 "바톤센터"로 표시해요.
+>   - 팀원의 원래 상세(`detail.js`)는 쓰지 않아서 가져오지 않았고, 팀원 `detail.css`는 `site-detail.css`로 이름을 바꿨어요(메이커 `detail.css`와 겹쳐서).
+>   - `assets/figma/`의 고화질 원본 이미지는 화면에 안 쓰여서 빼고 SVG·manifest만 뒀어요.
 > - 주의: `config.js`의 Apps Script URL은 아직 사용성 평가와 **같은 서버·시트**를 써요. 졸전용으로 분리할지 사용자에게 확인 필요.
 >
 > 아래는 ut.upload에서 이어받은 내용이에요. "ut.upload" 주소·저장소 언급은 이 저장소(morogado)로 바꿔 읽으세요.

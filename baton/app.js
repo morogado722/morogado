@@ -332,6 +332,7 @@
   }));
   $$('[data-inherit]').forEach(button => button.addEventListener('click', () => {
     emit('inherit', { sourceBaton: 'fruit-calendar', idea: button.dataset.inherit, stage: 'Planting' });
+    if (live?.inherit) { live.inherit(); return; }
     toast(live ? live.inheritMessage : '계승 시작 버튼까지 연결했어요. 바톤 메이커 연결 전에는 새 바톤이 생성되지 않아요.');
   }));
   $$('[data-unwired]').forEach(button => button.addEventListener('click', () => toast(`${button.dataset.unwired} 기능은 이번 상세페이지에 아직 연결되지 않았어요.`)));

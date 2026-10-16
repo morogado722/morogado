@@ -1,0 +1,9 @@
+/* 지아 상세페이지(baton/)를 화면 전체로 띄워요. 상세페이지가 자체 헤더를 가지고 있어 사이트 헤더·푸터는 잠시 숨겨요. */
+body.is-jia-detail { overflow: hidden; }
+body.is-jia-detail .site-header,
+body.is-jia-detail .site-footer,
+body.is-jia-detail .floating-dock,
+body.is-jia-detail .skip-link { display: none !important; }
+.jia-detail-host { position: fixed; inset: 0; z-index: 40; background: #FAFAFA; }
+.jia-detail-frame { display: block; width: 100%; height: 100%; border: 0; background: #FAFAFA; }
+body.is-jia-detail .toast-region { z-index: 60; }

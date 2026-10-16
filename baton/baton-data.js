@@ -45,7 +45,8 @@
     return String(name).length <= 6 ? String(name) : String(name).slice(0, 5) + '…';
   };
 
-  const isImageData = v => typeof v === 'string' && /^data:image\/(?:png|jpeg|webp|gif|svg\+xml);base64,/i.test(v);
+  // 졸전 사이트 연결(10/16): 사이트 저장소 이미지는 blob:·같은 사이트 주소로 와요.
+  const isImageData = v => typeof v === 'string' && (/^data:image\/(?:png|jpeg|webp|gif|svg\+xml);base64,/i.test(v) || /^(?:blob:|https?:\/\/)/i.test(v));
   const safeLink = v => { try { const u = new URL(v); return /^https?:$/.test(u.protocol) ? u.href : null; } catch { return null; } };
   const isFontName = n => /\.(?:woff2?|ttf|otf|eot|ttc|otc)$/i.test(n || '');
   const clean = v => (typeof v === 'string' ? v.trim() : '');
@@ -91,10 +92,10 @@
       subtitle: firstSentence(d.batonNote) || '여기에서 시작해, 다른 방향으로 이어지는 바톤',
       categories: list(d.categories).slice(0, 6),
       author: {
-        name: ownerName, isOwner: true,
-        message: record.preview
+        name: record.authorName || ownerName, isOwner: record.siteOwner ?? true,
+        message: record.authorMessage || (record.siteOwner === false ? '이 바톤을 이어받아 다음 작업을 시작해 보세요.' : null) || (record.preview
           ? '공개 전 미리보기예요. 아직 이 바톤을 저장하지 않았어요. 수정하기를 눌러 이어서 작성할 수 있어요.'
-          : '이 브라우저에 보관한 바톤이에요. 아직 다른 사용자에게 공개되지 않았어요.',
+          : '이 브라우저에 보관한 바톤이에요. 아직 다른 사용자에게 공개되지 않았어요.'),
       },
       thumbRatio: /^\d+\/\d+$/.test(d.thumbRatio || '') ? d.thumbRatio : null,
       gallery: (d.selectedThumbnails || []).filter(t => isImageData(t?.dataUrl)).slice(0, 10)
@@ -104,7 +105,7 @@
       note: clean(d.batonNote),
       references: (d.references || []).filter(t => isImageData(t?.dataUrl)).map((t, i) => ({ src: t.dataUrl, alt: clean(t.label) || `레퍼런스 이미지 ${i + 1}` })),
       palette: { colors: (d.palette || []).filter(h => /^#[\da-f]{6}$/i.test(h)).map(h => h.toUpperCase()), mode: String(d.colorMode || 'rgb').toUpperCase() },
-      dimensions: dim?.width && dim?.height ? `${dim.width}×${dim.height}(${dim.unit || 'px'})` : '',
+      dimensions: typeof dim === 'string' ? dim : dim?.width && dim?.height ? `${dim.width}×${dim.height}(${dim.unit || 'px'})` : '',
       tags: list(d.tags).slice(0, 15),
       nextIdeas: list(d.nextIdeas).slice(0, 3),
       materials: clean(d.materials), lessons: clean(d.lessons),

@@ -95,7 +95,7 @@
 
   function loadApp() {
     const script = document.createElement('script');
-    script.src = 'app.js';
+    script.src = 'app.js?v=1016a';
     script.onload = () => {
       document.documentElement.classList.remove('is-waiting-baton');
       if (embedded) post({ type: 'morogaro:baton-rendered', stage: window.MorogaroLive?.view.stage || null });
@@ -146,6 +146,7 @@
     $('.category-tags').replaceChildren(...v.categories.map(c => E('span', '', c)));
     $('.author-name').textContent = v.author.name;
     const edit = $('.contact-button');
+    if (!v.author.isOwner) { $('.author-bubble').textContent = v.author.message; return; }
     edit.removeAttribute('data-unwired'); edit.id = 'edit-baton'; edit.textContent = '바톤 수정하기';
     edit.addEventListener('click', () => post({ type: 'morogaro:baton-edit' }));
     $('.author-bubble').textContent = v.author.message;
@@ -288,7 +289,7 @@
     const strong = E('strong', '', '파일 목록 '); strong.append(E('span', 'file-count', v.files.length));
     const all = E('button', '', '전체다운'); all.type = 'button'; all.id = 'download-all';
     all.disabled = !v.files.some(f => !f.isFont);
-    all.addEventListener('click', () => window.MOROGARO_SITE ? toast(SITE_DOWNLOAD_NOTE) : downloadAll(v, all));
+    all.addEventListener('click', () => siteHost ? post({ type: 'morogaro:baton-download', all: true }) : window.MOROGARO_SITE ? toast(SITE_DOWNLOAD_NOTE) : downloadAll(v, all));
     heading.append(strong, all); panel.append(heading);
 
     const list = E('div', 'file-list');
@@ -297,7 +298,13 @@
       label.firstChild.title = f.name;
       const type = E('span', 'file-type' + (f.ext.length > 3 ? ' docx' : ''), `${f.ext}.`);
       let row;
-      if (window.MOROGARO_SITE) {
+      if (siteHost) {
+        // 졸전 사이트 안(10/16): 사이트 저장소에서 원본을 받아요.
+        const index = v.files.indexOf(f);
+        row = E('button', 'file-row'); row.type = 'button';
+        row.addEventListener('click', () => post({ type: 'morogaro:baton-download', index }));
+        row.append(type, label, img('assets/file-download.svg', '', 26, 21));
+      } else if (window.MOROGARO_SITE) {
         // 공유 사이트에서는 브라우저가 다운로드를 막아요. 로컬 실행(index.html)에서는 바로 받을 수 있어요.
         row = E('button', 'file-row'); row.type = 'button';
         row.addEventListener('click', () => toast(SITE_DOWNLOAD_NOTE));
@@ -416,8 +423,21 @@
 
   /* ───────── 기록 받기 → 그리기 → v10 인터랙션 실행 ───────── */
   let started = false;
-  function start(record, ownerName) {
+  /* 졸전 사이트 연결(10/16): 상세 헤더의 메뉴·검색·저장·알림을 사이트(index.html) 기능으로 이어요. */
+  function wireSiteHeader() {
+    const nav = (selector, message) => { const el = $(selector); if (!el) return; el.removeAttribute('data-unwired'); el.addEventListener('click', e => { e.preventDefault(); post({ type: 'morogaro:site-nav', ...message }); }); };
+    nav('.brand', { to: '/' }); nav('.nav-explore', { to: '/' }); nav('.nav-community', { to: '/community' });
+    const magazine = $('.nav-magazine'); if (magazine) magazine.textContent = '바톤센터';
+    nav('.nav-magazine', { to: '/center' }); nav('.nav-personality', { action: 'tendency' });
+    nav('.account-bookmark', { to: '/saved' }); nav('.account-notification', { action: 'notifications' }); nav('.account-avatar', { action: 'profile' });
+    const form = $('#search-form');
+    if (form) form.addEventListener('submit', e => { e.preventDefault(); e.stopImmediatePropagation(); post({ type: 'morogaro:site-nav', search: form.querySelector('input')?.value || '' }); }, true);
+  }
+  let siteHost = false;
+  function start(record, ownerName, site) {
     if (started) return; started = true;
+    siteHost = Boolean(site);
+    if (siteHost) { wireSiteHeader(); const name = $('.account-name span:last-child'); if (name && ownerName && record.siteOwner) name.textContent = `${ownerName} 님`; }
     let view;
     try { view = data.fromMakerRecord(record, { ownerName }); }
     catch (error) { document.documentElement.classList.remove('is-waiting-baton'); toast(error.message); return; }
@@ -441,13 +461,14 @@
         ? '아직 저장하지 않은 미리보기라 공유 주소가 없어요.'
         : '아직 공개 전인 바톤이에요. 공개 서버를 연결하면 공유 링크가 생겨요.',
       inheritMessage: '이어받기는 공개 서버를 연결한 뒤 새 바톤으로 이어져요. 지금은 버튼까지만 연결돼 있어요.',
+      inherit: siteHost ? () => post({ type: 'morogaro:baton-inherit' }) : null,
     });
     loadApp();
   }
   window.addEventListener('message', event => {
     if (event.source !== window.parent) return;
     const m = event.data;
-    if (m && m.type === 'morogaro:baton' && m.record) start(m.record, m.ownerName);
+    if (m && m.type === 'morogaro:baton' && m.record) start(m.record, m.ownerName, m.site);
   });
   window.addEventListener('pagehide', () => { for (const u of objectURLs) URL.revokeObjectURL(u); });
   document.documentElement.classList.add('is-waiting-baton');

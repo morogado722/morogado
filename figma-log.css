@@ -1,0 +1,59 @@
+/* slop-ok: 1 정보 카드의 민트→흰색은 팀 피그마 3423:14299 7단계 원본, 좌우 흐림은 스크롤 스크림
+   모로가도 · 릴레이 로그 (Figma 3423:14299). 단위는 홈과 같은 --u */
+.fl-probe{position:absolute;left:0;top:0;width:calc(100*var(--u));height:0;visibility:hidden;pointer-events:none}
+.fl-panel{position:relative;height:calc(350*var(--u));border-radius:calc(10*var(--u));background:#f6f6f6;overflow:hidden;outline:none;user-select:none;touch-action:pan-y;cursor:grab}
+.fl-panel:active{cursor:grabbing}
+.fl-panel:focus-visible{box-shadow:0 0 0 calc(2*var(--u)) #fff,0 0 0 calc(4*var(--u)) #2fd99a}
+.fl-rail{position:absolute;inset:0}
+.fl-node,.fl-branch{position:absolute;left:0;top:0;width:var(--w);height:var(--h);transform:translate(var(--x),var(--y));z-index:var(--z,1);opacity:var(--o,1);
+  transition:transform 560ms cubic-bezier(.16,1,.3,1),width 560ms cubic-bezier(.16,1,.3,1),height 640ms cubic-bezier(.16,1,.3,1),opacity 420ms cubic-bezier(.16,1,.3,1)}
+.fl-panel.is-entering .fl-node{transition-duration:1050ms,1050ms,1050ms,700ms;transition-delay:calc(var(--i,0)*40ms)}
+.fl-panel.is-entering .fl-node{opacity:0}
+.fl-tile{display:block;width:100%;height:100%;padding:0;border:0;border-radius:calc(3*var(--u));background:#fff;box-shadow:0 calc(2*var(--u)) calc(6*var(--u)) rgba(38,38,38,.14);cursor:pointer;position:relative;overflow:hidden;transition:box-shadow 420ms cubic-bezier(.16,1,.3,1),border-radius 420ms}
+.fl-node .fl-tile{width:100%;height:100%}
+.fl-tile.fl-branch{width:var(--w);height:var(--h);position:absolute}
+.fl-img{position:absolute;left:8%;right:8%;top:8%;aspect-ratio:1;display:block;transition:top 560ms cubic-bezier(.16,1,.3,1)}
+.fl-img img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
+.fl-node.is-hover .fl-tile{box-shadow:0 calc(8*var(--u)) calc(22*var(--u)) rgba(38,38,38,.2)}
+.fl-branch{padding:0;opacity:var(--o,0);pointer-events:none;transition-delay:var(--d,0ms)}
+.fl-branch.is-show{pointer-events:auto}
+.fl-branch.is-focus{box-shadow:0 calc(8*var(--u)) calc(22*var(--u)) rgba(38,38,38,.2)}
+.fl-branch-dot{position:absolute;right:calc(-6*var(--u));top:calc(-6*var(--u));min-width:calc(16*var(--u));height:calc(16*var(--u));padding:0 calc(4*var(--u));border-radius:999px;background:#262626;color:#fff;font:700 calc(9.5*var(--u))/calc(16*var(--u)) 'Spoqa',sans-serif;text-align:center;pointer-events:none;transition:opacity 300ms}
+.fl-node.is-hover .fl-branch-dot,.fl-node.is-up .fl-branch-dot{opacity:0}
+
+/* 7단계: 114×252 정보 카드 */
+.fl-card{position:absolute;left:0;right:0;top:calc(114*var(--u));bottom:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(6*var(--u)) calc(8*var(--u)) calc(10*var(--u));opacity:0;transform:translateY(calc(8*var(--u)));transition:opacity 300ms,transform 560ms cubic-bezier(.16,1,.3,1)}
+.is-open>.fl-tile,.fl-branch.is-open{background:linear-gradient(180deg,#a3f5cf 0%,#d4fbe9 40%,#fff 62%);box-shadow:0 calc(12*var(--u)) calc(30*var(--u)) rgba(38,38,38,.2)}
+.is-open .fl-img,.fl-branch.is-open .fl-img{top:calc(8*var(--u))}
+.is-open .fl-card,.fl-branch.is-open .fl-card{opacity:1;transform:none;transition-delay:200ms}
+.fl-card-tag{font:500 calc(8*var(--u))/1.3 'Noto Sans KR','Spoqa',sans-serif;color:#555}
+.fl-card strong{font:700 calc(11.5*var(--u))/1.3 'Spoqa',sans-serif;color:#1a1a1a;margin-top:calc(2*var(--u));word-break:keep-all}
+.fl-card-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(3*var(--u));margin-top:calc(6*var(--u))}
+.fl-card-tags span{font:500 calc(7*var(--u))/1 'Noto Sans KR','Spoqa',sans-serif;padding:calc(2*var(--u)) calc(4*var(--u));border:calc(.8*var(--u)) solid #cfcfcf;border-radius:999px;color:#333}
+.fl-card-foot{margin-top:auto;align-self:stretch;display:flex;align-items:center;gap:calc(5*var(--u));font:500 calc(8*var(--u))/1 'Spoqa',sans-serif;color:#333}
+.fl-card-foot i{width:calc(1*var(--u));height:calc(8*var(--u));background:#999}
+
+/* 지금 보고 있는 바톤(152, 어두운 틀) */
+.fl-origin{position:absolute;left:calc(60*var(--u));top:calc(99*var(--u));width:calc(152*var(--u));height:calc(152*var(--u));border-radius:calc(6.4*var(--u));background:#262626;box-shadow:0 calc(6*var(--u)) calc(16*var(--u)) rgba(0,0,0,.25);z-index:8;display:block;transition:transform 520ms cubic-bezier(.16,1,.3,1),box-shadow 520ms}
+.fl-origin:hover{transform:translateY(calc(-3*var(--u)));box-shadow:0 calc(12*var(--u)) calc(24*var(--u)) rgba(0,0,0,.3)}
+.fl-origin-img{position:absolute;inset:calc(14*var(--u));display:block}
+.fl-origin-img img{width:100%;height:100%;object-fit:contain;display:block}
+.fl-origin-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);font:500 calc(11*var(--u))/1.2 'Spoqa',sans-serif;color:#6f6f6f}
+
+.fl-fade{position:absolute;top:0;bottom:0;pointer-events:none;z-index:7}
+.fl-fade-r{right:0;width:calc(94*var(--u));background:linear-gradient(90deg,rgba(246,246,246,0),#f6f6f6 85%)}
+.fl-fade-l{left:calc(212*var(--u));width:calc(48*var(--u));background:linear-gradient(90deg,#f6f6f6,rgba(246,246,246,0));opacity:0;transition:opacity 400ms}
+.fl-panel.is-scrolled .fl-fade-l{opacity:1}
+.fl-panel::before{content:'';position:absolute;left:0;top:0;bottom:0;width:calc(212*var(--u));background:#f6f6f6;z-index:7}
+
+/* 1단계 안내 */
+.fl-hint{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(10*var(--u));background:rgba(70,70,70,.42);backdrop-filter:blur(calc(2*var(--u)));color:#fff;text-align:center;font:700 calc(13*var(--u))/1.5 'Spoqa',sans-serif;transition:opacity 700ms cubic-bezier(.16,1,.3,1),visibility 700ms}
+.fl-hint svg{width:calc(44*var(--u));height:calc(14*var(--u));animation:fl-swing 1.6s ease-in-out 2}
+.fl-hint.is-gone{opacity:0;visibility:hidden}
+@keyframes fl-swing{0%,100%{transform:translateX(0)}30%{transform:translateX(calc(-8*var(--u)))}70%{transform:translateX(calc(8*var(--u)))}}
+.fl-empty{position:absolute;left:calc(240*var(--u));top:50%;transform:translateY(-50%);font:400 calc(14*var(--u))/1.5 'Spoqa',sans-serif;color:#7a7a7a}
+@media (prefers-reduced-motion:reduce){.fl-node,.fl-branch,.fl-card,.fl-hint{transition-duration:1ms!important;animation:none!important}}
+
+/* 10/10: 안내 글을 원본 상자 오른쪽에 같은 세로 중심으로, 크게 */
+.fl-empty{left:calc(244*var(--u));font-size:calc(16*var(--u));line-height:1.6;color:#5d5d5d;max-width:calc(420*var(--u))}
+.is-open>.fl-tile,.fl-branch.is-open{background:#fff}

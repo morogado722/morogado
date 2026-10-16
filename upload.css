@@ -1,0 +1,7 @@
+.maker-host { width:100%; max-width:none!important; padding:0!important; background:#FAFAFA; }
+.maker-frame { display:block; width:100%; height:calc(100dvh - var(--header-size,152px)); min-height:640px; border:0; background:#FAFAFA; opacity:0; transition:opacity 180ms ease; }
+.maker-frame.is-loaded { opacity:1; }
+@media(max-width:640px){.maker-frame{height:calc(100dvh - var(--header-size,100px));min-height:520px;}}
+@media(prefers-reduced-motion:reduce){.maker-frame{transition:none;}}
+body:has(.maker-host) .floating-dock,body:has(.maker-host) .site-footer{display:none}
+@media(max-height:600px){.maker-frame{min-height:0}}

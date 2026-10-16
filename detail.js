@@ -134,6 +134,8 @@
     saving = true; $('finish-confirm').disabled = true; let value;
     try {
       value = build(pending.data, pending.payload, preview);
+      // 졸전 사이트 안에서 열렸으면 사이트 저장소에 올리고 사이트 상세(#/baton/아이디)로 이동해요 (site-bridge.js, 10/16)
+      if (!preview && window.MorogaroSiteBridge?.embedded && await window.MorogaroSiteBridge.publish(value, pending.payload)) { $('finish-dialog').close(); pending = null; return; }
       if (!preview) { $('finish-confirm').textContent = '바톤을 만드는 중…'; value.data.aiComments = await aiComments(value.data); }
       if (!preview) await put(value); else memory.set(value.id, value);
       // 사용성 연구(동의한 경우): 상세페이지로 넘어가기 전에 업로드 페이지 전체를 캡처해 둬요.

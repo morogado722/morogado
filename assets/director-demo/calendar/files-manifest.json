@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-10-09",
+  "sourceFigma": "https://www.figma.com/design/FZXlQEh3aOOazKfZSfIYZA/-UX-26-2-모로가도?node-id=3543-29246",
+  "files": [
+    {
+      "id": "calendar-demo-seeding",
+      "name": "과일 단위로 달력이 있으면 어떨까.docx",
+      "displayName": "과일 단위로 달력이 있으면 어떨까",
+      "originalName": "과일 단위로 달력이 있으면 어떨까.docx",
+      "size": 37961,
+      "kind": "seeding",
+      "description": "기획서",
+      "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "url": "assets/director-demo/calendar/과일 단위로 달력이 있으면 어떨까.docx",
+      "provenance": "generated-demo",
+      "sha256": "11a713fb5ef3427d0a5b752573c9417080cde01e0cce84daee7a843ae16939c3"
+    },
+    {
+      "id": "calendar-demo-planting",
+      "name": "참외, 자두, 복숭아 달력_ai.ai",
+      "displayName": "참외, 자두, 복숭아 달력_ai",
+      "originalName": "참외, 자두, 복숭아 달력_ai.ai",
+      "size": 29643,
+      "kind": "planting",
+      "description": "디자인 파일",
+      "type": "application/pdf",
+      "url": "assets/director-demo/calendar/참외, 자두, 복숭아 달력_ai.ai",
+      "provenance": "generated-demo",
+      "sha256": "4e82994c4d62bcebbbd77a33584dab60bb3465b10fe9a092cdafb636361f2f0d"
+    },
+    {
+      "id": "calendar-demo-growing",
+      "name": "참외, 자두, 복숭아 달력_인쇄용_pdf.pdf",
+      "displayName": "참외, 자두, 복숭아 달력_인쇄용_pdf",
+      "originalName": "참외, 자두, 복숭아 달력_인쇄용_pdf.pdf",
+      "size": 33488,
+      "kind": "growing",
+      "description": "인쇄용 칼선 파일",
+      "type": "application/pdf",
+      "url": "assets/director-demo/calendar/참외, 자두, 복숭아 달력_인쇄용_pdf.pdf",
+      "provenance": "generated-demo",
+      "sha256": "c474c3c76d8093c6d202bb9b55beb2438cb143014d01d08fbe12fe259278c4c4"
+    }
+  ],
+  "nativeAiVerified": false,
+  "originalFigmaAttachments": false,
+  "printApproved": false
+}
