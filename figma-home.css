@@ -590,3 +590,21 @@ main .fh-card.fh-open .fh-card-link:active .fh-card-open{transform:scale(.992);t
 }
 /* 휴대폰(479px 이하): 원래 의도대로 피드 2개씩. 뒤에 나온 카드 최소 너비 규칙 때문에 1개로 보이던 것 바로잡기 */
 @media (max-width:479px){.fh-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ===== 10/18 배너 펼친 카드 글자 크기: 화면 비율(--u)로 줄어도 읽기 편한 최소 크기를 지켜요 =====
+   사이트 기준(본문 14px·보조 12px·제목 20px 이상)에 맞춰, 좁은 화면에서도 이 아래로는 작아지지 않아요. */
+@media (min-width:768px){
+  .fh-hero-tools{font-size:max(12px,calc(12.5*var(--u)));gap:max(8px,calc(8*var(--u)))}
+  .fh-hero-title{font-size:max(20px,calc(23*var(--u)));line-height:1.3}
+  .fh-hero-desc{font-size:max(14px,calc(14.5*var(--u)));line-height:1.6}
+  .fh-hero-author{gap:max(8px,calc(9*var(--u)))}
+  .fh-hero-avatar{width:max(26px,calc(26*var(--u)));height:max(26px,calc(26*var(--u)))}
+  .fh-hero-author b{font-size:max(14px,calc(14.5*var(--u)))}
+  .fh-hero-author small{font-size:max(12px,calc(12*var(--u)));gap:max(8px,calc(8*var(--u)))}
+  .fh-hero-tags{gap:max(6px,calc(6*var(--u)));max-height:max(28px,calc(28*var(--u)))}
+  .fh-hero-tags span{font-size:max(12px,calc(12.5*var(--u)));padding:max(6px,calc(6*var(--u))) max(10px,calc(11*var(--u)))}
+  .fh-hero-foot{font-size:max(14px,calc(15*var(--u)))}
+  .fh-hero-foot svg{width:max(18px,calc(19*var(--u)));height:max(18px,calc(19*var(--u)))}
+  .fh-hero-bm svg{width:max(20px,calc(21*var(--u)));height:max(20px,calc(21*var(--u)))}
+  .fh-hero-shade{height:72%}
+}
