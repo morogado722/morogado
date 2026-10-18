@@ -60,3 +60,16 @@
 }
 @keyframes hf-breathe{0%,100%{opacity:.4}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){html body .site-header .add-baton::before{animation:none;opacity:.85}}
+
+/* 10/18 2차: 메뉴 글자 한 단계 작게, 로고·메뉴·검색창을 한 줄 가운데에 맞춤, 좁은 창에서도 검색창 안 아이콘·문구 세로 가운데 */
+@media (min-width:768px){
+  html body .site-header .header-main{align-items:center}
+  html body .site-header .brand,html body .site-header .header-main nav,html body .site-header .header-search{margin-top:0}
+  html body .site-header .brand{display:flex;align-items:center}
+  html body .site-header .header-main nav{margin-left:calc(64*var(--hu));gap:calc(40*var(--hu))}
+  html body .site-header .header-main nav a,html body .site-header .header-main nav button{height:auto;display:inline-flex;align-items:center;font-size:max(14px,calc(17*var(--hu)));line-height:1.4}
+  html body .site-header .header-search{display:flex;align-items:center;height:max(36px,calc(44*var(--hu)));width:calc(340*var(--hu));border-radius:max(16px,calc(20*var(--hu)));padding:0 calc(20*var(--hu)) 0 calc(20*var(--hu))}
+  html body .site-header .header-search [data-icon]{display:grid;place-items:center;width:max(16px,calc(19*var(--hu)));height:max(16px,calc(19*var(--hu)));line-height:0}
+  html body .site-header .header-search [data-icon] svg{width:100%;height:100%;display:block}
+  html body .site-header .header-search input{height:100%;padding:0;margin:0;line-height:normal;font-size:max(13px,calc(14*var(--hu)))}
+}
