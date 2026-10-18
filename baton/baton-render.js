@@ -434,10 +434,24 @@
     if (form) form.addEventListener('submit', e => { e.preventDefault(); e.stopImmediatePropagation(); post({ type: 'morogaro:site-nav', search: form.querySelector('input')?.value || '' }); }, true);
   }
   let siteHost = false;
-  function start(record, ownerName, site) {
+  function start(record, ownerName, site, viewerName) {
     if (started) return; started = true;
     siteHost = Boolean(site);
-    if (siteHost) { wireSiteHeader(); const name = $('.account-name span:last-child'); if (name && ownerName && record.siteOwner) name.textContent = `${ownerName} 님`; }
+    if (siteHost) {
+      wireSiteHeader();
+      /* 10/18: 사이트 헤더와 똑같이 — 보는 사람 이름, 플러스(업로드) 버튼 */
+      document.documentElement.classList.add('is-site-host');
+      const name = $('.account-name span:last-child'); if (name && (viewerName || (ownerName && record.siteOwner))) name.textContent = `${viewerName || ownerName} 님`;
+      const avatar = $('.account-avatar'); if (avatar && viewerName) avatar.setAttribute('aria-label', `${viewerName} 프로필`);
+      const account = $('.account');
+      if (account && !$('.account-plus')) {
+        const plus = E('button', 'icon-button account-plus'); plus.type = 'button'; plus.setAttribute('aria-label', '내 바톤 올리기');
+        let svg = ''; try { svg = window.parent.Morogado?.icon?.('plus-circle') || ''; } catch { /* 다른 창 */ }
+        plus.innerHTML = svg || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>';
+        plus.addEventListener('click', () => post({ type: 'morogaro:site-nav', to: '/upload' }));
+        account.prepend(plus);
+      }
+    }
     let view;
     try { view = data.fromMakerRecord(record, { ownerName }); }
     catch (error) { document.documentElement.classList.remove('is-waiting-baton'); toast(error.message); return; }
@@ -468,7 +482,7 @@
   window.addEventListener('message', event => {
     if (event.source !== window.parent) return;
     const m = event.data;
-    if (m && m.type === 'morogaro:baton' && m.record) start(m.record, m.ownerName, m.site);
+    if (m && m.type === 'morogaro:baton' && m.record) start(m.record, m.ownerName, m.site, m.viewerName);
   });
   window.addEventListener('pagehide', () => { for (const u of objectURLs) URL.revokeObjectURL(u); });
   document.documentElement.classList.add('is-waiting-baton');

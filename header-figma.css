@@ -90,3 +90,10 @@
   box-shadow:0 6px 20px rgba(38,38,38,.14);animation:mg-toast-in 360ms cubic-bezier(.22,.9,.24,1)}
 @keyframes mg-toast-in{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.toast-message{animation:none}}
+
+/* 10/18 4차: 검색 안내 문구는 가늘게(피그마 Regular 14 · #969696). "내 작업성향은?"은 탐색(홈)에서만 민트, 다른 화면에선 다른 메뉴처럼 회색 */
+@media (min-width:768px){
+  html body .site-header .header-search input,html body .site-header .header-search input::placeholder{font-weight:300}
+  html body:not([data-route="home"]) .site-header .header-main nav .tendency-link{color:#c5c5c5}
+  html body:not([data-route="home"]) .site-header .header-main nav .tendency-link:hover{color:#5a5a5a}
+}

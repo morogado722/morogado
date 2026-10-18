@@ -65,7 +65,7 @@
       try {
         switch (m.type) {
           case 'morogaro:baton-ready':
-            send({ type: 'morogaro:baton', record: toMakerRecord(record, { bookmarked, owner }), ownerName: record.author || nickname, site: true });
+            send({ type: 'morogaro:baton', record: toMakerRecord(record, { bookmarked, owner }), ownerName: record.author || nickname, viewerName: document.getElementById('runner-name')?.textContent?.trim() || nickname, site: true });
             break;
           case 'morogaro:baton-bookmark': {
             const now = await M.store.isBookmarked(record.id);
