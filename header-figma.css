@@ -55,8 +55,10 @@
 /* 업로드 화면: 접힐 때 띠 높이만큼 올라가요 */
 @media (min-width:768px){
   body[data-route="upload"].is-maker-scrolled .site-header{transform:translateY(calc(-104*var(--hu)))}
-  body[data-route="upload"] .maker-frame{top:calc(160*var(--hu))}
-  body[data-route="upload"].is-maker-scrolled .maker-frame{transform:translateY(calc(-160*var(--hu)))}
+  /* 10/18: 메이커 칸을 화면 맨 위부터 깔고(헤더 아래로 들어감) 안쪽에서 헤더 높이만큼 띄워요.
+     예전엔 칸이 헤더 아래 160에서 시작해서, 그 경계에서 메이커 배경이 가로로 잘려 보였어요 */
+  body[data-route="upload"] .maker-frame{top:0;height:100dvh}
+  body[data-route="upload"].is-maker-scrolled .maker-frame{transform:none}
 }
 @keyframes hf-breathe{0%,100%{opacity:.4}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){html body .site-header .add-baton::before{animation:none;opacity:.85}}
