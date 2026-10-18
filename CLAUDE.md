@@ -10,6 +10,7 @@
 >   - 상세: `jia-detail.js`·`jia-detail.css`가 `baton/index.html?embed=1&site=1`을 화면 전체 iframe으로 띄우고, 사이트 기록을 메이커 기록 모양으로 바꿔 보내요. 상세 헤더 메뉴·검색·저장·알림, 북마크, 파일 받기, 이어달리기(`#/upload?parent=`), 수정하기는 postMessage로 사이트에 연결돼요(`baton-render.js`의 `siteHost`). 헤더 "매거진"은 사이트에 맞춰 "바톤센터"로 표시해요.
 >   - 팀원의 원래 상세(`detail.js`)는 쓰지 않아서 가져오지 않았고, 팀원 `detail.css`는 `site-detail.css`로 이름을 바꿨어요(메이커 `detail.css`와 겹쳐서).
 >   - `assets/figma/`의 고화질 원본 이미지는 화면에 안 쓰여서 빼고 SVG·manifest만 뒀어요.
+> - 헤더(10/18): `header-figma.css`가 피그마 Sticky Header(3824:1266)를 1440 기준 px 그대로 맞춰요(`--hu`). 메뉴 순서 탐색·바톤센터·커뮤니티·내 작업성향은?. 플러스 버튼 빛 번짐은 `hf-breathe` 4.8초 깜빡임.
 > - 주의: `config.js`의 Apps Script URL은 아직 사용성 평가와 **같은 서버·시트**를 써요. 졸전용으로 분리할지 사용자에게 확인 필요.
 >
 > 아래는 ut.upload에서 이어받은 내용이에요. "ut.upload" 주소·저장소 언급은 이 저장소(morogado)로 바꿔 읽으세요.

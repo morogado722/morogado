@@ -1,0 +1,62 @@
+/* 10/18 사이트 헤더 = 피그마 Sticky Header(3824:1266) 그대로
+ * 피그마는 1440 화면 기준이라, 1440에서 1px = 1px이 되게 --hu로 맞춰요(좁은 창에선 0.72배까지 같이 줄어요).
+ * 메뉴 순서: 탐색 · 바톤센터 · 커뮤니티 · 내 작업성향은? (index.html)
+ * 플러스(업로드) 버튼: 피그마의 민트·노랑 빛 번짐이 천천히 옅어졌다 짙어지며 눈길을 끌어요. */
+@media (min-width:768px){
+  :root{--hu:clamp(.72px, calc(100vw / 1440), 1px)}
+
+  /* 흰 띠 104 + 오른쪽 탭 49(곡선 폭 86). 내리면 띠는 올라가고 탭만 위에 붙어요(팀원 동작 그대로, 높이만 피그마로) */
+  html body .site-header{top:calc(-104*var(--hu));height:calc(157*var(--hu))}
+  html body .site-header .header-shape{height:calc(104*var(--hu))}
+  html body .site-header .header-main{height:calc(104*var(--hu));align-items:flex-start;padding-inline:calc(59*var(--hu)) calc(61*var(--hu))}
+
+  /* 로고 47×32 (x59, y37) */
+  html body .site-header .brand{margin-top:calc(37*var(--hu))}
+  html body .site-header .brand img,html body .site-header .brand-mark{width:calc(47*var(--hu));height:calc(32*var(--hu))}
+
+  /* 메뉴: x176, y37, 20px 굵게, 간격 52 */
+  html body .site-header .header-main nav{margin-left:calc(70*var(--hu));margin-top:calc(37*var(--hu));gap:calc(52*var(--hu));align-items:center}
+  html body .site-header .header-main nav a,html body .site-header .header-main nav button{min-height:0;height:calc(32*var(--hu));font:700 calc(20*var(--hu))/1.6 var(--fh-font);color:#c5c5c5;letter-spacing:0}
+  html body .site-header .header-main nav a[aria-current]{color:#000}
+  html body .site-header .header-main nav a:not([aria-current]):hover{color:#5a5a5a}
+  html body .site-header .header-main nav .tendency-link{color:#00f998}
+  html body .site-header .header-main nav .tendency-link:hover{color:#00d985}
+  html body .site-header nav a::after,html body .site-header nav button::after{bottom:calc(-4*var(--hu));height:calc(2*var(--hu))}
+
+  /* 검색: 363×48 (x1016, y26), #ECECEC, 모서리 20, 아이콘 왼쪽 · 안내 문구 오른쪽 */
+  html body .site-header .header-search{margin-top:calc(26*var(--hu));width:calc(363*var(--hu));height:calc(48*var(--hu));border-radius:calc(20*var(--hu));background:#ececec;padding:0 calc(23*var(--hu)) 0 calc(25*var(--hu));gap:calc(12*var(--hu))}
+  html body .site-header .header-search:hover{background:#e6e6e6}
+  html body .site-header .header-search:focus-within{width:calc(400*var(--hu));background:#fff}
+  html body .site-header .header-search [data-icon],html body .site-header .header-search svg{width:calc(20*var(--hu));height:calc(20*var(--hu));flex:none}
+  html body .site-header .header-search input{font:400 calc(14*var(--hu))/1.6 var(--fh-font);letter-spacing:.01em;text-align:right}
+  html body .site-header .header-search input::placeholder{color:#969696}
+
+  /* 아래 탭: y105 줄, 플러스(23) · 저장(24) · 알림(24) · RUNNER 김찬우 님 · 동그라미(28), 오른쪽 여백 61 */
+  html body .site-header .header-actions{top:calc(104*var(--hu) - 1px);height:calc(49*var(--hu) + 1px);padding:calc(1*var(--hu) + 1px) calc(61*var(--hu)) 0 calc(22*var(--hu));align-items:flex-start;gap:calc(26*var(--hu))}
+  html body .site-header .header-actions::before{width:calc(86.2*var(--hu));height:calc(49*var(--hu) + 1px)}
+  html body .site-header .header-actions>*{height:calc(28*var(--hu));align-self:flex-start;display:grid;place-items:center}
+  html body .site-header .header-actions>.runner-button{display:flex;align-items:center;min-height:0}
+  html body .site-header .header-actions>.icon-button{height:calc(24*var(--hu));margin-top:calc(2*var(--hu))}
+  html body .site-header .header-actions .icon-button,html body .site-header .header-actions svg{width:calc(24*var(--hu));height:calc(24*var(--hu))}
+  html body .site-header .add-baton{width:calc(23*var(--hu));height:calc(23*var(--hu));margin-right:calc(1*var(--hu))}
+  html body .site-header .add-baton svg{width:calc(23*var(--hu));height:calc(23*var(--hu))}
+  html body .site-header .header-actions [data-action="notifications"]{margin-right:calc(-3*var(--hu))}
+  html body .site-header .runner-button{font:300 calc(14*var(--hu))/1.6 var(--fh-font);gap:calc(12*var(--hu));margin-left:0;color:#1a1a1a}
+  html body .site-header .runner-button strong{font:700 calc(14*var(--hu))/1.6 'Paperlogy',var(--fh-font);letter-spacing:0;color:#1a1a1a;margin-right:0;text-underline-offset:calc(4*var(--hu));text-decoration-thickness:calc(1*var(--hu))}
+  html body .site-header .runner-button .avatar{width:calc(28*var(--hu));height:calc(28*var(--hu))}
+
+  /* 플러스 버튼 빛 번짐(피그마 3824:1349)이 4.8초마다 미세하게 깜빡여요 */
+  html body .site-header .add-baton{align-self:flex-start;margin-top:calc(2.5*var(--hu))}
+  html body .site-header .add-baton::before{display:block;content:'';position:absolute;z-index:-1;inset:0;border-radius:50%;opacity:1;background:rgba(255,255,255,.01);
+    box-shadow:0 calc(-8*var(--hu)) calc(24.4*var(--hu)) rgba(0,255,238,.62),calc(7*var(--hu)) calc(2*var(--hu)) calc(27.2*var(--hu)) rgba(227,234,45,.53),calc(-5*var(--hu)) calc(2*var(--hu)) calc(12.6*var(--hu)) rgba(0,249,152,.72),inset calc(3*var(--hu)) 0 calc(17.8*var(--hu)) rgba(0,249,152,.5),inset calc(-12*var(--hu)) 0 calc(13.8*var(--hu)) rgba(227,234,45,.51);
+    animation:hf-breathe 4.8s ease-in-out infinite}
+  html body .site-header .add-baton:hover::before,html body .site-header .add-baton:focus-visible::before{animation-play-state:paused;opacity:1}
+}
+/* 업로드 화면: 접힐 때 띠 높이만큼 올라가요 */
+@media (min-width:768px){
+  body[data-route="upload"].is-maker-scrolled .site-header{transform:translateY(calc(-104*var(--hu)))}
+  body[data-route="upload"] .maker-frame{top:calc(160*var(--hu))}
+  body[data-route="upload"].is-maker-scrolled .maker-frame{transform:translateY(calc(-160*var(--hu)))}
+}
+@keyframes hf-breathe{0%,100%{opacity:.4}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){html body .site-header .add-baton::before{animation:none;opacity:.85}}
