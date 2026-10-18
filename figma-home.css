@@ -576,3 +576,9 @@ main .fh-card.fh-open .fh-card-link:active .fh-card-open{transform:scale(.992);t
   body[data-route="upload"].is-maker-scrolled .maker-frame{transform:translateY(calc(-160*var(--u)))}
 }
 @media (min-width:768px) and (prefers-reduced-motion:reduce){body[data-route="upload"] .site-header,body[data-route="upload"] .maker-frame{transition:none}}
+
+/* ===== 10/18 뒤집힌 카드 모서리: 3D로 돌린 면 안의 흐린 이미지가 둥근 모서리 밖으로 삐져나오던 문제(특히 Safari) =====
+   overflow:hidden만으로는 회전·흐림 레이어가 잘리지 않아서 면 자체를 둥근 모양으로 잘라요. */
+.fh-face{clip-path:inset(0 round calc(14*var(--u)));-webkit-mask-image:-webkit-radial-gradient(white,black);isolation:isolate}
+.fh-back-bg{inset:-8%}
+.fh-back-bg img{transform:translateZ(0)}
