@@ -45,7 +45,7 @@
   async function render(container, record) {
     const M = window.Morogado;
     const body = document.body;
-    const nickname = (await M.store.setting('nickname').catch(() => null)) || '찬우';
+    const nickname = (await M.store.setting('nickname').catch(() => null)) || '방문자';
     const owner = !record.example;
     const bookmarked = await M.store.isBookmarked(record.id).catch(() => false);
 

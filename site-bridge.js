@@ -44,8 +44,8 @@
   async function publish(value, payload) {
     const h = host();
     if (!embedded || !h?.store?.publish) return false;
-    let author = '김찬우';
-    try { const n = await h.store.setting?.('nickname'); if (n && n !== '찬우') author = n; } catch { /* 기본 이름 */ }
+    let author = '방문자';
+    try { const n = await h.store.setting?.('nickname'); if (n) author = n; } catch { /* 기본 이름 */ }
     const files = (payload?.files || []).map(file => new window.parent.File([file], file.name, { type: file.type, lastModified: file.lastModified }));
     const saved = await h.store.publish(toSiteRecord(value, payload, author), files);
     if (!saved?.id) throw new Error('저장 응답을 확인하지 못했어요.');

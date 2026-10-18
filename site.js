@@ -17,7 +17,7 @@
  dialog.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const items=[...dialog.querySelectorAll('a[href],button:not(:disabled),input:not(:disabled),textarea:not(:disabled),select:not(:disabled),[tabindex="0"]')].filter(x=>x.getBoundingClientRect().width>1&&x.getBoundingClientRect().height>1);const first=items[0],last=items.at(-1);if(!first)return;if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
  dialog.addEventListener('close',()=>{if(dialog.open)return;if(typeof modalCleanup==='function')modalCleanup();modalCleanup=null;});
  const navigate=route=>{dialog.open&&dialog.close();if(location.hash.slice(1)===route)renderRoute();else location.hash=route;};
- let bookmarks=new Set(),nickname='찬우',routeToken=0,cleanup=null,manifest={},examples=[];
+ let bookmarks=new Set(),nickname='방문자',routeToken=0,cleanup=null,manifest={},examples=[];
  let lastRoute='/',homeScroll=0,resetHomeScroll=false;
  let filter={category:'전체',artifacts:[],sort:'recommended',kind:'all'},query='';
  const asset=(node,name,original=false)=>{const url=manifest[node]?.[name]||'';return !original&&url.includes('assets/figma/')&&/\.(png|webp)$/.test(url)?url.replace('assets/figma/','assets/previews/').replace(/\.png$/,'.webp'):url;};
@@ -110,7 +110,7 @@
   for(const r of examples){if(r.author&&r.author!=='러너')continue;let h=0;for(const ch of r.id)h=(h*31+ch.charCodeAt(0))>>>0;r.author=runnerNames[h%runnerNames.length];if(!r.credits?.length||r.credits.every(c=>c==='러너'))r.credits=[r.author];}
   store.setExamples(examples);
  }
- async function updateChrome(){bookmarks=new Set(await store.bookmarks());nickname=await store.setting('nickname')||'찬우';document.getElementById('runner-name').textContent=nickname==='찬우'?'김찬우':nickname;const count=document.getElementById('saved-count');count.hidden=!bookmarks.size;count.textContent=bookmarks.size;}
+ async function updateChrome(){bookmarks=new Set(await store.bookmarks());nickname=await store.setting('nickname')||'방문자';document.getElementById('runner-name').textContent=nickname;const count=document.getElementById('saved-count');count.hidden=!bookmarks.size;count.textContent=bookmarks.size;}
  function childrenCount(r,all){return all.filter(x=>x.parentId===r.id).length;}
  async function renderHome(token=routeToken){
   const all=await store.list(),eligible=all.filter(r=>!r.id.startsWith('feature-')&&!['calendar-red','calendar-peach'].includes(r.id)&&!r.demoRelay);
