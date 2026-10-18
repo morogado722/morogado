@@ -1,0 +1,22 @@
+/* 10/18 아래 독 플러스 → 업로드 첫 칸(피그마 3829:2459)이 독 바로 위로 펼쳐져요 */
+:root{--du:clamp(.72px, calc(100vw / 1440), 1px)}
+.dock-drop-backdrop{position:fixed;inset:0;z-index:68;background:rgba(38,38,38,.08);display:none}
+.dock-drop-backdrop.is-open{display:block}
+.dock-drop{position:fixed;z-index:69;display:none;box-sizing:border-box;
+  width:min(calc(1051*var(--du)), calc(100vw - 32px));height:max(250px,calc(342*var(--du)));
+  left:calc((100vw - min(calc(1051*var(--du)), calc(100vw - 32px))) / 2);
+  bottom:calc(32*var(--u,1px) + 68*var(--u,1px) + 14px);
+  border-radius:calc(22*var(--du));background:#d9d9d9;padding:calc(19*var(--du)) calc(20*var(--du));
+  box-shadow:0 calc(18*var(--du)) calc(48*var(--du)) rgba(38,38,38,.16);transform-origin:center;will-change:transform}
+.dock-drop.is-open{display:block}
+body.is-dock-drop .floating-dock{z-index:70}
+.dock-drop-in{display:flex;flex-direction:column;gap:calc(5*var(--du));height:100%}
+.dock-drop-head{display:flex;align-items:center;gap:7px}
+.dock-drop-head strong{font:700 max(14px,calc(16*var(--du)))/1 'Spoqa Han Sans Neo',var(--fh-font,sans-serif);color:#262626}
+.dock-drop-count{display:grid;place-items:center;min-width:24px;height:24px;padding:0 6px;box-sizing:border-box;border-radius:4px;background:#ececec;font:300 12px/1 'Spoqa Han Sans Neo',var(--fh-font,sans-serif);color:#262626}
+.dock-drop-zone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(14*var(--du));width:100%;margin:0;background:#fff;border:2px dashed #eaeaea;border-radius:11px;cursor:pointer;
+  font:400 max(14px,calc(16*var(--du)))/1.5 'Spoqa Han Sans Neo',var(--fh-font,sans-serif);color:#7a7a7a;text-align:center;transition:border-color 200ms ease,background-color 200ms ease}
+.dock-drop-zone img{width:max(56px,calc(77*var(--du)));height:max(56px,calc(77*var(--du)));transition:transform 320ms cubic-bezier(.22,.9,.24,1)}
+.dock-drop-zone:hover,.dock-drop-zone.is-over{border-color:#00f998;background:#fbfffd}
+.dock-drop-zone:hover img,.dock-drop-zone.is-over img{transform:translateY(-4px)}
+.dock-drop-zone:focus-visible{outline:2px solid rgba(0,214,140,.6);outline-offset:3px}
