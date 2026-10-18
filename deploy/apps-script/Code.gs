@@ -21,6 +21,7 @@ const DEFAULT_MODEL = 'gpt-4.1-mini';
 function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || 'config';
   if (action === 'config') return reply({ service: 'morogaro-apps-script', version: 1, aiAvailable: aiRemaining() !== 0 && !!prop('OPENAI_API_KEY'), formUrl: prop('FORM_URL') || '', formEntry: prop('FORM_ENTRY') || '' });
+  if (action === 'batons') return reply(batonList());   // 졸전 사이트: 공개된 바톤 목록
   return reply({ ok: true });
 }
 
@@ -34,6 +35,8 @@ function doPost(e) {
       case 'note': return reply(note(data));
       case 'comments': return reply(comments(data));
       case 'progress': case 'leave': case 'complete': return reply(record(data));
+      case 'batonUpload': return reply(batonUpload(data));     // 졸전 사이트: 바톤 파일 한 개 올리기
+      case 'batonPublish': return reply(batonPublish(data));   // 졸전 사이트: 바톤 기록 저장
       default: return reply({ ok: false, error: '알 수 없는 요청이에요.' });
     }
   } catch (err) {
@@ -489,3 +492,117 @@ function 설문_다듬기() {
   }
   Logger.log('설문 다듬기 완료: ' + form.getPublishedUrl());
 }
+
+/* ───────── 졸전 사이트: 바톤 저장소 (10/18) ─────────
+ * 졸전 사이트(morogado722.github.io/morogado)에서 올린 바톤을 모두가 볼 수 있게 저장해요.
+ * 사용성 평가 기록과는 따로, 드라이브의 '모로가도 졸전 바톤' 폴더와 같은 이름의 시트에 쌓여요(처음 올릴 때 자동으로 만들어져요).
+ *   - 바톤 하나 = 시트 한 줄 + 폴더 하나(대표 이미지 · 원본 파일). 파일은 '링크가 있는 모든 사용자 보기'로 열어 사이트에 바로 보여요.
+ *   - 시트의 '공개' 칸 체크를 끄면 사이트에서 바로 숨겨져요(전시 중 이상한 바톤 정리용).
+ *   - 파일 하나 25MB까지. 그보다 큰 원본은 이름 · 크기만 기록해요.
+ * 스크립트 속성(선택): BATON_DAILY_LIMIT 하루 파일 업로드 상한(기본 400) */
+const BATON_NAME = '모로가도 졸전 바톤';
+const BATON_HEADERS = ['아이디', '올린 시각', '제목', '작성자', '공개', '기록(JSON)', '폴더'];
+const BATON_MAX_BYTES = 25 * 1024 * 1024;
+
+function batonFolder() { const f = DriveApp.getFoldersByName(BATON_NAME); return f.hasNext() ? f.next() : DriveApp.createFolder(BATON_NAME); }
+function batonSheet() {
+  let ss = null;
+  const id = prop('BATON_SHEET_ID');
+  if (id) { try { ss = SpreadsheetApp.openById(id); } catch (e) { ss = null; } }
+  if (!ss) {
+    ss = SpreadsheetApp.create(BATON_NAME);
+    PropertiesService.getScriptProperties().setProperty('BATON_SHEET_ID', ss.getId());
+    try { DriveApp.getFileById(ss.getId()).moveTo(batonFolder()); } catch (e) { /* 위치 옮기기는 실패해도 괜찮아요 */ }
+  }
+  let sh = ss.getSheetByName('바톤');
+  if (!sh) { sh = ss.getSheets()[0]; sh.setName('바톤'); }
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(BATON_HEADERS); sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, BATON_HEADERS.length).setFontWeight('bold').setBackground('#F1F1EF');
+    sh.setColumnWidth(6, 260);
+  }
+  return sh;
+}
+function batonQuota() {
+  const limit = Number(prop('BATON_DAILY_LIMIT') || 400), key = 'BATON_USED_' + today();
+  const props = PropertiesService.getScriptProperties(), used = Number(props.getProperty(key) || 0);
+  if (limit && used >= limit) throw new Error('오늘 올릴 수 있는 파일 수를 다 썼어요. 내일 다시 올려 주세요.');
+  props.setProperty(key, String(used + 1));
+}
+function uploadFolder(uploadId) {
+  const id = String(uploadId || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 60);
+  if (!id) throw new Error('업로드 번호가 없어요.');
+  const root = batonFolder(), f = root.getFoldersByName(id);
+  return f.hasNext() ? f.next() : root.createFolder(id);
+}
+function publicUrls(file) {
+  const id = file.getId();
+  return { fileId: id, view: 'https://drive.google.com/thumbnail?id=' + id + '&sz=w2000', download: 'https://drive.google.com/uc?export=download&id=' + id };
+}
+
+// 파일 한 개: { uploadId, name, type, data(base64, data: 주소여도 돼요) } → { ok, fileId, view, download }
+function batonUpload(d) {
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try { batonQuota(); } finally { lock.releaseLock(); }
+  const folder = uploadFolder(d.uploadId);
+  const raw = String(d.data || '').replace(/^data:[^,]*,/, '');
+  if (!raw) throw new Error('파일 내용이 비어 있어요.');
+  const bytes = Utilities.base64Decode(raw);
+  if (bytes.length > BATON_MAX_BYTES) throw new Error('파일이 25MB보다 커요.');
+  const name = String(d.name || '파일').replace(/[\\/:*?"<>|\u0000-\u001f]/g, '_').slice(0, 180);
+  const file = folder.createFile(Utilities.newBlob(bytes, String(d.type || 'application/octet-stream'), name));
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return Object.assign({ ok: true, name: name, size: bytes.length }, publicUrls(file));
+}
+
+// 기록 저장: { uploadId, record } → { ok, record }
+function batonPublish(d) {
+  const r = d.record || {};
+  const title = String(r.title || '').trim().slice(0, 120);
+  if (!title) throw new Error('바톤 제목이 없어요.');
+  const folder = uploadFolder(d.uploadId);
+  folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  const id = 'r-' + today() + '-' + Utilities.getUuid().slice(0, 8);
+  folder.setName(id + ' · ' + title);
+  const record = Object.assign({}, r, {
+    id: id, title: title, remote: true, example: false, flowering: false,
+    author: String(r.author || '방문자').slice(0, 40), createdAt: new Date().toISOString(), folderUrl: folder.getUrl()
+  });
+  const json = JSON.stringify(record);
+  if (json.length > 48000) throw new Error('바톤 정보가 너무 길어요. 노트를 조금 줄여 주세요.');
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    batonSheet().appendRow([id, kst(record.createdAt), title, record.author, true, json, '=HYPERLINK("' + folder.getUrl() + '","열기")']);
+    const sh = batonSheet(); sh.getRange(sh.getLastRow(), 5).insertCheckboxes().setValue(true);
+  } finally { lock.releaseLock(); }
+  CacheService.getScriptCache().remove('baton-list');
+  return { ok: true, record: record };
+}
+
+// 공개 목록: 최근 것부터 최대 300개
+function batonList() {
+  const cache = CacheService.getScriptCache(), hit = cache.get('baton-list');
+  if (hit) return JSON.parse(hit);
+  const sh = batonSheet(), n = sh.getLastRow() - 1;
+  const items = [];
+  if (n > 0) {
+    const rows = sh.getRange(2, 1, n, 6).getValues();
+    for (let i = rows.length - 1; i >= 0 && items.length < 300; i--) {
+      if (rows[i][4] !== true) continue;
+      try { items.push(JSON.parse(rows[i][5])); } catch (e) { /* 손으로 고친 줄은 건너뛰어요 */ }
+    }
+  }
+  const out = { ok: true, batons: items, at: new Date().toISOString() };
+  const text = JSON.stringify(out);
+  if (text.length < 90000) cache.put('baton-list', text, 20);
+  return out;
+}
+
+// 시트에서 '공개' 체크를 바꾸면 사이트 목록에 바로 반영되게 캐시를 비워요(편집기에서 한 번 실행해 두면 돼요)
+function 바톤_시트_준비() {
+  const sh = batonSheet();
+  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'onBatonEdit').forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('onBatonEdit').forSpreadsheet(sh.getParent()).onEdit().create();
+  Logger.log('준비 끝: ' + sh.getParent().getUrl() + ' / 폴더: ' + batonFolder().getUrl());
+}
+function onBatonEdit() { CacheService.getScriptCache().remove('baton-list'); }

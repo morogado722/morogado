@@ -46,7 +46,7 @@
     const M = window.Morogado;
     const body = document.body;
     const nickname = (await M.store.setting('nickname').catch(() => null)) || '방문자';
-    const owner = !record.example;
+    const owner = !record.example && (!record.remote || record.mine);
     const bookmarked = await M.store.isBookmarked(record.id).catch(() => false);
 
     const frame = document.createElement('iframe');

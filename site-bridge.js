@@ -47,7 +47,10 @@
     let author = '방문자';
     try { const n = await h.store.setting?.('nickname'); if (n) author = n; } catch { /* 기본 이름 */ }
     const files = (payload?.files || []).map(file => new window.parent.File([file], file.name, { type: file.type, lastModified: file.lastModified }));
-    const saved = await h.store.publish(toSiteRecord(value, payload, author), files);
+    /* 서버로 올리는 동안 '바톤 만들기' 버튼에 진행 상황을 보여줘요 (10/18, store-remote.js) */
+    const button = document.getElementById('finish-confirm');
+    const onProgress = ({ done, total }) => { if (button && total) button.textContent = `올리는 중… ${done}/${total}`; };
+    const saved = await h.store.publish({ ...toSiteRecord(value, payload, author), onProgress }, files);
     if (!saved?.id) throw new Error('저장 응답을 확인하지 못했어요.');
     try { await window.MorogaroMaker?.clearDraft?.(); } catch { /* 초안 정리는 실패해도 괜찮아요 */ }
     h.toast?.('바톤을 저장했어요. 다음 러너를 기다려볼까요?');

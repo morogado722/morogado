@@ -3,7 +3,7 @@
   'use strict';
   function mount(container,{parentId=null}={}){
     const frame=document.createElement('iframe');frame.className='maker-frame';frame.title=parentId?'바톤 이어서 올리기':'바톤 올리기';
-    const params=new URLSearchParams({embedded:'1',v:'1018b'});if(parentId)params.set('parentId',parentId);
+    const params=new URLSearchParams({embedded:'1',v:'1018c'});if(parentId)params.set('parentId',parentId);
     frame.src='upload.html?'+params;frame.setAttribute('allow','');container.classList.add('maker-host');container.replaceChildren(frame);
     frame.addEventListener('load',()=>frame.classList.add('is-loaded'),{once:true});
     /* 메이커를 내리면 사이트 헤더의 흰 띠를 접고 오른쪽 탭만 남겨요. 바깥 페이지가 끌려 올라가지 않게 0으로 고정 */
