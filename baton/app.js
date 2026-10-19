@@ -251,21 +251,69 @@
     });
     if (focus) $$('.thumbnail')[galleryIndex].focus();
   }
-  $$('.thumbnail').forEach(button => button.addEventListener('click', () => selectGallery(Number(button.dataset.image))));
+  const lightbox = $('#lightbox');
+  let lightboxSource = null;
+  let lightboxMotion = null;
+  const motionReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function animateLightboxImage(image, source, reverse = false) {
+    if (!image || !source || motionReduced() || !image.animate) return;
+    const from = reverse ? image.getBoundingClientRect() : source.getBoundingClientRect();
+    const to = reverse ? source.getBoundingClientRect() : image.getBoundingClientRect();
+    if (!from.width || !from.height || !to.width || !to.height) return;
+    const dx = from.left - to.left, dy = from.top - to.top;
+    const sx = from.width / to.width, sy = from.height / to.height;
+    image.style.transformOrigin = 'top left';
+    const animation = image.animate(
+      reverse
+        ? [{ transform: 'none' }, { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: .82 }]
+        : [{ transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: .82 }, { transform: 'none', opacity: 1 }],
+      { duration: 280, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }
+    );
+    lightboxMotion = animation;
+    animation.onfinish = () => { if (lightboxMotion === animation) { image.style.transformOrigin = ''; animation.cancel(); lightboxMotion = null; } };
+    animation.oncancel = () => { if (lightboxMotion === animation) lightboxMotion = null; };
+  }
+  $('.thumbnail').forEach(button => button.addEventListener('click', () => {
+    const index = Number(button.dataset.image);
+    selectGallery(index);
+    showImages(gallery[index].title, [gallery[index]], '', button.querySelector('img') || button);
+  }));
   $('.thumbnails').addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); selectGallery(galleryIndex + (e.key === 'ArrowRight' ? 1 : -1), true); }
     if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); selectGallery(e.key === 'Home' ? 0 : gallery.length - 1, true); }
   });
-  const lightbox = $('#lightbox');
-  function showImages(title, entries, className = '') {
+  function showImages(title, entries, className = '', source = null) {
     $('#lightbox-title').textContent = title;
     const content = $('#lightbox-content'); content.className = `lightbox-content ${className}`; content.replaceChildren();
-    for (const item of entries) { const img = new Image(); img.src = asset(item.src); img.alt = item.alt || title; content.append(img); }
+    for (const item of entries) { const img = new Image(); img.src = asset(item.src); img.alt = item.alt || title; img.draggable = false; content.append(img); }
+    lightboxSource = source;
     if (!lightbox.open) lightbox.showModal();
+    if (source && entries.length === 1) {
+      const target = content.querySelector('img');
+      Promise.resolve(target.decode ? target.decode().catch(() => {}) : undefined).then(() => requestAnimationFrame(() => animateLightboxImage(target, source)));
+    }
   }
-  $('#open-artwork').addEventListener('click', () => gallery.length && showImages(gallery[galleryIndex].title, [gallery[galleryIndex]]));
-  $('.close-dialog', lightbox).addEventListener('click', () => lightbox.close());
-  lightbox.addEventListener('click', e => { if (e.target !== lightbox) return; const b = lightbox.getBoundingClientRect(); if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) lightbox.close(); });
+  async function closeLightbox() {
+    if (!lightbox.open) return;
+    const source = lightboxSource, image = $('#lightbox-content img');
+    if (source && image && !motionReduced()) {
+      lightboxMotion?.cancel();
+      const from = image.getBoundingClientRect(), to = source.getBoundingClientRect();
+      if (from.width && to.width) {
+        const animation = image.animate(
+          [{ transform: 'none', opacity: 1 }, { transform: `translate(${to.left-from.left}px, ${to.top-from.top}px) scale(${to.width/from.width}, ${to.height/from.height})`, opacity: .82 }],
+          { duration: 220, easing: 'cubic-bezier(.4,0,1,1)', fill: 'both' }
+        );
+        lightboxMotion = animation;
+        try { await animation.finished; } catch {}
+      }
+    }
+    lightboxMotion?.cancel(); lightboxMotion = null; lightboxSource = null; lightbox.close();
+  }
+  $('#open-artwork').addEventListener('click', () => gallery.length && showImages(gallery[galleryIndex].title, [gallery[galleryIndex]], '', $('#main-artwork')));
+  $('.close-dialog', lightbox).addEventListener('click', closeLightbox);
+  lightbox.addEventListener('cancel', e => { e.preventDefault(); closeLightbox(); });
+  lightbox.addEventListener('click', e => { if (e.target !== lightbox) return; const b = lightbox.getBoundingClientRect(); if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) closeLightbox(); });
   $('#open-references').addEventListener('click', () => showImages('레퍼런스 이미지', live ? live.references : [
     { src: 'assets/detail-image-4.png', alt: '컬러 패키지 레퍼런스' },
     { src: 'assets/detail-image-5.png', alt: '과일 패키지 레퍼런스' },
@@ -309,7 +357,7 @@
   });
   $$('.save-baton').forEach(button => {
     let saved = live ? live.bookmarked : memory.read('saved:current', false) === true; button.setAttribute('aria-pressed', String(saved));
-    button.addEventListener('click', () => { saved = !saved; button.setAttribute('aria-pressed', String(saved)); button.setAttribute('aria-label', saved ? '바톤 저장 취소' : '바톤 저장'); if (live) live.setBookmark(saved); else memory.write('saved:current', saved); toast(saved ? '이 브라우저에 바톤을 저장했어요.' : '바톤 저장을 취소했어요.'); });
+    button.addEventListener('click', () => { saved = !saved; button.setAttribute('aria-pressed', String(saved)); button.setAttribute('aria-label', saved ? '바톤 저장 취소' : '바톤 저장'); if (live) { live.setBookmark(saved); } else { memory.write('saved:current', saved); toast(saved ? '이 브라우저에 바톤을 저장했어요.' : '바톤 저장을 취소했어요.'); } });
   });
   async function copyText(value, success) {
     try {
