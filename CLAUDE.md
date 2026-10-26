@@ -14,6 +14,7 @@
 > - 상세 헤더(10/18): 사이트 안에선 `baton-live.css`의 `html.is-site-host` 규칙으로 홈 헤더와 같은 좌표·크기·순서, 플러스 버튼·보는 사람 이름 추가(`baton-render.js`). "내 작업성향은?" 민트는 홈(`body[data-route=home]`)에서만.
 > - 업로드 진입(10/18, `dock-upload.js`·`.css`): 헤더 플러스 → 바로 `#/upload`. 아래 독 플러스 → 독 위로 업로드 첫 칸(피그마 3829:2459)이 펼쳐지고, 파일을 넣거나 칸을 누르면 `#/upload`로 이동(파일은 `pendingFiles`로 1단계에 들어감). 예전 `fh-upload` 모달은 안 써요.
 > - 바톤 서버(10/18): 같은 Apps Script에 `batonUpload`·`batonPublish`(POST)·`?action=batons`(GET) 추가. 드라이브 '모로가도 졸전 바톤' 폴더·시트에 저장(시트 '공개' 체크 끄면 숨김). 사이트는 `store-remote.js`가 store.js를 감싸 서버 바톤을 함께 보여주고, 올릴 때 서버 우선·실패 시 브라우저 저장. 서버 아이디는 `r-`로 시작, 이 브라우저에서 올린 것만 `mine`. 댓글·북마크는 아직 브라우저에만.
+> - 랜딩·헤더 v2(10/26, 피그마 HOME 4006:10070): `#/`는 랜딩(`landing.js`·`landing.css`, 에셋 `assets/landing/`), 바톤 탐색 피드는 `#/explore`로 옮김(`site.js` renderRoute에서 `explore`를 떼고 예전 홈처럼 그려요, `data-route`는 그대로 `home`). 헤더는 `header-v2.css` + `index.html`의 `hd-*` 마크업(워드마크 로고 · 탐색/커뮤니티/내 작업성향은? · 525 검색 · 검정 '바톤 올리기' · 회원 가입|로그인 → 이름 정하면 '이름 님 | 내 바톤'). 상세 iframe은 `baton-render.js`(`is-header-v2`)와 `baton-live.css` 맨 아래 블록에서 같은 모양으로 바꿔요. 바톤센터는 메뉴에서 빠졌고 모바일 메뉴(☰)에만 있어요.
 > - 주의: `config.js`의 Apps Script URL은 아직 사용성 평가와 **같은 서버·시트**를 써요. 졸전용으로 분리할지 사용자에게 확인 필요.
 >
 > 아래는 ut.upload에서 이어받은 내용이에요. "ut.upload" 주소·저장소 언급은 이 저장소(morogado)로 바꿔 읽으세요.

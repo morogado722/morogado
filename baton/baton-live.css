@@ -279,3 +279,35 @@ html.is-site-host .account-notification{left:1162px;top:103px}
 html.is-site-host .account-name{left:1213px;top:105px;line-height:28px}
 html.is-site-host .account-avatar{left:1351px;top:105px}
 html.header-compact.is-site-host .site-header .main-nav{visibility:hidden}
+
+/* ===== 10/26 헤더 v2(피그마 HOME 4006:10071) — 사이트 헤더(header-v2.css)와 같은 1440 좌표 =====
+   로고 워드마크 203×28(x72, y35) · 메뉴 14.3px 굵게 rgba(38,38,38,.4) 간격 35.7 · 검색 525×40 알약(오른쪽 73) ·
+   탭: 검정 '바톤 올리기' 128×34(x1049, y101) · 회원 가입 | 로그인(x1213) */
+html.is-header-v2 .site-header{height:158px}
+html.is-header-v2 .header-surface{width:1440px;height:158px}
+html.is-header-v2 .site-header .brand{left:72px;top:41px;width:203px;height:28px}
+html.is-header-v2 .site-header .brand img{width:203px;height:28px}
+html.is-header-v2 .main-nav{left:310px;top:44px;gap:35.7px;height:22px}
+html.is-header-v2 .main-nav button{font-size:14.3px;line-height:22px;font-weight:700;color:rgba(38,38,38,.4)}
+html.is-header-v2 .main-nav .nav-explore{order:1;color:#262626}
+html.is-header-v2 .main-nav .nav-community{order:2}
+html.is-header-v2 .main-nav .nav-personality{order:3;color:rgba(38,38,38,.4)}
+html.is-header-v2 .main-nav button:hover{color:rgba(38,38,38,.75)}
+html.is-header-v2 .main-nav .nav-explore:hover{color:#262626}
+html.is-header-v2 .search{left:842px;top:35px;width:525px;height:40px;border-radius:999px;padding:0 20px;gap:12px;background:#ececec}
+html.is-header-v2 .search:focus-within{background:#e2e2e2}
+html.is-header-v2 .search img{width:16.3px;height:16.3px}
+html.is-header-v2 .search input{font-size:12px;font-weight:400;letter-spacing:0}
+html.is-header-v2 .search input::placeholder{color:rgba(0,0,0,.4);font-weight:400}
+html.is-header-v2 .account{position:absolute;left:1049px;top:101px;height:34px;display:flex;align-items:center;gap:36px}
+html.is-header-v2 .hd-upload{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:128px;height:34px;border-radius:99px;background:#262626;color:#fafafa;text-decoration:none;font-size:14px;font-weight:500;line-height:1;white-space:nowrap;transition:background .25s ease,transform .25s ease}
+html.is-header-v2 .hd-upload img{width:10px;height:10px;transition:transform .5s cubic-bezier(.22,.9,.24,1)}
+html.is-header-v2 .hd-upload:hover{background:#000}
+html.is-header-v2 .hd-upload:hover img{transform:rotate(90deg) scale(1.15)}
+html.is-header-v2 .hd-account{display:flex;align-items:center;gap:20px;margin-top:-2px;font-size:14px;line-height:1.25}
+html.is-header-v2 .hd-account button{border:0;background:none;padding:0;cursor:pointer;font-family:inherit;font-size:inherit;line-height:inherit;white-space:nowrap}
+html.is-header-v2 .hd-join,html.is-header-v2 .hd-me{font-weight:700;color:#262626}
+html.is-header-v2 .hd-login,html.is-header-v2 .hd-my{font-weight:400;color:#8a8a8a}
+html.is-header-v2 .hd-account button:hover{text-decoration:underline;text-underline-offset:3px}
+html.is-header-v2 .hd-account i{display:block;width:1px;height:19px;background:#c4c4c4}
+html.is-header-v2 .header-bleed{height:158px;background:linear-gradient(#FFF, #FFF) left top / 50% 100px no-repeat, linear-gradient(#FFF, #FFF) right top / 50% 151px no-repeat}

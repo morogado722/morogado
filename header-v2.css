@@ -1,0 +1,62 @@
+/* 10/26 헤더 v2 — 피그마 HOME 헤더(4006:10071)를 모든 화면에 써요.
+ * 1440 기준: 흰 띠 100 + 오른쪽 탭(곡선 x928~, 높이 151). 로고 워드마크 203×28(x72, y35) · 메뉴 14px 굵게 · 검색 525×40 알약 ·
+ * 아래 탭: 검정 '바톤 올리기' 128×34(x1049, y101) · 회원 가입 | 로그인(x1213).
+ * 내리면 흰 띠는 올라가고 탭만 위에 붙어요(예전 헤더와 같은 동작). 예전 헤더 규칙(header-figma.css 등)은 새 클래스(hd-*)라 닿지 않아요. */
+:root{--hu:clamp(.72px, calc(100vw / 1440), 1px)}
+
+html body .site-header{position:sticky;top:calc(-100*var(--hu));z-index:60;height:calc(151*var(--hu));padding:0;margin:0;background:none;border:0;box-shadow:none;isolation:isolate;transform:none}
+html body .site-header .hd-shape{position:absolute;inset:0 0 auto 0;height:calc(158*var(--hu));pointer-events:none;z-index:-1;
+  background:url('assets/landing/header-shape.svg') right top/calc(1440*var(--hu)) calc(158*var(--hu)) no-repeat,linear-gradient(#fff,#fff) left top/calc(100% - 1300*var(--hu)) calc(100*var(--hu)) no-repeat;
+  filter:drop-shadow(0 calc(1*var(--hu)) calc(1.5*var(--hu)) rgba(0,0,0,.02))}
+
+html body .site-header .hd-bar{position:absolute;left:calc(72*var(--hu));right:calc(73*var(--hu));top:calc(35*var(--hu));height:calc(40*var(--hu));display:flex;align-items:center;justify-content:space-between;gap:calc(32*var(--hu))}
+html body .site-header .hd-left{display:flex;align-items:center;gap:calc(35.7*var(--hu));min-width:0}
+html body .site-header .hd-logo{display:block;flex:none;width:calc(202.7*var(--hu));height:calc(28*var(--hu));line-height:0}
+html body .site-header .hd-logo img{width:100%;height:100%;display:block}
+html body .site-header .hd-nav{margin:0;padding:0;display:flex;align-items:center;gap:calc(35.7*var(--hu))}
+html body .site-header .hd-nav a,html body .site-header .hd-nav button{all:unset;cursor:pointer;font:700 max(12px,calc(14.3*var(--hu)))/1.25 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:rgba(38,38,38,.4);white-space:nowrap;letter-spacing:0;transition:color .25s ease}
+html body .site-header .hd-nav a:hover,html body .site-header .hd-nav button:hover{color:rgba(38,38,38,.75)}
+html body .site-header .hd-nav a[aria-current]{color:#262626}
+html body .site-header .hd-nav a:focus-visible,html body .site-header .hd-nav button:focus-visible{outline:2px solid #00c97f;outline-offset:3px;border-radius:4px}
+
+html body .site-header .hd-search{flex:0 1 calc(525*var(--hu));min-width:0;height:max(34px,calc(40*var(--hu)));display:flex;align-items:center;gap:calc(12*var(--hu));padding:0 calc(20*var(--hu));border-radius:999px;background:#ececec;transition:background .25s ease}
+html body .site-header .hd-search:hover{background:#e6e6e6}
+html body .site-header .hd-search:focus-within{background:#e2e2e2}
+html body .site-header .hd-search img{width:max(14px,calc(16.3*var(--hu)));height:max(14px,calc(16.3*var(--hu)));flex:none;display:block}
+html body .site-header .hd-search input{flex:1;min-width:0;height:100%;border:0;outline:0;background:none;padding:0;margin:0;text-align:right;font:400 max(11px,calc(12*var(--hu)))/1 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#262626;-webkit-appearance:none;appearance:none}
+html body .site-header .hd-search input::placeholder{color:rgba(0,0,0,.4)}
+html body .site-header .hd-search input::-webkit-search-cancel-button{display:none}
+
+html body .site-header .hd-tab{position:absolute;right:calc(93*var(--hu));top:calc(101*var(--hu));height:calc(34*var(--hu));display:flex;align-items:center;gap:calc(36*var(--hu))}
+html body .site-header .hd-upload{display:inline-flex;align-items:center;justify-content:center;gap:calc(8*var(--hu));width:calc(128*var(--hu));height:calc(34*var(--hu));border-radius:99px;background:#262626;color:#fafafa;text-decoration:none;font:500 max(12px,calc(14*var(--hu)))/1 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);white-space:nowrap;transition:background .25s ease,transform .25s ease}
+html body .site-header .hd-upload img{width:calc(10*var(--hu));height:calc(10*var(--hu));display:block;transition:transform .5s cubic-bezier(.22,.9,.24,1)}
+html body .site-header .hd-upload:hover{background:#000}
+html body .site-header .hd-upload:hover img{transform:rotate(90deg) scale(1.15)}
+html body .site-header .hd-upload:active{transform:scale(.97)}
+html body .site-header .hd-account{display:flex;align-items:center;gap:calc(20*var(--hu));margin-top:calc(-2*var(--hu));font:400 max(12px,calc(14*var(--hu)))/1.25 var(--fh-font,'Spoqa Han Sans Neo',sans-serif)}
+html body .site-header .hd-account button,html body .site-header .hd-account a{all:unset;cursor:pointer;white-space:nowrap}
+html body .site-header .hd-account .hd-join{font-weight:700;color:#262626}
+html body .site-header .hd-account .hd-login{color:#8a8a8a}
+html body .site-header .hd-account button:hover,html body .site-header .hd-account a:hover{text-decoration:underline;text-underline-offset:3px}
+html body .site-header .hd-account i{display:block;width:1px;height:calc(19*var(--hu));background:#c4c4c4}
+html body .site-header .hd-account [hidden]{display:none!important}
+html body .site-header .hd-menu{display:none}
+
+/* 업로드 화면: 접힐 때 띠 높이만큼만 올라가요 */
+@media (min-width:768px){
+  body[data-route="upload"] .site-header{position:fixed;top:0;left:0;right:0;transition:transform 620ms cubic-bezier(.22,.9,.24,1)}
+  body[data-route="upload"].is-maker-scrolled .site-header{transform:translateY(calc(-100*var(--hu)))}
+}
+
+/* 휴대폰: 로고 · 검색 · 메뉴만 한 줄로 */
+@media (max-width:767px){
+  html body .site-header{position:sticky;top:0;height:64px}
+  html body .site-header .hd-shape{height:64px;background:#fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.04))}
+  html body .site-header .hd-bar{left:16px;right:16px;top:12px;height:40px;gap:12px}
+  html body .site-header .hd-logo{width:116px;height:16px}
+  html body .site-header .hd-nav,html body .site-header .hd-tab{display:none}
+  html body .site-header .hd-search{flex:1;height:38px;padding:0 14px}
+  html body .site-header .hd-search input{font-size:12px}
+  html body .site-header .hd-menu{display:grid;place-items:center;flex:none;width:38px;height:38px;border:0;border-radius:50%;background:#ececec;color:#262626;padding:0}
+  html body .site-header .hd-menu svg{width:20px;height:20px}
+}

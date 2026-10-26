@@ -426,7 +426,7 @@
   /* 졸전 사이트 연결(10/16): 상세 헤더의 메뉴·검색·저장·알림을 사이트(index.html) 기능으로 이어요. */
   function wireSiteHeader() {
     const nav = (selector, message) => { const el = $(selector); if (!el) return; el.removeAttribute('data-unwired'); el.addEventListener('click', e => { e.preventDefault(); post({ type: 'morogaro:site-nav', ...message }); }); };
-    nav('.brand', { to: '/' }); nav('.nav-explore', { to: '/' }); nav('.nav-community', { to: '/community' });
+    nav('.brand', { to: '/' }); nav('.nav-explore', { to: '/explore' }); nav('.nav-community', { to: '/community' });
     const magazine = $('.nav-magazine'); if (magazine) magazine.textContent = '바톤센터';
     nav('.nav-magazine', { to: '/center' }); nav('.nav-personality', { action: 'tendency' });
     nav('.account-bookmark', { to: '/saved' }); nav('.account-notification', { action: 'notifications' }); nav('.account-avatar', { action: 'profile' });
@@ -439,17 +439,23 @@
     siteHost = Boolean(site);
     if (siteHost) {
       wireSiteHeader();
-      /* 10/18: 사이트 헤더와 똑같이 — 보는 사람 이름, 플러스(업로드) 버튼 */
-      document.documentElement.classList.add('is-site-host');
-      const name = $('.account-name span:last-child'); if (name && (viewerName || (ownerName && record.siteOwner))) name.textContent = `${viewerName || ownerName} 님`;
-      const avatar = $('.account-avatar'); if (avatar && viewerName) avatar.setAttribute('aria-label', `${viewerName} 프로필`);
+      /* 10/26: 사이트 헤더 v2(피그마 4006:10071)와 똑같이 — 워드마크 로고, 탐색·커뮤니티·내 작업성향은?, 검정 '바톤 올리기' + 회원 가입 | 로그인 */
+      document.documentElement.classList.add('is-site-host', 'is-header-v2');
+      const surface = $('.header-surface'); if (surface) { surface.src = '../assets/landing/header-shape.svg'; surface.height = 158; }
+      const brandImg = $('.brand img'); if (brandImg) { brandImg.src = '../assets/landing/logo.svg'; brandImg.width = 203; brandImg.height = 28; }
+      $('.nav-magazine')?.remove();
+      const input = $('#search-form input'); if (input) input.placeholder = '‘사랑과 관련된 프로젝트’ 같은 키워드로 검색해보세요!';
+      const searchIcon = $('#search-form img'); if (searchIcon) { searchIcon.src = '../assets/landing/search.svg'; searchIcon.width = 17; searchIcon.height = 17; }
       const account = $('.account');
-      if (account && !$('.account-plus')) {
-        const plus = E('button', 'icon-button account-plus'); plus.type = 'button'; plus.setAttribute('aria-label', '내 바톤 올리기');
-        let svg = ''; try { svg = window.parent.Morogado?.icon?.('plus-circle') || ''; } catch { /* 다른 창 */ }
-        plus.innerHTML = svg || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>';
-        plus.addEventListener('click', () => post({ type: 'morogaro:site-nav', to: '/upload' }));
-        account.prepend(plus);
+      if (account && !$('.hd-upload')) {
+        const named = viewerName && viewerName !== '방문자';
+        account.innerHTML = `<a class="hd-upload" href="#"><img src="../assets/landing/sparkle.svg" width="10" height="10" alt="">바톤 올리기</a>
+          <span class="hd-account">${named
+            ? `<button type="button" class="hd-me"><b></b> 님</button><i aria-hidden="true"></i><button type="button" class="hd-my">내 바톤</button>`
+            : `<button type="button" class="hd-join">회원 가입</button><i aria-hidden="true"></i><button type="button" class="hd-login">로그인</button>`}</span>`;
+        if (named) account.querySelector('.hd-me b').textContent = viewerName;
+        const go = (sel, msg) => account.querySelector(sel)?.addEventListener('click', e => { e.preventDefault(); post({ type: 'morogaro:site-nav', ...msg }); });
+        go('.hd-upload', { to: '/upload' }); go('.hd-join', { action: 'profile' }); go('.hd-login', { action: 'profile' }); go('.hd-me', { action: 'profile' }); go('.hd-my', { to: '/my' });
       }
     }
     let view;
