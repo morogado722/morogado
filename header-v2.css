@@ -82,3 +82,6 @@ html body .site-header .hd-icon,html body .site-header .hd-avatar,html body[data
   html body .site-header .hd-menu{display:grid;place-items:center;flex:none;width:38px;height:38px;border:0;border-radius:50%;background:#ececec;color:#262626;padding:0}
   html body .site-header .hd-menu svg{width:20px;height:20px}
 }
+
+/* 10/27 예전 헤더의 메뉴 밑줄(::after)이 all:unset 때문에 헤더 폭만큼 길게 그어지던 것 — 새 헤더엔 밑줄 없음 */
+html body .site-header .hd-nav a::after,html body .site-header .hd-nav button::after{content:none!important;display:none!important}

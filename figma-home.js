@@ -103,7 +103,10 @@
     teardown();
     const { main, items, hero, nickname, filter, query, defaultFeed, all } = ctx;
     const chips = [['all', `${ICON.user}<span>For ${E(nickname)}</span>`], ['deadline', '기한 있는 바톤'], ['first', '첫 계승을 기다리는 바톤'], ['deep', '족보 깊은 바톤'], ['reborn', '다시 태어난 바톤']];
-    main.innerHTML = `<div class="fh-home">
+    /* 10/27 검색어나 필터 모달 조건이 있으면 'TOP5'는 숨기고 검색 결과만 보여 줘요 */
+    const searching = !!query || !!filter.adv;
+    const feedTitle = query ? `‘${E(query)}’ 검색 결과` : filter.adv ? '고른 조건으로 찾은 바톤' : `<u>${E(nickname)}님</u>이 마음에 들어하실 만한 바톤`;
+    main.innerHTML = `<div class="fh-home${searching ? ' is-searching' : ''}">
       <div class="fh-deco" aria-hidden="true"><svg viewBox="0 0 1440 1100" preserveAspectRatio="none"><image href="assets/director-reference/home-vector-0.svg" x="713" y="708" width="357" height="544"/><image href="assets/director-reference/home-vector-1.svg" x="0" y="637" width="262" height="189"/><image href="assets/director-reference/home-vector-2.svg" x="996" y="0" width="444" height="204"/><image href="assets/director-reference/home-vector-3.svg" x="1137" y="558" width="303" height="239"/><image href="assets/director-reference/home-vector-4.svg" x="0" y="48" width="609" height="273"/></svg></div>
       <section class="fh-hero" aria-labelledby="fh-hero-title">
         <h1 class="fh-h1" id="fh-hero-title">지난 주,<br>가장 많이 이어받은 바톤&nbsp; TOP5</h1>
@@ -112,7 +115,7 @@
       </section>
       <section class="fh-feed${defaultFeed ? '' : ' is-filtered'}" aria-labelledby="fh-feed-title">
         <div class="fh-feed-tab" aria-hidden="true"></div>
-        <h2 class="fh-h2" id="fh-feed-title">${query ? `‘${E(query)}’ 검색 결과` : `<u>${E(nickname)}님</u>이 마음에 들어하실 만한 바톤`}</h2>
+        <h2 class="fh-h2" id="fh-feed-title">${feedTitle}${searching ? ` <span class="fh-result-n">${items.length}개</span>` : ''}</h2>${searching ? '<button type="button" class="fh-result-reset" data-action="reset-search">검색 지우기</button>' : ''}
         <div class="fh-chips">${chips.map(([k, label]) => `<button class="fh-chip${k === 'all' ? ' fh-chip-for' : ''}" data-feed-filter="${k}" aria-pressed="${filter.kind === k}">${label}</button>`).join('')}<button class="fh-chip fh-chip-filter" data-action="filter" aria-label="분야·산출물·정렬 필터">${ICON.filter}</button></div>
         <div class="fh-grid" role="list"></div>
         <div class="fh-sentinel" aria-hidden="true"><span></span><span></span><span></span></div>

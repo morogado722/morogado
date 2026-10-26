@@ -638,3 +638,11 @@ main .fh-card.fh-open .fh-card-link:active .fh-card-open{transform:scale(.992);t
 .fh-hero-rank>span{margin-top:max(4px,calc(6*var(--u)));font:300 max(16px,calc(19*var(--u)))/1.45 var(--fh-font)}
 .fh-hero-rank em{font-style:normal;font-weight:700}
 .fh-hero-card.is-active .fh-hero-rank{opacity:1;transform:none;transition:opacity 320ms cubic-bezier(.2,.7,.2,1) 400ms,transform 380ms cubic-bezier(.2,.7,.2,1) 400ms}
+
+/* 10/27 검색 결과 화면: TOP5 숨기고 결과를 위로 */
+.fh-home.is-searching .fh-hero{display:none}
+.fh-home.is-searching .fh-feed{margin-top:calc(8*var(--u))}
+.fh-home.is-searching .fh-feed-tab{display:none}
+.fh-result-n{margin-left:calc(8*var(--u));font-weight:400;color:#8a8a8a}
+.fh-result-reset{position:absolute;right:calc(41*var(--u));top:calc(36*var(--u));z-index:2;border:0;background:none;padding:4px 2px;cursor:pointer;font:400 max(12px,calc(14*var(--u)))/1.4 var(--fh-font);color:#8a8a8a;text-decoration:underline;text-underline-offset:3px}
+.fh-result-reset:hover{color:#262626}

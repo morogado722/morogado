@@ -1,12 +1,12 @@
 /* 10/27 필터 모달 — 피그마 filter(3989:2489) 899 × 1310, 1440 기준(--hu).
  * 어두운 유리판(배경 흐림) · 위 검색 띠 64 · 왼쪽 메뉴 209 · 오른쪽 623 칸. 헤더 검색창 자리(오른쪽 여백 73, y23)에서 펼쳐져요. */
-.fm-root{--fu:clamp(.72px, calc(100vw / 1440), 1px);position:fixed;inset:0;z-index:200;font-family:var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff}
-.fm-backdrop{position:absolute;inset:0;background:rgba(20,20,20,.14);opacity:0;transition:opacity .22s ease}
+.fm-root{--fu:clamp(.6px, calc(100vw / 1700), .82px);position:fixed;inset:0;z-index:200;font-family:var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff}
+.fm-backdrop{position:absolute;inset:0;background:rgba(20,20,20,.28);opacity:0;transition:opacity .22s ease}
 .fm-root.is-in .fm-backdrop{opacity:1}
-.fm-panel{position:absolute;right:calc(73*var(--fu));top:calc(23*var(--fu));width:min(calc(899*var(--fu)),calc(100vw - 32px));max-height:calc(100vh - 23*var(--fu) - 24px);display:flex;flex-direction:column;border-radius:calc(20*var(--fu));overflow:hidden;
+.fm-panel{position:absolute;left:50%;top:50%;width:min(calc(899*var(--fu)),calc(100vw - 32px));height:min(calc(1000*var(--fu)),calc(100vh - 96px));display:flex;flex-direction:column;border-radius:calc(20*var(--fu));overflow:hidden;
   background:rgba(52,52,52,.8);-webkit-backdrop-filter:blur(40px) saturate(1.2);backdrop-filter:blur(40px) saturate(1.2);box-shadow:3px 4px 4px rgba(0,0,0,.25);
-  opacity:0;transform:translateY(-8px) scale(.985);transform-origin:top right;transition:opacity .22s ease,transform .32s cubic-bezier(.22,.9,.24,1)}
-.fm-root.is-in .fm-panel{opacity:1;transform:none}
+  opacity:0;transform:translate(-50%,calc(-50% + 12px)) scale(.98);transform-origin:center;transition:opacity .22s ease,transform .32s cubic-bezier(.22,.9,.24,1)}
+.fm-root.is-in .fm-panel{opacity:1;transform:translate(-50%,-50%)}
 @media (prefers-reduced-motion:reduce){.fm-panel,.fm-backdrop{transition:none}}
 html.fm-open{overflow:hidden}
 
@@ -102,7 +102,8 @@ html.fm-open{overflow:hidden}
 
 /* 휴대폰: 화면 꽉 차게, 메뉴는 위 가로줄 */
 @media (max-width:767px){
-  .fm-panel{left:8px;right:8px;top:8px;width:auto;max-height:calc(100vh - 16px);border-radius:16px}
+  .fm-panel{left:8px;right:8px;top:8px;width:auto;height:calc(100vh - 16px);border-radius:16px;transform:translateY(12px)}
+  .fm-root.is-in .fm-panel{transform:none}
   .fm-bar{padding:0 16px;border-radius:16px}
   .fm-body{grid-template-columns:1fr;padding:0 16px 20px}
   .fm-menu{flex-direction:row;overflow-x:auto;gap:6px;padding:10px 0;background:rgba(52,52,52,.92);z-index:1}

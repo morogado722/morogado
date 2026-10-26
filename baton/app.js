@@ -273,7 +273,7 @@
     animation.onfinish = () => { if (lightboxMotion === animation) { image.style.transformOrigin = ''; animation.cancel(); lightboxMotion = null; } };
     animation.oncancel = () => { if (lightboxMotion === animation) lightboxMotion = null; };
   }
-  $('.thumbnail').forEach(button => button.addEventListener('click', () => {
+  $$('.thumbnail').forEach(button => button.addEventListener('click', () => {
     const index = Number(button.dataset.image);
     selectGallery(index);
     showImages(gallery[index].title, [gallery[index]], '', button.querySelector('img') || button);
