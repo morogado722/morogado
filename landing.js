@@ -156,15 +156,18 @@
       setTimeout(() => cur.classList.remove('is-off'), 500);
       i = (i + 1) % chips.length;
     };
+    /* 아이콘 펼침·접힘과 러너 칩(1초마다)은 따로 같이 움직여요 */
+    const row = tools.closest('.ld-row1');
+    const wide = () => innerWidth >= 768;
+    let chipTimer = setInterval(nextChip, 1000);
     (async () => {
-      await wait(1200);
+      await wait(1000);
       while (alive) {
-        tools.classList.add('is-open'); await wait(3200); if (!alive) return;
-        tools.classList.remove('is-open'); await wait(1100); if (!alive) return;
-        for (let n = 0; n < 3 && alive; n++) { nextChip(); await wait(1000); }
-        await wait(300);
+        if (wide()) row.classList.add('is-open'); await wait(3300); if (!alive) return;
+        row.classList.remove('is-open'); await wait(2300);
       }
     })();
+    stop.push(() => clearInterval(chipTimer));
     stop.push(() => { alive = false; clearTimeout(timer); });
   }
 

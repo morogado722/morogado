@@ -24,10 +24,15 @@ body[data-route="landing"] .floating-dock{display:none!important}
 .ld-row2{top:calc(353.6*var(--u));height:calc(67*var(--u));gap:calc(13*var(--u));padding-right:calc(40*var(--u))}
 .ld-row3{top:calc(420.6*var(--u));height:calc(79*var(--u));gap:calc(8*var(--u));padding-left:calc(8*var(--u))}
 .ld-row3>span{padding-top:calc(12*var(--u));align-self:flex-start;line-height:calc(67*var(--u))}
-.ld-tools{position:relative;flex:none;width:calc(70*var(--u));height:calc(70*var(--u));transition:width .8s cubic-bezier(.65,0,.35,1)}
-.ld-tools.is-open{width:calc(392*var(--u))}
-.ld-tool{position:absolute;left:calc(-1*var(--u));top:calc(-1*var(--u));z-index:calc(10 - var(--i));width:calc(78*var(--u));height:calc(78*var(--u));max-width:none;object-fit:contain;transform:translateX(0);transition:transform .8s cubic-bezier(.65,0,.35,1)}
-.ld-tools.is-open .ld-tool{transform:translateX(calc(var(--i)*80*var(--u)))}
+/* 10/26 4차: 펼침은 transform만 움직여요(폭·글자 위치를 다시 계산하지 않아 버벅이지 않아요).
+   자리는 펼친 상태(392)로 잡아 두고, 접힌 동안엔 '멈춘'·'작업이'·아이콘을 가운데로 161씩 당겨 둬요. */
+.ld-row1{--ease-open:cubic-bezier(.76,0,.24,1);--fold:calc(161*var(--u))}
+.ld-row1>span:not(.ld-tools){transform:translateX(var(--fold));transition:transform .9s var(--ease-open);will-change:transform}
+.ld-row1>span:not(.ld-tools):last-child{transform:translateX(calc(-1*var(--fold)))}
+.ld-row1.is-open>span:not(.ld-tools),.ld-row1.is-open>span:not(.ld-tools):last-child{transform:none}
+.ld-tools{position:relative;flex:none;width:calc(392*var(--u));height:calc(70*var(--u))}
+.ld-tool{position:absolute;left:calc(-1*var(--u));top:calc(-1*var(--u));z-index:calc(10 - var(--i));width:calc(78*var(--u));height:calc(78*var(--u));max-width:none;object-fit:contain;transform:translate3d(var(--fold),0,0);transition:transform .9s var(--ease-open);will-change:transform;backface-visibility:hidden}
+.ld-row1.is-open .ld-tool{transform:translate3d(calc(var(--i)*80*var(--u)),0,0)}
 .ld-chipbox{position:relative;flex:none;width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;overflow:hidden}
 .ld-chipbox .ld-runner-chip{position:absolute;inset:0;transform:translateY(105%);opacity:0}
 .ld-chipbox .ld-runner-chip.is-on{transform:none;opacity:1;transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .18s ease}
@@ -135,6 +140,9 @@ body[data-route="landing"] .floating-dock{display:none!important}
 
 /* 좁은 창(768 미만): 시안을 그대로 줄이면 너무 작아서 한 줄로 쌓아요 */
 @media (max-width:767px){
+  .ld-row1{--fold:0px}
+  .ld-tools{width:calc(70*var(--u))}
+  .ld-row1.is-open .ld-tool{transform:none}
   .ld{--u:.62px;margin-top:0}
   .ld-canvas{width:auto;height:auto;padding:28px 16px 48px}
   .ld-road,.ld-deco{display:none}
