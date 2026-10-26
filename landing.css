@@ -30,43 +30,27 @@ body[data-route="landing"] .floating-dock{display:none!important}
 .ld-row1{--ease-open:cubic-bezier(.76,0,.24,1);--fold:calc(199.5*var(--u));--mid:calc(161*var(--u))}
 /* 10/26 6차: 펼칠 때 — 두 단어가 먼저 벌어지고(.55초) 아이콘이 왼쪽부터 하나씩 톡톡 나타나요(75ms 간격).
    접을 때 — 아이콘이 오른쪽부터 하나씩 사라진 뒤 두 단어가 모여요. */
-.ld-row1>span:not(.ld-tools){transform:translateX(var(--fold));transition:transform .55s var(--ease-open) .42s;will-change:transform}
+.ld-row1>span:not(.ld-tools){transform:translateX(var(--fold));transition:transform .5s var(--ease-open) .34s;will-change:transform}
 .ld-row1>span:not(.ld-tools):last-child{transform:translateX(calc(-1*var(--fold)))}
 .ld-row1.is-open>span:not(.ld-tools),.ld-row1.is-open>span:not(.ld-tools):last-child{transform:none;transition-delay:0s}
 .ld-tools{position:relative;flex:none;width:calc(392*var(--u));height:calc(70*var(--u))}
-.ld-tool{position:absolute;left:calc(-1*var(--u));top:calc(-1*var(--u));width:calc(78*var(--u));height:calc(78*var(--u));max-width:none;object-fit:contain;opacity:0;transform:translate3d(calc(var(--i)*80*var(--u)),0,0) scale(.2);transition:transform .2s cubic-bezier(.5,0,.75,0) calc((4 - var(--i))*65ms),opacity .16s ease calc((4 - var(--i))*65ms + 40ms);will-change:transform,opacity;backface-visibility:hidden}
-.ld-row1.is-open .ld-tool{opacity:1;transform:translate3d(calc(var(--i)*80*var(--u)),0,0);transition:transform .42s cubic-bezier(.34,1.6,.64,1) calc(.38s + var(--i)*75ms),opacity .14s ease calc(.38s + var(--i)*75ms)}
+.ld-tool{position:absolute;left:calc(-1*var(--u));top:calc(-1*var(--u));width:calc(78*var(--u));height:calc(78*var(--u));max-width:none;object-fit:contain;opacity:0;transform:translate3d(calc(var(--i)*80*var(--u)),0,0) scale(.2);transition:transform .2s cubic-bezier(.5,0,.75,0) calc((4 - var(--i))*62.5ms),opacity .16s ease calc((4 - var(--i))*62.5ms + 40ms);will-change:transform,opacity;backface-visibility:hidden}
+.ld-row1.is-open .ld-tool{opacity:1;transform:translate3d(calc(var(--i)*80*var(--u)),0,0);transition:transform .42s cubic-bezier(.34,1.6,.64,1) calc(.25s + var(--i)*62.5ms),opacity .14s ease calc(.25s + var(--i)*62.5ms)}
 .ld-chipbox{position:relative;flex:none;width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;overflow:hidden}
 .ld-chipbox .ld-runner-chip{position:absolute;inset:0;transform:translateY(105%);opacity:0}
-.ld-chipbox .ld-runner-chip.is-on{transform:none;opacity:1;transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .18s ease}
-.ld-chipbox .ld-runner-chip.is-off{transform:translateY(-105%);opacity:0;transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .22s ease}
+.ld-chipbox .ld-runner-chip.is-on{transform:none;opacity:1;transition:transform .42s cubic-bezier(.34,1.45,.64,1),opacity .16s ease}
+.ld-chipbox .ld-runner-chip.is-off{transform:translateY(-105%);opacity:0;transition:transform .28s cubic-bezier(.5,0,.75,0),opacity .22s ease .06s}
 .ld-runner-chip{display:inline-flex;align-items:center;justify-content:center;gap:calc(15*var(--u));width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;background:#fff;font:400 calc(32*var(--u))/1.4 var(--ldf);color:rgba(0,0,0,.5)}
 .ld-runner-chip img{width:calc(40*var(--u));height:calc(40*var(--u))}
 .ld-runner{width:calc(109.5*var(--u));height:calc(79*var(--u))}
-/* 10/26 6차: 바톤 러너가 제자리에서 달려요 — 통통 뛰는 달리기 박자 + 뒤로 흘러가는 속도선 + 발밑 먼지.
+/* (6차 제자리 달리기는 7차에서 차분하게 바꿈) 바톤 러너가 제자리에서 달려요 — 통통 뛰는 달리기 박자 + 뒤로 흘러가는 속도선 + 발밑 먼지.
    커서를 올리면 전력 질주(박자·속도선이 빨라지고 몸이 앞으로 기울어요). */
-.ld-runner-wrap{display:block;flex:none;position:relative;z-index:3;--beat:.44s}
-.ld-runner-wrap:hover{--beat:.26s}
+.ld-runner-wrap{display:block;flex:none;position:relative;z-index:3}
 .ld-runner-wrap .ld-runner{position:relative;z-index:1;transform-origin:50% 90%}
-.ld-speed{position:absolute;left:calc(-6*var(--u));height:calc(3*var(--u));border-radius:9px;background:linear-gradient(90deg,rgba(0,249,152,0),rgba(0,201,127,.55));pointer-events:none;opacity:0}
-.ld-speed:nth-of-type(1){top:calc(24*var(--u));width:calc(30*var(--u))}
-.ld-speed:nth-of-type(2){top:calc(40*var(--u));width:calc(34*var(--u));left:calc(-10*var(--u))}
-.ld-speed:nth-of-type(3){top:calc(56*var(--u));width:calc(24*var(--u))}
-.ld-dust{position:absolute;left:calc(6*var(--u));bottom:calc(-2*var(--u));width:calc(12*var(--u));height:calc(12*var(--u));border-radius:50%;background:rgba(38,38,38,.12);pointer-events:none;opacity:0}
-.ld-dust+.ld-dust{left:calc(20*var(--u));width:calc(8*var(--u));height:calc(8*var(--u))}
 @media (prefers-reduced-motion:no-preference){
-  .ld-runner-wrap .ld-runner{animation:ld-stride var(--beat) cubic-bezier(.45,0,.55,1) infinite}
-  .ld-runner-wrap:hover .ld-runner{animation-name:ld-sprint}
-  .ld-speed{animation:ld-whoosh calc(var(--beat)*2.2) linear infinite}
-  .ld-speed:nth-of-type(2){animation-delay:calc(var(--beat)*-.8)}
-  .ld-speed:nth-of-type(3){animation-delay:calc(var(--beat)*-1.5)}
-  .ld-dust{animation:ld-puff calc(var(--beat)*2) ease-out infinite}
-  .ld-dust+.ld-dust{animation-delay:calc(var(--beat)*-1)}
+  /* 10/26 7차: 러너는 박자(2박 = 1초)에 맞춰 살짝만 들썩여요. 칩이 바뀌는 박자와 같아요 */
+  .ld-row3.is-beat .ld-runner{animation:ld-jog 1s cubic-bezier(.45,0,.55,1) infinite}
 }
-@keyframes ld-stride{0%,100%{transform:translateY(0) rotate(0) scale(1,.97)}45%{transform:translateY(calc(-7*var(--u))) rotate(-3deg) scale(.99,1.02)}}
-@keyframes ld-sprint{0%,100%{transform:translateY(0) rotate(4deg) scale(1,.96)}45%{transform:translateY(calc(-9*var(--u))) rotate(1deg) scale(.99,1.03)}}
-@keyframes ld-whoosh{0%{transform:translateX(calc(26*var(--u))) scaleX(.4);opacity:0}30%{opacity:1}100%{transform:translateX(calc(-8*var(--u))) scaleX(1);opacity:0}}
-@keyframes ld-puff{0%{transform:translate(0,0) scale(.4);opacity:.9}100%{transform:translate(calc(-22*var(--u)),calc(-10*var(--u))) scale(1.4);opacity:0}}
 
 .ld-sub{position:absolute;left:0;right:0;margin:0;display:flex;align-items:center;justify-content:center;gap:calc(4*var(--u));font:400 calc(20*var(--u))/1.35 var(--ldf);color:#8a8a8a;white-space:nowrap}
 .ld-sub1{top:calc(532.6*var(--u))}
@@ -189,3 +173,5 @@ body[data-route="landing"] .floating-dock{display:none!important}
   .ld-glow{margin:24px auto 0;left:auto}
 }
 .ld-row3>.ld-runner-wrap{padding:0;align-self:center;line-height:0}
+
+@keyframes ld-jog{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(calc(-4*var(--u))) rotate(-2deg)}}

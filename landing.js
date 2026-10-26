@@ -65,7 +65,7 @@
       <h1 class="ld-hero">
         <span class="ld-row ld-row1"><span>멈춘</span><span class="ld-tools" role="img" aria-label="일러스트레이터·블렌더·피그마·라이노·포토샵 작업">${TOOLS.map((t, i) => `<img class="ld-tool" style="--i:${i};--d:${i * 40}ms" src="${A}${t}" width="78" height="78" alt="">`).join('')}</span><span>작업이</span></span>
         <span class="ld-row ld-row2"><span class="ld-chipbox" aria-label="새싹 2019 같은 다음 러너">${RUNNERS.map(([a, n], i) => `<span class="ld-runner-chip${i ? '' : ' is-on'}"${i ? ' aria-hidden="true"' : ''}><img src="${A}${a}" width="40" height="40" alt=""><span class="ld-chip-name">${n}</span></span>`).join('')}</span><span>다음 디자이너와</span></span>
-        <span class="ld-row ld-row3"><span>다시 출발하는 곳</span><span class="ld-runner-wrap"><i class="ld-speed"></i><i class="ld-speed"></i><i class="ld-speed"></i><i class="ld-dust"></i><i class="ld-dust"></i><img class="ld-runner" src="${A}runner.png" width="110" height="79" alt=""></span></span>
+        <span class="ld-row ld-row3"><span>다시 출발하는 곳</span><span class="ld-runner-wrap"><img class="ld-runner" src="${A}runner.png" width="110" height="79" alt=""></span></span>
       </h1>
       <p class="ld-sub ld-sub1">디자인 전공자 2명 중 1명은 멈춘 작업을 갖고 있어요.</p>
       <p class="ld-sub ld-sub2"><img src="${A}logo.svg" width="140" height="19" alt="모로가도"><span>에서 멈춘 작업을 <b>바톤처럼 넘기고</b>, <b>이어받아요.</b></span></p>
@@ -156,18 +156,21 @@
       setTimeout(() => cur.classList.remove('is-off'), 500);
       i = (i + 1) % chips.length;
     };
-    /* 아이콘 펼침·접힘과 러너 칩(1초마다)은 따로 같이 움직여요 */
+    /* 10/26 7차: 하나의 박자(1박 = 0.5초, 120BPM)에 모든 움직임을 맞춰요.
+       칩은 2박마다, 아이콘은 16박 주기로 3박째에 펼치고 11박째에 접어요(펼친 채 4초 · 접힌 채 4초). 러너도 2박마다 들썩여요. */
     const row = tools.closest('.ld-row1');
     const wide = () => innerWidth >= 768;
-    let chipTimer = setInterval(nextChip, 1000);
-    (async () => {
-      await wait(1000);
-      while (alive) {
-        if (wide()) row.classList.add('is-open'); await wait(3300); if (!alive) return;
-        row.classList.remove('is-open'); await wait(2300);
-      }
-    })();
-    stop.push(() => clearInterval(chipTimer));
+    const BEAT = 500; let n = 0, t0 = 0;
+    const beat = () => {
+      if (!alive) return;
+      const k = n % 16;
+      if (n > 0 && n % 2 === 0) nextChip();
+      if (k === 2 && wide()) row.classList.add('is-open');
+      if (k === 10) row.classList.remove('is-open');
+      n++;
+      timer = setTimeout(beat, Math.max(0, t0 + n * BEAT - performance.now()));
+    };
+    timer = setTimeout(() => { t0 = performance.now(); root.querySelector('.ld-row3')?.classList.add('is-beat'); beat(); }, 800);
     stop.push(() => { alive = false; clearTimeout(timer); });
   }
 
