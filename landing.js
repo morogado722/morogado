@@ -63,9 +63,9 @@
       <img class="ld-deco ld-deco-mint" src="${A}path-mint.png" alt="" aria-hidden="true">
 
       <h1 class="ld-hero">
-        <span class="ld-row ld-row1"><span>멈춘</span><span class="ld-tools" role="img" aria-label="일러스트레이터·블렌더·피그마·라이노·포토샵 작업">${TOOLS.map((t, i) => `<img class="ld-tool" style="--i:${i}" src="${A}${t}" width="78" height="78" alt="">`).join('')}</span><span>작업이</span></span>
+        <span class="ld-row ld-row1"><span>멈춘</span><span class="ld-tools" role="img" aria-label="일러스트레이터·블렌더·피그마·라이노·포토샵 작업">${TOOLS.map((t, i) => `<img class="ld-tool" style="--i:${i};--d:${i * 40}ms" src="${A}${t}" width="78" height="78" alt="">`).join('')}</span><span>작업이</span></span>
         <span class="ld-row ld-row2"><span class="ld-chipbox" aria-label="새싹 2019 같은 다음 러너">${RUNNERS.map(([a, n], i) => `<span class="ld-runner-chip${i ? '' : ' is-on'}"${i ? ' aria-hidden="true"' : ''}><img src="${A}${a}" width="40" height="40" alt=""><span class="ld-chip-name">${n}</span></span>`).join('')}</span><span>다음 디자이너와</span></span>
-        <span class="ld-row ld-row3"><span>다시 출발하는 곳</span><img class="ld-runner" src="${A}runner.png" width="110" height="79" alt=""></span>
+        <span class="ld-row ld-row3"><span>다시 출발하는 곳</span><span class="ld-runner-wrap is-waiting"><img class="ld-runner" src="${A}runner.png" width="110" height="79" alt=""></span></span>
       </h1>
       <p class="ld-sub ld-sub1">디자인 전공자 2명 중 1명은 멈춘 작업을 갖고 있어요.</p>
       <p class="ld-sub ld-sub2"><img src="${A}logo.svg" width="140" height="19" alt="모로가도"><span>에서 멈춘 작업을 <b>바톤처럼 넘기고</b>, <b>이어받아요.</b></span></p>
@@ -130,12 +130,12 @@
     box.addEventListener('click', go);
     if (!reduce.matches) (async () => {
       while (alive) {
-        await wait(2600); if (!alive) return;
+        await wait(1500); if (!alive) return;
         const cur = out.textContent;
-        for (let n = cur.length; n >= 0 && alive; n--) { out.textContent = cur.slice(0, n); await wait(34); }
+        for (let n = cur.length; n >= 0 && alive; n--) { out.textContent = cur.slice(0, n); await wait(24); }
         i = (i + 1) % PHRASES.length; const next = PHRASES[i].text;
-        await wait(260);
-        for (let n = 1; n <= next.length && alive; n++) { out.textContent = next.slice(0, n); await wait(80); }
+        await wait(200);
+        for (let n = 1; n <= next.length && alive; n++) { out.textContent = next.slice(0, n); await wait(58); }
       }
     })();
     stop.push(() => { alive = false; clearTimeout(timer); });
@@ -169,6 +169,21 @@
     })();
     stop.push(() => clearInterval(chipTimer));
     stop.push(() => { alive = false; clearTimeout(timer); });
+  }
+
+  /* 바톤 러너 등장: 화면 왼쪽 밖에서 달려와 멈춰요 */
+  function runner(root) {
+    const w = root.querySelector('.ld-runner-wrap'); if (!w) return;
+    const done = () => { w.classList.remove('is-waiting', 'is-entering'); };
+    if (reduce.matches || innerWidth < 768) { done(); return; }
+    const t = setTimeout(() => {
+      const r = w.getBoundingClientRect();
+      w.style.setProperty('--from', `${-(r.right + 40)}px`);
+      w.classList.remove('is-waiting'); w.classList.add('is-entering');
+    }, 500);
+    w.addEventListener('animationend', e => { if (e.animationName === 'ld-enter') done(); else w.classList.remove('is-hop'); });
+    w.addEventListener('pointerenter', () => { if (!w.classList.contains('is-entering') && !w.classList.contains('is-hop')) w.classList.add('is-hop'); });
+    stop.push(() => clearTimeout(t));
   }
 
   /* 이어받기 줄: 천천히 왼쪽으로 흐르고, 카드에 올리면 멈춰요 */
@@ -220,7 +235,7 @@
     teardown();
     main.innerHTML = markup(items, bookmarks);
     const root = main.querySelector('.ld'), M = window.Morogado;
-    typing(root, M); cycle(root); rail(root); drop(root, M); reveal(root);
+    typing(root, M); cycle(root); runner(root); rail(root); drop(root, M); reveal(root);
   }
 
   window.MorogadoLanding = { render, teardown };

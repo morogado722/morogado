@@ -26,13 +26,14 @@ body[data-route="landing"] .floating-dock{display:none!important}
 .ld-row3>span{padding-top:calc(12*var(--u));align-self:flex-start;line-height:calc(67*var(--u))}
 /* 10/26 4차: 펼침은 transform만 움직여요(폭·글자 위치를 다시 계산하지 않아 버벅이지 않아요).
    자리는 펼친 상태(392)로 잡아 두고, 접힌 동안엔 '멈춘'·'작업이'·아이콘을 가운데로 161씩 당겨 둬요. */
-.ld-row1{--ease-open:cubic-bezier(.76,0,.24,1);--fold:calc(161*var(--u))}
+/* 10/26 5차: 접히면 아이콘 없이 '멈춘 작업이'만(두 단어 사이 한 칸 띄움 13). 펼치면 가운데서 아이콘이 퍼져 나와요 */
+.ld-row1{--ease-open:cubic-bezier(.76,0,.24,1);--fold:calc(199.5*var(--u));--mid:calc(161*var(--u))}
 .ld-row1>span:not(.ld-tools){transform:translateX(var(--fold));transition:transform .9s var(--ease-open);will-change:transform}
 .ld-row1>span:not(.ld-tools):last-child{transform:translateX(calc(-1*var(--fold)))}
 .ld-row1.is-open>span:not(.ld-tools),.ld-row1.is-open>span:not(.ld-tools):last-child{transform:none}
 .ld-tools{position:relative;flex:none;width:calc(392*var(--u));height:calc(70*var(--u))}
-.ld-tool{position:absolute;left:calc(-1*var(--u));top:calc(-1*var(--u));z-index:calc(10 - var(--i));width:calc(78*var(--u));height:calc(78*var(--u));max-width:none;object-fit:contain;transform:translate3d(var(--fold),0,0);transition:transform .9s var(--ease-open);will-change:transform;backface-visibility:hidden}
-.ld-row1.is-open .ld-tool{transform:translate3d(calc(var(--i)*80*var(--u)),0,0)}
+.ld-tool{position:absolute;left:calc(-1*var(--u));top:calc(-1*var(--u));z-index:calc(10 - var(--i));width:calc(78*var(--u));height:calc(78*var(--u));max-width:none;object-fit:contain;opacity:0;transform:translate3d(var(--mid),0,0) scale(.4);transition:transform .7s var(--ease-open),opacity .25s ease;will-change:transform;backface-visibility:hidden}
+.ld-row1.is-open .ld-tool{opacity:1;transform:translate3d(calc(var(--i)*80*var(--u)),0,0);transition:transform .9s var(--ease-open) calc(.12s + var(--d,0s)),opacity .3s ease calc(.12s + var(--d,0s))}
 .ld-chipbox{position:relative;flex:none;width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;overflow:hidden}
 .ld-chipbox .ld-runner-chip{position:absolute;inset:0;transform:translateY(105%);opacity:0}
 .ld-chipbox .ld-runner-chip.is-on{transform:none;opacity:1;transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .18s ease}
@@ -40,6 +41,13 @@ body[data-route="landing"] .floating-dock{display:none!important}
 .ld-runner-chip{display:inline-flex;align-items:center;justify-content:center;gap:calc(15*var(--u));width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;background:#fff;font:400 calc(32*var(--u))/1.4 var(--ldf);color:rgba(0,0,0,.5)}
 .ld-runner-chip img{width:calc(40*var(--u));height:calc(40*var(--u))}
 .ld-runner{width:calc(109.5*var(--u));height:calc(79*var(--u))}
+/* 10/26 5차: 바톤 러너가 화면 왼쪽 밖에서 달려 들어와 제자리에 멈춰요(살짝 미끄러지며). 커서를 올리면 폴짝. */
+.ld-runner-wrap{display:block;flex:none;position:relative;z-index:3;cursor:default}
+.ld-runner-wrap.is-waiting{visibility:hidden}
+.ld-runner-wrap.is-entering{animation:ld-enter 1.9s cubic-bezier(.25,.7,.35,1) both}
+.ld-runner-wrap.is-hop{animation:ld-hop .55s cubic-bezier(.3,.7,.4,1)}
+@keyframes ld-enter{0%{transform:translateX(var(--from,-1200px))}74%{transform:translateX(calc(14*var(--u))) skewX(0)}84%{transform:translateX(calc(-4*var(--u))) skewX(-8deg)}93%{transform:translateX(calc(2*var(--u))) skewX(2deg)}100%{transform:none}}
+@keyframes ld-hop{0%,100%{transform:none}35%{transform:translateY(calc(-16*var(--u))) rotate(-6deg)}70%{transform:translateY(calc(2*var(--u))) scaleY(.94)}}
 @media (prefers-reduced-motion:no-preference){
   .ld-runner{animation:ld-run .9s ease-in-out infinite alternate}
 }
@@ -141,8 +149,7 @@ body[data-route="landing"] .floating-dock{display:none!important}
 /* 좁은 창(768 미만): 시안을 그대로 줄이면 너무 작아서 한 줄로 쌓아요 */
 @media (max-width:767px){
   .ld-row1{--fold:0px}
-  .ld-tools{width:calc(70*var(--u))}
-  .ld-row1.is-open .ld-tool{transform:none}
+  .ld-tools{display:none}
   .ld{--u:.62px;margin-top:0}
   .ld-canvas{width:auto;height:auto;padding:28px 16px 48px}
   .ld-road,.ld-deco{display:none}
