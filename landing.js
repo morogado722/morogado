@@ -63,7 +63,7 @@
       <img class="ld-deco ld-deco-mint" src="${A}path-mint.png" alt="" aria-hidden="true">
 
       <h1 class="ld-hero">
-        <span class="ld-row ld-row1"><span>멈춘</span><span class="ld-tools" role="img" aria-label="일러스트레이터·블렌더·피그마·라이노·포토샵 작업">${TOOLS.map((t, i) => `<img class="ld-tool${i ? '' : ' is-on'}" src="${A}${t}" width="78" height="78" alt="">`).join('')}</span><span>작업이</span></span>
+        <span class="ld-row ld-row1"><span>멈춘</span><span class="ld-tools" role="img" aria-label="일러스트레이터·블렌더·피그마·라이노·포토샵 작업">${TOOLS.map((t, i) => `<img class="ld-tool" style="--i:${i}" src="${A}${t}" width="78" height="78" alt="">`).join('')}</span><span>작업이</span></span>
         <span class="ld-row ld-row2"><span class="ld-chipbox" aria-label="새싹 2019 같은 다음 러너">${RUNNERS.map(([a, n], i) => `<span class="ld-runner-chip${i ? '' : ' is-on'}"${i ? ' aria-hidden="true"' : ''}><img src="${A}${a}" width="40" height="40" alt=""><span class="ld-chip-name">${n}</span></span>`).join('')}</span><span>다음 디자이너와</span></span>
         <span class="ld-row ld-row3"><span>다시 출발하는 곳</span><img class="ld-runner" src="${A}runner.png" width="110" height="79" alt=""></span>
       </h1>
@@ -141,25 +141,31 @@
     stop.push(() => { alive = false; clearTimeout(timer); });
   }
 
-  /* 툴 아이콘은 톡 튀어나오며, 러너 칩은 아래에서 위로 밀려 올라오며 바뀌어요. 칩은 툴보다 살짝 늦게 */
+  /* 10/26 3차(피그마 4023:11249): 'Ai' 아이콘이 옆으로 쫙 펼쳐져 툴 다섯 개가 한 줄로 섰다가 다시 접혀요.
+     정신없지 않게 둘이 번갈아 움직여요 — 러너 칩이 1초마다 세 번 바뀌는 동안 아이콘은 가만히, 아이콘이 펼쳐져 있는 동안 칩은 가만히. */
   function cycle(root) {
     if (reduce.matches) return;
-    const timers = [];
-    const rotate = (sel, ms, delay) => {
-      const items = [...root.querySelectorAll(sel)]; if (items.length < 2) return;
-      let i = 0;
-      const tick = () => {
-        const cur = items[i], next = items[(i + 1) % items.length];
-        cur.classList.remove('is-on'); cur.classList.add('is-off'); cur.setAttribute('aria-hidden', 'true');
-        next.classList.remove('is-off'); void next.offsetWidth; next.classList.add('is-on'); next.removeAttribute('aria-hidden');
-        setTimeout(() => cur.classList.remove('is-off'), 700);
-        i = (i + 1) % items.length;
-      };
-      timers.push(setTimeout(() => { tick(); timers.push(setInterval(tick, ms)); }, delay));
+    const tools = root.querySelector('.ld-tools');
+    const chips = [...root.querySelectorAll('.ld-runner-chip')];
+    let i = 0, timer = 0, alive = true;
+    const wait = ms => new Promise(r => { timer = setTimeout(r, ms); });
+    const nextChip = () => {
+      const cur = chips[i], next = chips[(i + 1) % chips.length];
+      cur.classList.remove('is-on'); cur.classList.add('is-off'); cur.setAttribute('aria-hidden', 'true');
+      next.classList.remove('is-off'); void next.offsetWidth; next.classList.add('is-on'); next.removeAttribute('aria-hidden');
+      setTimeout(() => cur.classList.remove('is-off'), 500);
+      i = (i + 1) % chips.length;
     };
-    rotate('.ld-tool', 2400, 1800);
-    rotate('.ld-runner-chip', 1000, 1000);
-    stop.push(() => timers.forEach(t => { clearTimeout(t); clearInterval(t); }));
+    (async () => {
+      await wait(1200);
+      while (alive) {
+        tools.classList.add('is-open'); await wait(3200); if (!alive) return;
+        tools.classList.remove('is-open'); await wait(1100); if (!alive) return;
+        for (let n = 0; n < 3 && alive; n++) { nextChip(); await wait(1000); }
+        await wait(300);
+      }
+    })();
+    stop.push(() => { alive = false; clearTimeout(timer); });
   }
 
   /* 이어받기 줄: 천천히 왼쪽으로 흐르고, 카드에 올리면 멈춰요 */
