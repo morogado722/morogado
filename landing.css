@@ -24,15 +24,20 @@ body[data-route="landing"] .floating-dock{display:none!important}
 .ld-row2{top:calc(353.6*var(--u));height:calc(67*var(--u));gap:calc(13*var(--u));padding-right:calc(40*var(--u))}
 .ld-row3{top:calc(420.6*var(--u));height:calc(79*var(--u));gap:calc(8*var(--u));padding-left:calc(8*var(--u))}
 .ld-row3>span{padding-top:calc(12*var(--u));align-self:flex-start;line-height:calc(67*var(--u))}
-.ld-ai{width:calc(78*var(--u));height:calc(78*var(--u));margin:calc(-1*var(--u)) calc(-7*var(--u)) calc(-7*var(--u)) calc(-1*var(--u));transform-origin:40% 40%}
+.ld-tools{position:relative;flex:none;width:calc(70*var(--u));height:calc(70*var(--u))}
+.ld-tool{position:absolute;left:calc(-1*var(--u));top:calc(-1*var(--u));width:calc(78*var(--u));height:calc(78*var(--u));max-width:none;object-fit:contain;opacity:0;transform:scale(.4) rotate(-14deg);transform-origin:45% 45%}
+.ld-tool.is-on{opacity:1;transform:none;transition:opacity .25s ease,transform .62s cubic-bezier(.34,1.56,.64,1)}
+.ld-tool.is-off{opacity:0;transform:scale(.55) rotate(10deg);transition:opacity .28s ease,transform .32s cubic-bezier(.5,0,.75,0)}
+.ld-chipbox{position:relative;flex:none;width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;overflow:hidden}
+.ld-chipbox .ld-runner-chip{position:absolute;inset:0;transform:translateY(105%);opacity:0}
+.ld-chipbox .ld-runner-chip.is-on{transform:none;opacity:1;transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .4s ease}
+.ld-chipbox .ld-runner-chip.is-off{transform:translateY(-105%);opacity:0;transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .5s ease}
 .ld-runner-chip{display:inline-flex;align-items:center;justify-content:center;gap:calc(15*var(--u));width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;background:#fff;font:400 calc(32*var(--u))/1.4 var(--ldf);color:rgba(0,0,0,.5)}
 .ld-runner-chip img{width:calc(40*var(--u));height:calc(40*var(--u))}
 .ld-runner{width:calc(109.5*var(--u));height:calc(79*var(--u))}
 @media (prefers-reduced-motion:no-preference){
-  .ld-ai{animation:ld-tilt 4.2s ease-in-out infinite}
   .ld-runner{animation:ld-run .9s ease-in-out infinite alternate}
 }
-@keyframes ld-tilt{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg) translateY(calc(-3*var(--u)))}}
 @keyframes ld-run{from{transform:translateY(0) rotate(0)}to{transform:translateY(calc(-5*var(--u))) rotate(-2deg)}}
 
 .ld-sub{position:absolute;left:0;right:0;margin:0;display:flex;align-items:center;justify-content:center;gap:calc(4*var(--u));font:400 calc(20*var(--u))/1.35 var(--ldf);color:#8a8a8a;white-space:nowrap}

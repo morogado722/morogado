@@ -17,6 +17,9 @@
   ];
   /* 이어받기 카드 줄에 흐르는 바톤(피그마 시안의 오토바이·작업실·식기 순서부터) */
   const CAROUSEL = ['example-11', 'example-15', 'example-18', 'calendar', 'example-17', 'example-3', 'example-7', 'example-8', 'example-19', 'example-5'];
+  /* 10/26: 'Ai' 자리는 툴 아이콘이 차례로 바뀌고(피그마 4003:10053~10057), 러너 칩은 위로 밀려 올라오며 바뀌어요(4003:10029~10045) */
+  const TOOLS = ['ai.png', 'tool-blender.png', 'tool-figma.png', 'tool-rhino.png', 'tool-ps.png'];
+  const RUNNERS = [['avatar-seed.svg', '새싹 2019'], ['avatar-cyan.svg', '씨앗 4431'], ['avatar-yellow.svg', '줄기 5493'], ['avatar-orange.svg', '이파리 6943']];
   const STAGE = '다음 단계를 이어서 완성해줄 러너를 기다려요.';
 
   const check = (strong, light, boldFirst = true) => `<li><img src="${A}check.svg" width="28" height="28" alt="">
@@ -60,8 +63,8 @@
       <img class="ld-deco ld-deco-mint" src="${A}path-mint.png" alt="" aria-hidden="true">
 
       <h1 class="ld-hero">
-        <span class="ld-row ld-row1"><span>멈춘</span><img class="ld-ai" src="${A}ai.png" width="78" height="78" alt=""><span>작업이</span></span>
-        <span class="ld-row ld-row2"><span class="ld-runner-chip"><img src="${A}avatar-seed.svg" width="40" height="40" alt=""><span class="ld-chip-name">새싹 2019</span></span><span>다음 디자이너와</span></span>
+        <span class="ld-row ld-row1"><span>멈춘</span><span class="ld-tools" role="img" aria-label="일러스트레이터·블렌더·피그마·라이노·포토샵 작업">${TOOLS.map((t, i) => `<img class="ld-tool${i ? '' : ' is-on'}" src="${A}${t}" width="78" height="78" alt="">`).join('')}</span><span>작업이</span></span>
+        <span class="ld-row ld-row2"><span class="ld-chipbox" aria-label="새싹 2019 같은 다음 러너">${RUNNERS.map(([a, n], i) => `<span class="ld-runner-chip${i ? '' : ' is-on'}"${i ? ' aria-hidden="true"' : ''}><img src="${A}${a}" width="40" height="40" alt=""><span class="ld-chip-name">${n}</span></span>`).join('')}</span><span>다음 디자이너와</span></span>
         <span class="ld-row ld-row3"><span>다시 출발하는 곳</span><img class="ld-runner" src="${A}runner.png" width="110" height="79" alt=""></span>
       </h1>
       <p class="ld-sub ld-sub1">디자인 전공자 2명 중 1명은 멈춘 작업을 갖고 있어요.</p>
@@ -138,6 +141,27 @@
     stop.push(() => { alive = false; clearTimeout(timer); });
   }
 
+  /* 툴 아이콘은 톡 튀어나오며, 러너 칩은 아래에서 위로 밀려 올라오며 바뀌어요. 칩은 툴보다 살짝 늦게 */
+  function cycle(root) {
+    if (reduce.matches) return;
+    const timers = [];
+    const rotate = (sel, ms, delay) => {
+      const items = [...root.querySelectorAll(sel)]; if (items.length < 2) return;
+      let i = 0;
+      const tick = () => {
+        const cur = items[i], next = items[(i + 1) % items.length];
+        cur.classList.remove('is-on'); cur.classList.add('is-off'); cur.setAttribute('aria-hidden', 'true');
+        next.classList.remove('is-off'); void next.offsetWidth; next.classList.add('is-on'); next.removeAttribute('aria-hidden');
+        setTimeout(() => cur.classList.remove('is-off'), 700);
+        i = (i + 1) % items.length;
+      };
+      timers.push(setTimeout(() => { tick(); timers.push(setInterval(tick, ms)); }, delay));
+    };
+    rotate('.ld-tool', 2400, 1800);
+    rotate('.ld-runner-chip', 2400, 2400);
+    stop.push(() => timers.forEach(t => { clearTimeout(t); clearInterval(t); }));
+  }
+
   /* 이어받기 줄: 천천히 왼쪽으로 흐르고, 카드에 올리면 멈춰요 */
   function rail(root) {
     const railEl = root.querySelector('.ld-rail'), track = root.querySelector('.ld-track');
@@ -187,7 +211,7 @@
     teardown();
     main.innerHTML = markup(items, bookmarks);
     const root = main.querySelector('.ld'), M = window.Morogado;
-    typing(root, M); rail(root); drop(root, M); reveal(root);
+    typing(root, M); cycle(root); rail(root); drop(root, M); reveal(root);
   }
 
   window.MorogadoLanding = { render, teardown };
