@@ -30,8 +30,8 @@ body[data-route="landing"] .floating-dock{display:none!important}
 .ld-tool.is-off{opacity:0;transform:scale(.55) rotate(10deg);transition:opacity .28s ease,transform .32s cubic-bezier(.5,0,.75,0)}
 .ld-chipbox{position:relative;flex:none;width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;overflow:hidden}
 .ld-chipbox .ld-runner-chip{position:absolute;inset:0;transform:translateY(105%);opacity:0}
-.ld-chipbox .ld-runner-chip.is-on{transform:none;opacity:1;transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .4s ease}
-.ld-chipbox .ld-runner-chip.is-off{transform:translateY(-105%);opacity:0;transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .5s ease}
+.ld-chipbox .ld-runner-chip.is-on{transform:none;opacity:1;transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .25s ease}
+.ld-chipbox .ld-runner-chip.is-off{transform:translateY(-105%);opacity:0;transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .3s ease}
 .ld-runner-chip{display:inline-flex;align-items:center;justify-content:center;gap:calc(15*var(--u));width:calc(270*var(--u));height:calc(67*var(--u));border-radius:99px;background:#fff;font:400 calc(32*var(--u))/1.4 var(--ldf);color:rgba(0,0,0,.5)}
 .ld-runner-chip img{width:calc(40*var(--u));height:calc(40*var(--u))}
 .ld-runner{width:calc(109.5*var(--u));height:calc(79*var(--u))}
