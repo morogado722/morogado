@@ -22,7 +22,7 @@
     'feature-0': { tools: ['.blend', '.psd'], title: '스마트 안경 DreamWalk', desc: '걸으면서 쓰는 안경형 기기를 렌더링까지 해 둔 상태예요. 착용 장면과 패키지는 아직 비어 있어서, 생활 속 장면을 이어서 그려 줄 사람을 찾아요.', author: 'jihoon kang.', followers: '팔로워 820', posts: '게시물 34', tags: ['제품 디자인', '3D', '렌더링', '웨어러블', '브랜딩', '패키지', '공예', '오브제'], relay: 2, comments: 18 },
     'feature-1': { tools: ['.psd', '.psd'], title: '인물 화보 AI 프로젝트', desc: '읽힐 아주 작은 여지가 있어요. 3문단의 "자주 함께 시키는 메뉴를 묶어 → 화면의 선택지가 손님 응대를 대신"이 그걸 "고객이 이미 원하던 조합을 찾기로 해요', author: 'chanwoo kim.', followers: '팔로워 1k', posts: '게시물99+', tags: ['제품 디자인', '공예', '오브제', '3D', '브랜딩', '브랜딩', '공예', '오브제', '3D', '제품 디자인'], relay: 1, comments: 34 },
     'feature-2': { tools: ['.ai', '.pdf'], title: '안경테 설계 도면', desc: '치수와 단면까지 정리한 안경테 도면이에요. 3D 모델로 옮기는 단계에서 멈췄어요. 도면을 그대로 모델링해 줄 러너를 기다려요.', author: 'jahyun park.', followers: '팔로워 540', posts: '게시물 21', tags: ['제품 디자인', '도면', 'CAD', '아이웨어', '3D', '공예', '오브제', '브랜딩'], relay: 0, comments: 9 },
-    'feature-3': { tools: ['.psd', '.mp4'], title: '몸의 움직임 포스터', desc: '점프하는 순간을 흑백으로 잘라낸 포스터 시리즈예요. 세 장 중 한 장만 완성했어요. 같은 톤으로 나머지 두 장을 이어 주세요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['그래픽', '포스터', '사진', '모션', '타이포', '편집', '브랜딩', '캠페인'], relay: 3, comments: 41 },
+    'feature-3': { tools: ['.psd', '.mp4'], title: '몸의 움직임 포스터', desc: '점프하는 순간을 흑백으로 잘라낸 포스터 시리즈예요. 세 장 중 한 장만 완성했어요. 같은 톤으로 나머지 두 장을 이어 주세요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['그래픽', '포스터', '사진', '모션', '타이포', '편집', '브랜딩', '캠페인'], relay: 3, comments: 29 },
     'feature-4': { tools: ['.blend', '.zbr'], title: '캐릭터의 표정', desc: '표정 연구용 3D 캐릭터예요. 얼굴은 끝냈고 몸과 의상이 남았어요. 같은 질감으로 전신을 이어서 만들어 볼 분을 찾아요.', author: 'chanwoo kim.', followers: '팔로워 1k', posts: '게시물99+', tags: ['3D', '캐릭터', '모델링', '텍스처', '애니메이션', '오브제', '공예', '그래픽'], relay: 1, comments: 27 }
   };
 
@@ -41,13 +41,14 @@
     return { tools: tools.slice(0, 2), title: r.title, desc: r.summary || `${pick(STAGE_LINES, i)}. 다음 단계를 이어서 완성해 줄 러너를 기다려요.`, author: pick(['chanwoo kim.', 'jia choi.', 'jahyun park.', 'jihoon kang.'], i), followers: '팔로워 ' + (300 + i * 170), posts: '게시물 ' + (12 + i * 7), tags: [...tags, ...r.category || []].slice(0, 8), relay: r.relayCount ?? 0, comments: r.commentCount ?? 0 };
   }
 
-  function heroCard(r, i) {
+  function heroCard(r, i, rank = 0) {
     const info = heroInfo(r, i);
     const img = r.thumbnails?.[0]?.url;
-    return `<a class="fh-hero-card" href="#/baton/${encodeURIComponent(r.id)}" data-hero="${E(r.id)}" aria-label="${E(info.title)} 상세 보기">
+    return `<a class="fh-hero-card" href="#/baton/${encodeURIComponent(r.id)}" data-hero="${E(r.id)}" aria-label="${rank ? `지난 주 이어받은 바톤 TOP ${rank}, ${info.comments}명이 이어받음. ` : ''}${E(info.title)} 상세 보기">
       <span class="fh-hero-inner">
         ${img ? `<img src="${E(img)}" alt="" loading="eager" decoding="async">` : ''}
         <span class="fh-hero-shade" aria-hidden="true"></span>
+        ${rank ? `<span class="fh-hero-rank" aria-hidden="true"><b>TOP ${rank}</b><span>지난 주,<br><em>${info.comments}명</em>이 이어 받았어요.</span></span>` : ''}
         <span class="fh-hero-info" aria-hidden="true">
           <span class="fh-hero-tools">${info.tools.map(t => `<span>${E(t)}</span>`).join('')}</span>
           <strong class="fh-hero-title">${E(info.title)}</strong>
@@ -105,7 +106,7 @@
     main.innerHTML = `<div class="fh-home">
       <div class="fh-deco" aria-hidden="true"><svg viewBox="0 0 1440 1100" preserveAspectRatio="none"><image href="assets/director-reference/home-vector-0.svg" x="713" y="708" width="357" height="544"/><image href="assets/director-reference/home-vector-1.svg" x="0" y="637" width="262" height="189"/><image href="assets/director-reference/home-vector-2.svg" x="996" y="0" width="444" height="204"/><image href="assets/director-reference/home-vector-3.svg" x="1137" y="558" width="303" height="239"/><image href="assets/director-reference/home-vector-4.svg" x="0" y="48" width="609" height="273"/></svg></div>
       <section class="fh-hero" aria-labelledby="fh-hero-title">
-        <h1 class="fh-h1" id="fh-hero-title">모바일에서 담은 바톤, 완성하러 가볼까요?</h1>
+        <h1 class="fh-h1" id="fh-hero-title">지난 주,<br>가장 많이 이어받은 바톤&nbsp; TOP5</h1>
         <div class="fh-hero-strip" data-count="5"></div>
         <a class="fh-more" href="#/saved"><span>전체 보기</span>${ICON.arrow}</a>
       </section>
@@ -152,12 +153,14 @@
     state.cols = cols;
     const { hero, all } = state.ctx;
     const extra = all.filter(r => r.example && !r.id.startsWith('feature-') && r.thumbnails?.[0]?.url && !r.demoRelay && !['calendar-red', 'calendar-peach'].includes(r.id));
-    const list = [...hero];
+    /* 10/26: 지난 주 이어받은 수(다운로드 수) 많은 순으로 TOP5 */
+    const list = [...hero].sort((a, b) => heroInfo(b, 0).comments - heroInfo(a, 0).comments);
+    const ranked = list.length;
     if (!state.heroExtra) state.heroExtra = shuffle(extra);
     for (let i = 0; list.length < cols && i < state.heroExtra.length; i++) list.push(state.heroExtra[i]);
     state.heroKeys = new Set(list.map(imageKey));
     state.strip.style.setProperty('--cols', cols);
-    state.strip.innerHTML = list.slice(0, cols).map((r, i) => heroCard(r, i)).join('');
+    state.strip.innerHTML = list.slice(0, cols).map((r, i) => heroCard(r, i, i < ranked ? i + 1 : 0)).join('');
   }
 
   /* 피드: 매번 무작위 순서, 같은 이미지는 한 번만. 다 보여 주면 새로 섞되 방금 본 것과 이어지지 않게 */

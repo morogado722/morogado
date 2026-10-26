@@ -630,3 +630,11 @@ main .fh-card.fh-open .fh-card-link:active .fh-card-open{transform:scale(.992);t
   .fh-hero-foot,.fh-hero-foot svg,.fh-hero-bm{color:#fff}
   .fh-hero-avatar{background:rgba(232,255,245,.9)}
 }
+
+/* 10/26 탐색 배너 = 지난 주 가장 많이 이어받은 바톤 TOP5. 펼치면 왼쪽 위에 순위 · 이어받은 사람 수 */
+.fh-hero-rank{position:absolute;left:0;top:0;right:0;z-index:2;display:flex;flex-direction:column;gap:max(4px,calc(6*var(--u)));padding:max(18px,calc(22*var(--u)));padding-bottom:max(40px,calc(48*var(--u)));color:#fff;pointer-events:none;
+  background:linear-gradient(180deg,rgba(18,18,18,.55) 0,rgba(18,18,18,.25) 60%,rgba(18,18,18,0));opacity:0;transform:translateY(-6px);transition:opacity 160ms ease-out,transform 160ms ease-out}
+.fh-hero-rank b{font:700 max(32px,calc(40*var(--u)))/1.05 var(--fh-font);letter-spacing:-.01em}
+.fh-hero-rank>span{margin-top:max(4px,calc(6*var(--u)));font:300 max(16px,calc(19*var(--u)))/1.45 var(--fh-font)}
+.fh-hero-rank em{font-style:normal;font-weight:700}
+.fh-hero-card.is-active .fh-hero-rank{opacity:1;transform:none;transition:opacity 320ms cubic-bezier(.2,.7,.2,1) 400ms,transform 380ms cubic-bezier(.2,.7,.2,1) 400ms}
