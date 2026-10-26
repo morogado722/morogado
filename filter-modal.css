@@ -1,0 +1,114 @@
+/* 10/27 필터 모달 — 피그마 filter(3989:2489) 899 × 1310, 1440 기준(--hu).
+ * 어두운 유리판(배경 흐림) · 위 검색 띠 64 · 왼쪽 메뉴 209 · 오른쪽 623 칸. 헤더 검색창 자리(오른쪽 여백 73, y23)에서 펼쳐져요. */
+.fm-root{--fu:clamp(.72px, calc(100vw / 1440), 1px);position:fixed;inset:0;z-index:200;font-family:var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff}
+.fm-backdrop{position:absolute;inset:0;background:rgba(20,20,20,.14);opacity:0;transition:opacity .22s ease}
+.fm-root.is-in .fm-backdrop{opacity:1}
+.fm-panel{position:absolute;right:calc(73*var(--fu));top:calc(23*var(--fu));width:min(calc(899*var(--fu)),calc(100vw - 32px));max-height:calc(100vh - 23*var(--fu) - 24px);display:flex;flex-direction:column;border-radius:calc(20*var(--fu));overflow:hidden;
+  background:rgba(52,52,52,.8);-webkit-backdrop-filter:blur(40px) saturate(1.2);backdrop-filter:blur(40px) saturate(1.2);box-shadow:3px 4px 4px rgba(0,0,0,.25);
+  opacity:0;transform:translateY(-8px) scale(.985);transform-origin:top right;transition:opacity .22s ease,transform .32s cubic-bezier(.22,.9,.24,1)}
+.fm-root.is-in .fm-panel{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.fm-panel,.fm-backdrop{transition:none}}
+html.fm-open{overflow:hidden}
+
+/* 위 검색 띠 */
+.fm-bar{flex:none;display:flex;align-items:center;gap:calc(12*var(--fu));height:calc(64*var(--fu));min-height:52px;padding:0 calc(28*var(--fu));background:rgba(255,255,255,.2);border-radius:calc(20*var(--fu));margin:0}
+.fm-bar-icon{flex:none;width:calc(27*var(--fu));height:calc(27*var(--fu));min-width:22px;min-height:22px}
+.fm-bar-icon svg{width:100%;height:100%;display:block}
+.fm-bar input{flex:1;min-width:0;height:100%;border:0;outline:0;background:none;padding:0;margin:0;font:500 max(14px,calc(16*var(--fu)))/1.6 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#f5f5f5;-webkit-appearance:none;appearance:none}
+.fm-bar input::placeholder{color:rgba(245,245,245,.75)}
+.fm-bar input::-webkit-search-cancel-button{display:none}
+.fm-go{all:unset;cursor:pointer;flex:none;font:700 max(14px,calc(16*var(--fu)))/1.6 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#f5f5f5;padding:4px 2px;border-radius:6px}
+.fm-go:hover{text-decoration:underline;text-underline-offset:4px}
+.fm-go:focus-visible{outline:2px solid #00f998;outline-offset:3px}
+
+/* 몸통: 왼쪽 메뉴는 붙어 있고 오른쪽만 내려가요 */
+.fm-body{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;display:grid;grid-template-columns:calc(209*var(--fu)) 1fr;column-gap:calc(30*var(--fu));padding:0 calc(25*var(--fu)) calc(28*var(--fu)) calc(12*var(--fu));scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.3) transparent}
+.fm-menu{position:sticky;top:0;align-self:start;display:flex;flex-direction:column;gap:calc(20*var(--fu));padding-top:calc(37*var(--fu))}
+.fm-menu-item{all:unset;cursor:pointer;display:flex;align-items:center;gap:calc(4*var(--fu));height:calc(46*var(--fu));padding-left:calc(16*var(--fu));border-radius:calc(16*var(--fu));font:500 max(14px,calc(18*var(--fu)))/1.6 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#f5f5f5;transition:background .2s ease}
+.fm-menu-item svg{width:calc(28*var(--fu));height:calc(28*var(--fu));flex:none}
+.fm-menu-item:hover{background:rgba(255,255,255,.12)}
+.fm-menu-item[aria-current]{background:rgba(255,255,255,.3)}
+.fm-menu-item:focus-visible{outline:2px solid #00f998;outline-offset:2px}
+
+.fm-content{padding-top:calc(23*var(--fu));min-width:0}
+.fm-sec{padding:calc(32*var(--fu)) 0;border-top:1px solid rgba(255,255,255,.5)}
+.fm-sec:first-child{border-top:0;padding-top:0}
+.fm-sec-last{padding-bottom:calc(8*var(--fu))}
+.fm-sec-icon{display:block;width:calc(28*var(--fu));height:calc(28*var(--fu));margin-bottom:calc(10*var(--fu))}
+.fm-sec-icon svg{width:100%;height:100%;display:block}
+.fm-label{margin:0;font:300 max(12px,calc(14*var(--fu)))/calc(22*var(--fu)) var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff}
+.fm-label-gap{margin-top:calc(12*var(--fu))}
+
+/* 칩 */
+.fm-chips{display:flex;flex-wrap:wrap;gap:calc(16*var(--fu)) calc(16*var(--fu))}
+.fm-chips-gap{margin-top:calc(20*var(--fu))}
+.fm-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;height:calc(34*var(--fu));min-height:30px;padding:0 calc(16*var(--fu));border-radius:calc(8*var(--fu));background:rgba(255,255,255,.01);box-shadow:inset 1px 1px 4px rgba(0,0,0,.1),1px 1px 4px rgba(0,0,0,.1);font:500 max(12px,calc(14*var(--fu)))/1 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff;white-space:nowrap;transition:background .18s ease,transform .18s ease}
+.fm-chip:hover{background:rgba(255,255,255,.12)}
+.fm-chip[aria-pressed="true"]{background:rgba(255,255,255,.3)}
+.fm-chip:active{transform:scale(.97)}
+.fm-chip:focus-visible,.fm-type:focus-visible,.fm-stage:focus-visible{outline:2px solid #00f998;outline-offset:2px}
+.fm-label + .fm-chips{margin-top:0}
+
+/* 바톤 유형 카드 */
+.fm-types{display:flex;gap:calc(16*var(--fu))}
+.fm-type{all:unset;box-sizing:border-box;cursor:pointer;width:calc(119*var(--fu));height:calc(84*var(--fu));min-width:100px;min-height:72px;border-radius:calc(8*var(--fu));display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:calc(6*var(--fu));background:rgba(245,245,245,.01);box-shadow:inset 1px 1px 4px rgba(0,0,0,.1),1px 1px 3.6px rgba(0,0,0,.1);transition:background .18s ease}
+.fm-type svg{width:calc(48*var(--fu));height:calc(48*var(--fu));display:block}
+.fm-type span{margin-top:calc(2*var(--fu));font:500 max(12px,calc(14*var(--fu)))/calc(22*var(--fu)) var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff;white-space:nowrap}
+.fm-type:hover{background:rgba(255,255,255,.12)}
+.fm-type[aria-pressed="true"]{background:rgba(255,255,255,.3)}
+
+/* 진척도 */
+.fm-stages{display:flex;gap:calc(7*var(--fu))}
+.fm-stage{all:unset;box-sizing:border-box;cursor:pointer;width:calc(113.2*var(--fu));height:calc(113.2*var(--fu));border-radius:calc(12*var(--fu));display:grid;place-items:center;transition:background .2s ease,box-shadow .2s ease}
+.fm-stage img{display:block;max-width:66%;max-height:66%;transition:transform .3s cubic-bezier(.22,.9,.24,1),opacity .2s ease}
+.fm-stage img.is-seeding{max-height:56%}
+.fm-stage:hover img{transform:scale(1.06)}
+.fm-stage[aria-pressed="true"]{background:rgba(255,255,255,.1);box-shadow:inset 4px 4px 16px rgba(255,255,255,.1),3px 4px 16.4px rgba(0,0,0,.07)}
+
+/* 파일 확장자 안내 */
+.fm-hint{display:flex;align-items:center;gap:0;margin:calc(12*var(--fu)) 0 0;font:300 max(11px,calc(12*var(--fu)))/1.55 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff}
+.fm-hint svg{width:calc(18*var(--fu));height:calc(18*var(--fu));flex:none}
+
+/* 로그 횟수 */
+.fm-range-head{display:flex;align-items:center;gap:calc(14*var(--fu));margin-top:calc(-5*var(--fu))}
+.fm-range-val{font:400 max(12px,calc(14*var(--fu)))/calc(22*var(--fu)) var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff}
+.fm-range-val b{display:inline-block;min-width:calc(15*var(--fu));padding:0 2px;margin:0 2px;text-align:center;border-radius:calc(4*var(--fu));background:rgba(217,217,217,.3);font-weight:500}
+.fm-range{position:relative;width:min(calc(480*var(--fu)),100%);height:calc(15*var(--fu));min-height:15px;margin-top:calc(12*var(--fu))}
+.fm-range::before{content:"";position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:10px;background:rgba(0,0,0,.2)}
+.fm-range-fill{position:absolute;top:50%;height:4px;margin-top:-2px;border-radius:10px;background:rgba(255,255,255,.35);left:calc(var(--a) * (100% - 15px) + 7.5px);right:calc((1 - var(--b)) * (100% - 15px) + 7.5px)}
+.fm-range input{position:absolute;inset:0;width:100%;height:100%;margin:0;background:none;-webkit-appearance:none;appearance:none;pointer-events:none;opacity:0}
+.fm-range input::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;pointer-events:auto;cursor:pointer}
+.fm-range input::-moz-range-thumb{width:22px;height:22px;pointer-events:auto;cursor:pointer;border:0}
+.fm-thumb{position:absolute;top:0;width:15px;height:15px;pointer-events:none;transition:left .12s ease}
+.fm-thumb svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))}
+.fm-thumb[data-thumb=min]{left:calc(var(--a) * (100% - 15px))}
+.fm-thumb[data-thumb=max]{left:calc(var(--b) * (100% - 15px))}
+.fm-range:has(input:focus-visible) .fm-thumb{outline:2px solid #00f998;outline-offset:2px;border-radius:50%}
+
+/* 기한 토글 */
+.fm-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:20px;cursor:pointer;font:500 max(12px,calc(14*var(--fu)))/1.3 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff}
+.fm-toggle{position:absolute;opacity:0;width:1px;height:1px}
+.fm-toggle + i{position:relative;flex:none;width:calc(51*var(--fu));height:calc(28*var(--fu));min-width:44px;min-height:24px;border-radius:99px;background:rgba(255,255,255,.01);box-shadow:inset 1px 1px 4px rgba(0,0,0,.1),1px 1px 4px rgba(0,0,0,.1);transition:background .2s ease}
+.fm-toggle + i::after{content:"";position:absolute;top:50%;left:3px;width:calc(22*var(--fu));height:calc(22*var(--fu));min-width:19px;min-height:19px;transform:translateY(-50%);border-radius:50%;background:rgba(255,255,255,.5);box-shadow:inset 2px 2px 4px rgba(0,0,0,.1),2px 2px 4px rgba(0,0,0,.1);transition:left .25s cubic-bezier(.22,.9,.24,1),background .2s ease}
+.fm-toggle:checked + i{background:rgba(0,249,152,.35)}
+.fm-toggle:checked + i::after{left:calc(100% - 3px - max(19px, calc(22*var(--fu))));background:#fff}
+.fm-toggle:focus-visible + i{outline:2px solid #00f998;outline-offset:2px}
+
+/* 고른 조건 */
+.fm-summary{margin:calc(4*var(--fu)) 0 calc(16*var(--fu));font:500 max(13px,calc(14*var(--fu)))/1.6 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#fff;word-break:keep-all}
+.fm-actions{display:flex;gap:calc(16*var(--fu))}
+.fm-apply{background:rgba(255,255,255,.3)}
+.fm-apply:hover{background:rgba(255,255,255,.4)}
+
+/* 휴대폰: 화면 꽉 차게, 메뉴는 위 가로줄 */
+@media (max-width:767px){
+  .fm-panel{left:8px;right:8px;top:8px;width:auto;max-height:calc(100vh - 16px);border-radius:16px}
+  .fm-bar{padding:0 16px;border-radius:16px}
+  .fm-body{grid-template-columns:1fr;padding:0 16px 20px}
+  .fm-menu{flex-direction:row;overflow-x:auto;gap:6px;padding:10px 0;background:rgba(52,52,52,.92);z-index:1}
+  .fm-menu-item{height:36px;padding:0 12px 0 8px;font-size:13px;white-space:nowrap}
+  .fm-menu-item svg{width:22px;height:22px}
+  .fm-types{flex-wrap:wrap}
+  .fm-stages{flex-wrap:wrap}
+  .fm-stage{width:64px;height:64px}
+}

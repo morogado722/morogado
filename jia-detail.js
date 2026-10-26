@@ -81,7 +81,8 @@
             break;
           }
           case 'morogaro:site-nav':
-            if (m.action) clickParent(m.action);
+            if (m.action === 'filter' && window.MorogadoFilterModal) window.MorogadoFilterModal.open();
+            else if (m.action) clickParent(m.action);
             else if (m.search !== undefined) {
               const input = document.getElementById('site-search'); input.value = m.search;
               document.getElementById('search-form').requestSubmit();

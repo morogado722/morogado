@@ -121,8 +121,9 @@
   if(query)items=items.filter(r=>[r.title,r.summary,...r.category,...r.tags,...(r.displayTags||[])].join(' ').toLowerCase().includes(query.toLowerCase()));
   if(filter.category!=='전체')items=items.filter(r=>r.category.includes(filter.category));if(filter.artifacts.length)items=items.filter(r=>filter.artifacts.every(a=>r.artifacts.includes(a)));
   if(filter.kind==='deadline')items=items.filter(r=>r.exhibitionDeadline?.sample);if(filter.kind==='first')items=items.filter(r=>!childrenCount(r,all));if(filter.kind==='deep')items=items.filter(r=>r.parentId||childrenCount(r,all));if(filter.kind==='reborn')items=items.filter(r=>r.parentId);
+  if(filter.adv&&window.MorogadoFilterModal)items=items.filter(r=>window.MorogadoFilterModal.match(r,filter.adv,childrenCount(r,all)));
   if(filter.sort==='recent')items.sort((a,b)=>b.createdAt.localeCompare(a.createdAt));if(filter.sort==='name')items.sort((a,b)=>a.title.localeCompare(b.title,'ko'));
-  const defaultFeed=!query&&filter.category==='전체'&&!filter.artifacts.length&&filter.kind==='all'&&filter.sort==='recommended';
+  const defaultFeed=!query&&!filter.adv&&filter.category==='전체'&&!filter.artifacts.length&&filter.kind==='all'&&filter.sort==='recommended';
   // 기본 피드는 바톤 전체(홈 화면이 무작위로 섞어 보여 줌), 필터 결과도 자르지 않고 전부
   if(defaultFeed)items=[...homeOrder.map(id=>all.find(r=>r.id===id)).filter(Boolean),...eligible.filter(r=>!homeOrder.includes(r.id))];
   const commentCounts=await Promise.all(items.map(r=>store.comments(r.id).then(list=>list.length)));
@@ -180,7 +181,7 @@
   flowering(){modal({title:'Flowering · 전시 시연',html:'<p>방향·형태·마감·발표는 파일의 구성을 알려줘요. Flowering은 서비스가 별도로 고르는 선정 상태예요.</p><p>실제 선정 기준·가격·리워드는 팀이 확정할 내용이에요. 이번 전시에서는 결제 정보를 받거나 돈을 청구하지 않아요.</p><div class="modal-actions"><button class="secondary-button" data-action="rights">자료 이용 안내</button><button class="primary-button" data-action="demo-purchase">구매 안내 흐름 체험</button></div>'});},
   'demo-purchase'(){modal({title:'시연용 구매 안내',html:'<p class="notice">실제 상품 주문이 아니에요. 결제나 구매 권한이 생성되지 않아요.</p><p>실제 서비스에서는 선정된 바톤의 제공 파일, 사용 조건, 함께한 러너의 크레딧과 가격을 먼저 확인하게 돼요.</p><div class="modal-actions"><button class="secondary-button" data-action="flowering">이전 안내</button><button class="primary-button" data-action="demo-purchase-done">시연 완료하기</button></div>'});},
   'demo-purchase-done'(){modal({title:'안내 흐름을 체험했어요.',html:'<p>전시 시연이 끝났어요. 실제 결제나 파일 구매는 이루어지지 않았어요.</p><div class="modal-actions"><a class="primary-button" href="#/center">바톤센터로 돌아가기</a></div>'});},
-  search(){document.getElementById('site-search').focus();},filter:showFilters,
+  search(){window.MorogadoFilterModal?window.MorogadoFilterModal.open():document.getElementById('site-search').focus();},filter(){window.MorogadoFilterModal?window.MorogadoFilterModal.open():showFilters();},
   'reset-search'(){filter={category:'전체',artifacts:[],sort:'recommended',kind:'all'};query='';resetHomeScroll=true;homeScroll=0;navigate('/explore');},retry:renderRoute,
   about(){modal({title:'모로가도는 이어달리는 서비스예요.',html:'<p>포트폴리오에 넣지 못하고 멈춘 작업도 다른 사람에게는 새로운 시작이 될 수 있어요. 파일, 작업의 의도, 남은 일, 함께한 사람의 이름을 바톤으로 넘겨요.</p><p>이 사이트는 졸업전시 시연 버전이에요. 업로드·저장·다운로드·계승·댓글은 실제로 동작하며, 데이터는 이 브라우저에만 저장돼요.</p><p>홈의 이미지는 팀 피그마의 미리보기예요. 카드의 도구·태그·활동 수치와 달력 릴레이 기록 일부는 전시용 샘플이에요. 기한 필터는 샘플 그룹이며 실제 마감 날짜를 뜻하지 않아요. 실제 원본 파일·계정·구매를 제공하는 항목과는 구분돼요.</p>'});},
   rights(){modal({title:'바톤을 올리고 이어받기 전에',html:'<p>자신이 제공할 권한이 있는 파일만 올려주세요. 다른 사람의 작품·사진·폰트·상표가 들어 있다면 제공 조건을 확인해 주세요.</p><p>이전 바톤에서 이어받았다면 이전 작성자와 계승 관계를 함께 남겨요. 크레딧은 새 바톤과 다운로드 묶음에 자동으로 이어져요.</p><p>전시 버전의 확인 문구는 실제 서비스 이용약관이나 법률 검토를 대신하지 않아요. 공개 운영의 구체적인 라이선스와 수익 조건은 아직 확정하지 않아요.</p>'});},
@@ -231,6 +232,8 @@
   }
  };
  document.addEventListener('click',async e=>{const skip=e.target.closest('.skip-link');if(skip){e.preventDefault();main.focus({preventScroll:true});scrollTo({top:Math.max(0,main.offsetTop-document.getElementById('site-header').offsetHeight),behavior:'instant'});return;}const link=e.target.closest('a[href^="#/"]');if(link&&dialog.open)dialog.close();const save=e.target.closest('[data-save-baton]');if(save){try{const on=await store.toggleBookmark(save.dataset.saveBaton);bookmarks=new Set(await store.bookmarks());document.querySelectorAll(`[data-save-baton="${save.dataset.saveBaton}"]`).forEach(b=>{b.setAttribute('aria-pressed',on);const r=examples.find(x=>x.id===save.dataset.saveBaton);b.setAttribute('aria-label',(r?.title||'바톤')+(on?' 저장 해제':' 저장'));});toast(on?'바톤을 저장했어요.':'저장을 해제했어요.');await updateChrome();if(location.hash==='#/saved')renderRoute();}catch(err){toast(err.message);}return;}const f=e.target.closest('[data-feed-filter]');if(f){filter.kind=f.dataset.feedFilter;try{await renderHome();}catch(error){toast(error.message);}return;}const action=e.target.closest('[data-action]')?.dataset.action;if(action&&actions[action])try{await actions[action]();}catch(err){toast(err.message);}});
+ /* 10/27 필터 모달(filter-modal.js)이 지금 검색어·조건을 읽고, '검색'을 누르면 여기로 넘겨요 */
+ window.MorogadoSite={state:()=>({query,adv:filter.adv||null}),apply(q,adv){query=q||'';filter={category:'전체',artifacts:[],sort:'recommended',kind:'all',adv:adv||null};resetHomeScroll=true;homeScroll=0;navigate('/explore');}};
  document.getElementById('search-form').onsubmit=e=>{e.preventDefault();query=document.getElementById('site-search').value.trim();filter.kind='all';resetHomeScroll=true;homeScroll=0;navigate('/explore');};
  addEventListener('hashchange',renderRoute);addEventListener('scroll',updateDockVisibility,{passive:true});addEventListener('resize',updateDockVisibility);addEventListener('morogado:changed',()=>{updateChrome().catch(error=>toast(error.message));});
  document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));

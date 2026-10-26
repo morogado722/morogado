@@ -311,3 +311,20 @@ html.is-header-v2 .hd-login,html.is-header-v2 .hd-my{font-weight:400;color:#8a8a
 html.is-header-v2 .hd-account button:hover{text-decoration:underline;text-underline-offset:3px}
 html.is-header-v2 .hd-account i{display:block;width:1px;height:19px;background:#c4c4c4}
 html.is-header-v2 .header-bleed{height:158px;background:linear-gradient(#FFF, #FFF) left top / 50% 100px no-repeat, linear-gradient(#FFF, #FFF) right top / 50% 151px no-repeat}
+
+/* ===== 10/27 홈 말고는 심볼 로고 헤더(피그마 4010:10602) · 헤더 아래 선 없음 ===== */
+html.is-header-v2 .site-header .brand{left:72px;top:41px;width:41px;height:28px}
+html.is-header-v2 .site-header .brand img{width:41px;height:28px}
+html.is-header-v2 .main-nav{left:176.9px}
+html.is-header-v2 .search input{cursor:pointer}
+html.is-header-v2 .account{left:1027px;gap:24px}
+html.is-header-v2 .hd-icon{display:grid;place-items:center;width:24px;height:24px;padding:0;border:0;background:none;cursor:pointer;transition:transform .25s ease}
+html.is-header-v2 .hd-icon img{width:24px;height:24px;display:block}
+html.is-header-v2 .hd-icon:hover{transform:translateY(-1px)}
+html.is-header-v2 .hd-account{gap:6.7px;margin:0 0 0 2px}
+html.is-header-v2 .hd-account .hd-me{font-weight:400;color:#8a8a8a}
+html.is-header-v2 .hd-account .hd-me b{font-weight:700;color:#262626;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+html.is-header-v2 .hd-account .hd-me:hover{text-decoration:none}
+html.is-header-v2 .hd-account .hd-avatar{display:block;width:28px;height:28px;border-radius:50%;line-height:0}
+html.is-header-v2 .hd-account .hd-avatar img{width:28px;height:28px;display:block}
+html.is-header-v2 .header-surface,html.is-header-v2 .site-header{filter:none;box-shadow:none}

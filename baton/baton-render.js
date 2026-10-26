@@ -441,21 +441,29 @@
       wireSiteHeader();
       /* 10/26: 사이트 헤더 v2(피그마 4006:10071)와 똑같이 — 워드마크 로고, 탐색·커뮤니티·내 작업성향은?, 검정 '바톤 올리기' + 회원 가입 | 로그인 */
       document.documentElement.classList.add('is-site-host', 'is-header-v2');
-      const surface = $('.header-surface'); if (surface) { surface.src = '../assets/landing/header-shape.svg'; surface.height = 158; }
-      const brandImg = $('.brand img'); if (brandImg) { brandImg.src = '../assets/landing/logo.svg'; brandImg.width = 203; brandImg.height = 28; }
+      const surface = $('.header-surface'); if (surface) { surface.src = '../assets/landing/header-shape.svg?v=1027'; surface.height = 158; }
+      /* 10/27 홈 말고는 심볼 로고 헤더(피그마 4010:10602) */
+      const brandImg = $('.brand img'); if (brandImg) { brandImg.src = '../assets/landing/symbol.svg'; brandImg.width = 41; brandImg.height = 28; }
       $('.nav-magazine')?.remove();
-      const input = $('#search-form input'); if (input) input.placeholder = '‘사랑과 관련된 프로젝트’ 같은 키워드로 검색해보세요!';
+      const input = $('#search-form input');
+      if (input) {
+        input.placeholder = '‘사랑과 관련된 프로젝트’ 같은 키워드로 검색해보세요!';
+        /* 10/27 검색창을 누르면 사이트의 필터 모달을 열어요 */
+        input.readOnly = true;
+        const openFilter = e => { e.preventDefault(); post({ type: 'morogaro:site-nav', action: 'filter' }); };
+        input.closest('form')?.addEventListener('mousedown', openFilter);
+        input.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openFilter(e); });
+      }
       const searchIcon = $('#search-form img'); if (searchIcon) { searchIcon.src = '../assets/landing/search.svg'; searchIcon.width = 17; searchIcon.height = 17; }
       const account = $('.account');
       if (account && !$('.hd-upload')) {
-        const named = viewerName && viewerName !== '방문자';
         account.innerHTML = `<a class="hd-upload" href="#"><img src="../assets/landing/sparkle.svg" width="10" height="10" alt="">바톤 올리기</a>
-          <span class="hd-account">${named
-            ? `<button type="button" class="hd-me"><b></b> 님</button><i aria-hidden="true"></i><button type="button" class="hd-my">내 바톤</button>`
-            : `<button type="button" class="hd-join">회원 가입</button><i aria-hidden="true"></i><button type="button" class="hd-login">로그인</button>`}</span>`;
-        if (named) account.querySelector('.hd-me b').textContent = viewerName;
+          <button type="button" class="hd-icon hd-saved" aria-label="저장한 바톤"><img src="../assets/landing/hd-bookmark.svg" width="24" height="24" alt=""></button>
+          <button type="button" class="hd-icon hd-bell" aria-label="알림"><img src="../assets/landing/hd-bell.svg" width="24" height="24" alt=""></button>
+          <span class="hd-account"><button type="button" class="hd-me"><b></b> 님</button><button type="button" class="hd-avatar" aria-label="내 바톤"><img src="../assets/landing/hd-avatar.svg" width="28" height="28" alt=""></button></span>`;
+        account.querySelector('.hd-me b').textContent = viewerName || '방문자';
         const go = (sel, msg) => account.querySelector(sel)?.addEventListener('click', e => { e.preventDefault(); post({ type: 'morogaro:site-nav', ...msg }); });
-        go('.hd-upload', { to: '/upload' }); go('.hd-join', { action: 'profile' }); go('.hd-login', { action: 'profile' }); go('.hd-me', { action: 'profile' }); go('.hd-my', { to: '/my' });
+        go('.hd-upload', { to: '/upload' }); go('.hd-saved', { to: '/saved' }); go('.hd-bell', { action: 'notifications' }); go('.hd-me', { action: 'profile' }); go('.hd-avatar', { to: '/my' });
       }
     }
     let view;
