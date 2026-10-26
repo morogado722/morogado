@@ -158,7 +158,7 @@
       timers.push(setTimeout(() => { tick(); timers.push(setInterval(tick, ms)); }, delay));
     };
     rotate('.ld-tool', 2400, 1800);
-    rotate('.ld-runner-chip', 1500, 1500);
+    rotate('.ld-runner-chip', 1000, 1000);
     stop.push(() => timers.forEach(t => { clearTimeout(t); clearInterval(t); }));
   }
 
