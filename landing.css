@@ -132,7 +132,8 @@ body[data-route="landing"] .floating-dock{display:none!important}
 .ld-glow img{position:absolute;left:-.5px;top:-.5px;width:calc(319*var(--u));height:calc(52*var(--u));max-width:none;z-index:-1;transition:transform .8s cubic-bezier(.22,.9,.24,1)}
 .ld-glow span{font:700 calc(16*var(--u))/1.6 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);letter-spacing:.01em;color:#262626}
 .ld-glow:hover{transform:translateY(calc(-2*var(--u)));box-shadow:0 calc(8*var(--u)) calc(22*var(--u)) rgba(0,201,127,.22)}
-.ld-glow:hover img{transform:translateX(calc(-40*var(--u))) scale(1.08)}
+.ld-glow img{transform-origin:50% 50%}
+.ld-glow:hover img{transform:scale(1.3) translateX(-7%)}
 
 /* 올리기 칸: 파인더 창 + 끌어다 놓는 자리 */
 .ld-desk{position:absolute;left:0;top:calc(195*var(--u));width:100%;height:calc(291*var(--u));overflow:hidden;background:#f1f1f1}
