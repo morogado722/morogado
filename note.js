@@ -71,12 +71,12 @@
   function renderIdeas(){
     const ideas=(state().nextIdeas||['']).slice(0,3);if(!ideas.length)ideas.push('');
     $('idea-fields').replaceChildren();
-    ideas.forEach((value,index)=>{const row=E('div','idea-field'),input=E('input');input.className='idea-input';input.type='text';input.maxLength=240;input.value=value;input.placeholder=index?'예: 다른 주제로 확장해보세요':'어떤 방향으로 이어가면 좋을까요?';input.setAttribute('aria-label',`이어받을 아이디어 ${index+1}`);
+    ideas.forEach((value,index)=>{const row=E('div','idea-field'),input=E('input');input.className='idea-input';input.type='text';input.maxLength=240;input.value=value;input.placeholder=index?'예: 다른 주제로 확장해보세요':(suggestionCache.ideas.length&&suggestionCache.fp===(review.getContext()?.fingerprint||null)?'위에서 고르거나, 직접 적어도 좋아요':'어떤 방향으로 이어가면 좋을까요?');input.setAttribute('aria-label',`이어받을 아이디어 ${index+1}`);
       input.addEventListener('input',()=>{const next=(state().nextIdeas||ideas).slice(0,3);next[index]=input.value;write({nextIdeas:next});$('suggest-ideas').querySelector('span').textContent=next.filter(v=>String(v).trim()).length>=3?'다시 생각해보기':'AI 추천 방향 보기';});
       const remove=B('×','idea-remove',()=>{const next=(state().nextIdeas||ideas).filter((_,i)=>i!==index);write({nextIdeas:next.length?next:['']});renderIdeas();});remove.setAttribute('aria-label',`아이디어 ${index+1} 삭제`);row.append(E('span','idea-number',String(index+1)),input,remove);$('idea-fields').append(row);
     });$('add-idea').disabled=ideas.length>=3;$('add-idea').hidden=false;$('add-idea').title=ideas.length>=3?'아이디어는 최대 3개예요':'';
     // AI가 이미 3개를 채웠으면 추천 버튼은 숨겨요(지우면 다시 보여요).
-    const full=ideas.filter(v=>String(v).trim()).length>=3;$('suggest-ideas').querySelector('span').textContent=full?'다시 생각해보기':'AI 추천 방향 보기';if(full)$('idea-suggestions').replaceChildren();
+    const full=ideas.filter(v=>String(v).trim()).length>=3;$('suggest-ideas').querySelector('span').textContent=full?'다시 생각해보기':'AI 추천 방향 보기';paintSuggestions();
   }
   function renderReferences(){
     const refs=(state().references||[]).filter(ref=>analysis.isPreviewURL(ref.dataUrl));$('reference-images').replaceChildren();
@@ -89,9 +89,26 @@
   function consent(){lastFocus=document.activeElement;return new Promise(resolve=>{consentResolver=resolve;$('note-ai-consent').showModal();});}
   function resolveConsent(value){$('note-ai-consent').close();const resolve=consentResolver;consentResolver=null;resolve?.(value);lastFocus?.focus({preventScroll:true});}
   function contextForAI(){const ctx=review.getContext();return {title:ctx.form.title||'',stage:ctx.form.stage||null,categories:ctx.form.categories||[],tools:ctx.form.tools||[],materials:ctx.form.materials||'',physical:ctx.form.physical??null,summary:ctx.result.mode==='ai'?(ctx.result.summary||''):'',tags:ctx.form.tags||[],stageReason:ctx.result.values?.stageReason||'',images:(()=>{const d=review.getData?.();const th=(d?.selectedThumbnails||[]).map(t=>t?.dataUrl).filter(Boolean);const all=th.length?th:(ctx.result.thumbnails||[]).map(t=>t.dataUrl);return all.filter(u=>/^data:image\//.test(u||'')).slice(0,3);})(),evidence:(ctx.result.evidence||[]).slice(0,35).map((e,i)=>({id:'e'+i,field:e.field,quote:String(e.quote||'').slice(0,1400),location:String(e.location||''),sourceName:ctx.result.sources.find(s=>s.id===e.fileId)?.name||''}))};}
-  function showSuggestions(ideas){
-    $('idea-suggestions').replaceChildren();$('idea-suggestions').hidden=!ideas.length;
-    for(const text of ideas){const pick=B('','idea-suggestion',()=>{const next=(state().nextIdeas||['']).slice(0,3);const empty=next.findIndex(v=>!v.trim());if(next.some(v=>v.trim()===text.trim()))return;if(empty>=0)next[empty]=text;else if(next.length<3)next.push(text);else{say('아이디어는 최대 3개예요. 기존 아이디어를 지우고 추가해 주세요.');return;}write({nextIdeas:next});renderIdeas();pick.disabled=true;pick.lastElementChild.textContent='추가했어요';});pick.append(E('span','',text),E('span','','+ 담기'));$('idea-suggestions').append(pick);}
+  /* 10/27 AI 추천 방향은 카드로 보여주고 '누르기만 하면 담겨요'(다시 누르면 빠져요) */
+  let suggestionCache={fp:null,ideas:[]};
+  function showSuggestions(ideas){suggestionCache={fp:review.getContext()?.fingerprint||null,ideas:ideas.slice(0,3)};paintSuggestions();}
+  function paintSuggestions(){
+    const box=$('idea-suggestions');box.replaceChildren();
+    const fp=review.getContext()?.fingerprint||null,ideas=suggestionCache.fp===fp?suggestionCache.ideas:[];
+    box.hidden=!ideas.length;$('ideas-row')?.classList.toggle('has-suggestions',ideas.length>0);
+    const current=(state().nextIdeas||[]).map(v=>String(v).trim());
+    for(const text of ideas){
+      const on=current.includes(text.trim());
+      const pick=B('','idea-suggestion',()=>{
+        let next=(state().nextIdeas||['']).slice(0,3);
+        if(next.some(v=>v.trim()===text.trim())){next=next.filter(v=>v.trim()!==text.trim());if(!next.length)next=[''];}
+        else{const empty=next.findIndex(v=>!v.trim());if(empty>=0)next[empty]=text;else if(next.length<3)next.push(text);else{$('idea-status').textContent='아이디어는 최대 3개예요. 하나를 빼고 다시 골라 주세요.';return;}}
+        write({nextIdeas:next});renderIdeas();
+      });
+      pick.setAttribute('aria-pressed',String(on));
+      pick.append(E('span','idea-check',''),E('span','idea-suggestion-text',text),E('span','idea-suggestion-state',on?'담았어요':'고르기'));
+      box.append(pick);
+    }
   }
   async function generate(action){
     if(busy||!review.getData())return;
@@ -122,7 +139,7 @@
         else{$('apply-note-draft').hidden=false;status.textContent='새 초안을 준비했어요. 현재 노트는 덮어쓰지 않았어요. 적용 버튼으로 비교하고 선택해 주세요.';}
       }else if(action==='draft'){status.textContent='시작과 진행을 설명할 근거가 부족해 초안을 비워두었어요. 직접 이야기해 주세요.';}
       const ideas=Array.isArray(data.ideas)?data.ideas.filter(v=>typeof v==='string'&&v.trim()).slice(0,3).map(s=>s.slice(0,240)):[];
-      if(action==='ideas'){showSuggestions(ideas);status.textContent=ideas.length?'미래의 방향에 대한 AI 제안이에요. 필요한 아이디어만 골라 담아주세요.':'제안을 받지 못했어요. 아이디어는 직접 추가할 수 있어요.';}
+      if(action==='ideas'){showSuggestions(ideas);renderIdeas();status.textContent=ideas.length?'마음에 드는 방향을 누르기만 하면 담겨요.':'제안을 받지 못했어요. 아이디어는 직접 적을 수 있어요.';}
       if(action==='draft')$('note-ai-label').textContent='다시 쓰기';
     }catch(error){status.textContent=error.name==='AbortError'?'AI 제안 요청이 중단됐어요. 작성한 내용은 그대로예요.':error.message;status.classList.add('is-error');}
     finally{clearTimeout(timeout);busy=false;controller=null;$('generate-note').disabled=false;$('suggest-ideas').disabled=false;syncBubble();}
@@ -178,8 +195,8 @@
       const ideas=Array.isArray(data.ideas)?data.ideas.filter(v=>typeof v==='string'&&v.trim()).slice(0,3).map(v=>v.slice(0,240)):[];
       if(!ideas.length||review.getContext()?.fingerprint!==ctx.fingerprint)return false;
       if((state().nextIdeas||[]).some(v=>String(v).trim()))return true;   // 그사이 직접 적었으면 그대로 둬요
-      write({nextIdeas:ideas});renderIdeas();
-      $('idea-status').textContent='AI가 이어받을 방향을 미리 적어뒀어요. 자유롭게 고치거나 지울 수 있어요.';
+      showSuggestions(ideas);renderIdeas();
+      $('idea-status').textContent='AI가 이어갈 방향을 골라뒀어요. 마음에 드는 걸 누르기만 하면 담겨요.';
       return true;
     }catch{return false;}
   }

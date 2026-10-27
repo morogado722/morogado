@@ -127,11 +127,15 @@
     pending = { data, payload }; $('finish-error').hidden = true; $('finish-preview').hidden = true;
     const list = E('dl', 'review-summary-list');
     for (const [k, v] of [['바톤 제목', data.title || '새 바톤'], ['진척도', data.stage || '미확인'], ['대표 이미지', (data.selectedThumbnails || []).length + '개'], ['바톤 노트', data.batonNote?.trim() ? '작성했어요' : '남기지 않았어요'], ['이어받을 아이디어', (data.nextIdeas || []).filter(s => s.trim()).length + '개']]) list.append(E('dt', '', k), E('dd', '', v));
-    $('finish-summary').replaceChildren(list); $('finish-dialog').showModal(); setTimeout(() => $('finish-confirm').focus({ preventScroll: true }), 30);
+    $('finish-summary').replaceChildren(list);
+    /* 10/27 사용성 평가: 확인 창 없이 바로 바톤을 만들어요(저장에 실패했을 때만 이 창으로 알려요) */
+    void finish();
   }
   async function finish(preview = false) {
     if (saving || !pending) return;
     saving = true; $('finish-confirm').disabled = true; let value;
+    const nextBtn = $('review-next'), nextLabel = nextBtn?.querySelector('.review-next-label'), nextText = nextLabel?.textContent;
+    if (nextBtn) { nextBtn.disabled = true; nextBtn.setAttribute('aria-busy', 'true'); if (nextLabel) nextLabel.textContent = '바톤 만드는 중…'; }
     try {
       value = build(pending.data, pending.payload, preview);
       // 졸전 사이트 안에서 열렸으면 사이트 저장소에 올리고 사이트 상세(#/baton/아이디)로 이동해요 (site-bridge.js, 10/16)
@@ -142,8 +146,8 @@
       if (!preview && window.MorogaroResearch?.hasConsent()) { $('finish-confirm').textContent = '바톤을 만드는 중…'; await window.MorogaroResearch.beforeShow(value); }
       $('finish-dialog').close(); show(value); pending = null; captureFor = preview ? null : value.id;
     }
-    catch { $('finish-error').hidden = false; $('finish-error').textContent = '이 브라우저에 저장하지 못했어요. 작성 내용은 그대로이며, 저장 없이 상세페이지를 미리 볼 수 있어요.'; $('finish-preview').hidden = false; }
-    finally { saving = false; $('finish-confirm').disabled = false; $('finish-confirm').textContent = finishLabel; }
+    catch { if (!$('finish-dialog').open) $('finish-dialog').showModal(); $('finish-error').hidden = false; $('finish-error').textContent = '이 브라우저에 저장하지 못했어요. 작성 내용은 그대로이며, 저장 없이 상세페이지를 미리 볼 수 있어요.'; $('finish-preview').hidden = false; }
+    finally { saving = false; $('finish-confirm').disabled = false; $('finish-confirm').textContent = finishLabel; if (nextBtn) { nextBtn.disabled = false; nextBtn.removeAttribute('aria-busy'); if (nextLabel && nextLabel.textContent === '바톤 만드는 중…') nextLabel.textContent = nextText; } }
   }
   document.addEventListener('morogaro:detail-preview', e => { e.preventDefault(); const value = build(e.detail.review, e.detail.payload, true); memory.set(value.id, value); show(value); });
   document.addEventListener('morogaro:publish-request', e => { e.preventDefault(); askFinish(e.detail.review, e.detail.payload); });

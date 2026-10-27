@@ -288,3 +288,44 @@ body::before {
 
 /* 10/27 분석 중 화면의 '파일 올리기로 돌아가기' 버튼은 숨겨요(loading.js가 요소를 찾으니 지우지 않고 가려요) */
 .analysis-return{display:none!important}
+
+/* ===== 10/27 사용성 평가 반영 ===== */
+/* URL 칸 안내 문구: 보기 좋은 크기로 */
+.url-panel .url-field input,.url-panel .url-field input::placeholder{font-size:14px}
+
+/* '다음으로': 초록 유리 버튼. 파일을 올려 버튼이 나타나면 한 번 톡 튀고, 빛이 계속 지나가요 */
+.upload-actions .next-button{position:relative;overflow:hidden;isolation:isolate;border:1px solid rgb(255 255 255 / 85%);
+  background:linear-gradient(135deg,rgb(0 249 152 / 58%) 0%,rgb(180 255 222 / 55%) 55%,rgb(0 230 160 / 50%) 100%);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  box-shadow:inset 0 1px 0 rgb(255 255 255 / 80%),inset 0 -6px 14px rgb(0 160 110 / 18%),0 10px 28px rgb(0 201 127 / 30%);color:#14281F;font-weight:700;
+  transition:transform .3s cubic-bezier(.22,.9,.24,1),box-shadow .3s ease}
+.upload-actions .next-button::after{content:"";position:absolute;inset:-2px auto -2px -40%;width:36%;z-index:-1;pointer-events:none;
+  background:linear-gradient(105deg,transparent 0%,rgb(255 255 255 / 0%) 20%,rgb(255 255 255 / 85%) 50%,rgb(255 255 255 / 0%) 80%,transparent 100%);
+  transform:skewX(-18deg);animation:mg-next-shine 2.6s cubic-bezier(.45,0,.2,1) .5s infinite}
+.upload-actions .next-button:hover{transform:translateY(-2px);background:linear-gradient(135deg,rgb(0 249 152 / 70%) 0%,rgb(180 255 222 / 62%) 55%,rgb(0 230 160 / 62%) 100%);box-shadow:inset 0 1px 0 rgb(255 255 255 / 85%),inset 0 -6px 14px rgb(0 160 110 / 20%),0 14px 34px rgb(0 201 127 / 38%)}
+.upload-actions .next-button:active{transform:translateY(0) scale(.98)}
+.upload-actions:not([hidden]) .next-button{animation:mg-next-pop .7s cubic-bezier(.22,1.4,.36,1) both}
+@keyframes mg-next-shine{0%{left:-40%}55%,100%{left:120%}}
+@keyframes mg-next-pop{0%{opacity:0;transform:translateY(10px) scale(.92)}60%{opacity:1;transform:translateY(-3px) scale(1.03)}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.upload-actions .next-button::after,.upload-actions:not([hidden]) .next-button{animation:none}}
+
+/* 바톤노트 가이드는 빼고 노트를 넓게 */
+.note-guide{display:none!important}
+.note-body{grid-template-columns:minmax(0,1fr)!important}
+
+/* 이어받을 아이디어: 위아래 구분선 없이, 'AI 추천에서 고르기만 하면 된다'는 인상 */
+.note-divider{display:none!important}
+.ideas-row .note-label p{line-height:1.6}
+.idea-suggestions{display:grid;width:100%;max-width:none!important;align-self:stretch;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:2px 0 6px}
+@media (max-width:900px){.idea-suggestions{grid-template-columns:1fr}}
+.idea-suggestions[hidden]{display:none}
+.idea-suggestion{position:relative;display:flex!important;flex-direction:column;align-items:flex-start!important;gap:10px!important;width:auto!important;min-height:112px;margin:0!important;padding:14px 14px 12px 14px!important;border:1.5px solid #E2E2E2!important;border-radius:14px!important;background:#fff!important;text-align:left;cursor:pointer;transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease,background .2s ease}
+.idea-suggestion:hover{transform:translateY(-2px);border-color:#9BEFC9!important;box-shadow:0 8px 20px rgb(0 201 127 / 12%)}
+.idea-suggestion[aria-pressed="true"]{border-color:#00D98A!important;background:linear-gradient(160deg,#F1FFF8,#fff)!important;box-shadow:0 6px 18px rgb(0 201 127 / 16%)}
+.idea-check{width:20px;height:20px;border-radius:50%;border:1.5px solid #CFCFCF;display:grid;place-items:center;flex:none;transition:all .2s ease}
+.idea-suggestion[aria-pressed="true"] .idea-check{border-color:#00C97F;background:#00C97F}
+.idea-suggestion[aria-pressed="true"] .idea-check::after{content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:translateY(-1px) rotate(-45deg)}
+.idea-suggestion-text{font-size:14px;line-height:1.55;color:#262626;white-space:normal!important;word-break:keep-all}
+.idea-suggestion-state{margin-top:auto;font-size:12px!important;font-weight:600;color:#8A8A8A!important}
+.idea-suggestion[aria-pressed="true"] .idea-suggestion-state{color:#00A86B!important}
+.ideas-row.has-suggestions .idea-fields .idea-input::placeholder{color:#B5B5B5}
