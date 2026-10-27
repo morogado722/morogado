@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="./refinement.css?v=1027e">
   <link rel="stylesheet" href="./loading.css">
   <link rel="stylesheet" href="./buttons.css">
-  <link rel="stylesheet" href="./review.css?v=1012g">
+  <link rel="stylesheet" href="./review.css?v=1027a">
   <link rel="stylesheet" href="./stepper.css">
   <link rel="stylesheet" href="./ambient.css">
   <link rel="stylesheet" href="./note.css?v=1012h">
@@ -44,13 +44,13 @@
   <script src="./loading.js?v=1011p" defer></script>
   <script src="./file-analysis.js?v=1012a" defer></script>
   <script src="./ambient.js?v=1012h" defer></script>
-  <script src="./stepper.js?v=1011p" defer></script>
+  <script src="./stepper.js?v=1027a" defer></script>
   <script src="./note-snap.js?v=1012b" defer></script>
   <script src="./review.js?v=1012f" defer></script>
   <script src="./note.js?v=1027b" defer></script>
   <script src="./download-bundle.js?v=1011p" defer></script>
   <script src="./vendor/modern-screenshot.js" defer></script>
-  <script src="./research.js?v=1016a" defer></script>
+  <script src="./research.js?v=1027a" defer></script>
   <script src="./site-bridge.js?v=1018b" defer></script>
   <script src="./detail.js?v=1027a" defer></script>
 </head>
@@ -165,10 +165,10 @@
                 <button class="step-button" type="button" data-step="1" aria-current="step"><span class="step-number">1</span><span class="step-label">파일 올리기</span></button>
               </li>
               <li class="step" data-node-id="3571:2166">
-                <button class="step-button" type="button" data-step="2" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">2</span><span class="step-label">소스 확인</span></button>
+                <button class="step-button" type="button" data-step="2" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">2</span><span class="step-label">썸네일 설정</span></button>
               </li>
               <li class="step" data-node-id="3571:2168">
-                <button class="step-button" type="button" data-step="3" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">3</span><span class="step-label">썸네일 설정</span></button>
+                <button class="step-button" type="button" data-step="3" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">3</span><span class="step-label">소스 확인</span></button>
               </li>
               <li class="step" data-node-id="3571:2169">
                 <button class="step-button" type="button" data-step="4" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">4</span><span class="step-label">프로젝트 정보</span></button>
@@ -235,7 +235,7 @@
         </section>
         <div class="upload-actions" id="upload-actions" hidden>
           <p class="upload-summary" id="upload-summary" aria-live="polite" data-node-id="3421:2376"></p>
-          <button class="next-button glass-button" id="next-button" type="button" data-node-id="3421:2367" aria-label="다음으로, 소스 확인">
+          <button class="next-button glass-button" id="next-button" type="button" data-node-id="3421:2367" aria-label="다음으로, 썸네일 설정">
             <span>다음으로</span><span class="send-icon-slot"><img src="./assets/send.svg" alt="" data-node-id="3421:2372"></span>
           </button>
         </div>
@@ -252,16 +252,7 @@
         <div class="review-provenance"><span id="analysis-mode-label">파일 정보 확인</span><button type="button" id="show-evidence">근거·추출 범위 보기</button><button type="button" id="reanalyze-files" title="직접 수정한 값은 유지하고 AI가 다시 확인해요">AI 다시 분석</button></div>
       </section>
       <div class="review-content" id="review-content" hidden data-node-id="3516:28759">
-        <section class="review-panel sources-panel" id="review-sources-section" data-maker-section="2" aria-labelledby="sources-heading" data-node-id="3516:28836">
-          <div class="review-section-heading"><div class="heading-with-meta"><h2 id="sources-heading" tabindex="-1">업로드 소스 확인</h2><p id="review-source-count"></p></div><button type="button" class="text-action" id="edit-sources">수정하기</button></div>
-          <div class="review-sources" id="review-sources"></div>
-          <div class="stage-heading"><h2>바톤 진척도</h2><button type="button" class="info-button" data-info="stage" aria-label="바톤 진척도 안내"><img src="./assets/review-info.svg" alt=""></button></div>
-          <div class="stage-selector" id="stage-selector" aria-label="바톤 진척도 선택">
-            <div class="stage-options" id="stage-options"></div>
-          </div>
-          <p class="review-quiet" id="stage-provenance"></p>
-        </section>
-        <section class="review-panel thumbnails-panel" id="review-thumbnails-section" data-maker-section="3" aria-labelledby="thumbnails-heading" data-node-id="3516:28837">
+        <section class="review-panel thumbnails-panel" id="review-thumbnails-section" data-maker-section="2" aria-labelledby="thumbnails-heading" data-node-id="3516:28837">
           <div class="review-section-heading"><div class="heading-with-meta"><h2 id="thumbnails-heading" tabindex="-1">바톤 썸네일 설정</h2><button class="info-button" type="button" data-info="thumbnails" aria-label="썸네일 설정 안내"><img src="./assets/review-info.svg" alt=""></button></div><div class="thumbnail-count"><img src="./assets/review-count.svg" alt=""><span><strong id="selected-count">0</strong>/10</span></div></div>
           <div class="thumbnail-toolbar"><span id="thumbnail-candidate-count">파일에서 캡처한 후보</span><label hidden><select id="thumbnail-source-filter" aria-hidden="true"><option value="all">전체 파일</option></select></label></div>
           <div class="thumbnail-layout">
@@ -270,6 +261,15 @@
           </div>
           <input id="thumbnail-input" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only" tabindex="-1" aria-label="바톤 썸네일 이미지 선택">
           <p class="review-quiet">선택한 순서로 표시돼요. 첫 번째 이미지가 대표 썸네일이에요.</p>
+        </section>
+        <section class="review-panel sources-panel" id="review-sources-section" data-maker-section="3" aria-labelledby="sources-heading" data-node-id="3516:28836">
+          <div class="review-section-heading"><div class="heading-with-meta"><h2 id="sources-heading" tabindex="-1">업로드 소스 확인</h2><p id="review-source-count"></p></div><button type="button" class="text-action" id="edit-sources">수정하기</button></div>
+          <div class="review-sources" id="review-sources"></div>
+          <div class="stage-heading"><h2>바톤 진척도</h2><button type="button" class="info-button" data-info="stage" aria-label="바톤 진척도 안내"><img src="./assets/review-info.svg" alt=""></button></div>
+          <div class="stage-selector" id="stage-selector" aria-label="바톤 진척도 선택">
+            <div class="stage-options" id="stage-options"></div>
+          </div>
+          <p class="review-quiet" id="stage-provenance"></p>
         </section>
         <section class="review-panel project-panel" id="review-project-section" data-maker-section="4" aria-labelledby="project-info-heading" data-node-id="3556:982">
           <h2 id="project-info-heading" tabindex="-1">프로젝트 정보</h2>

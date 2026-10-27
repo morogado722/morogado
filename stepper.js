@@ -4,8 +4,8 @@
  */
 (() => {
   'use strict';
-  const labels = Object.freeze(['파일 올리기', '소스 확인', '썸네일 설정', '프로젝트 정보', '파일 정보', '바톤 노트 작성']);
-  const anchors = Object.freeze({2: 'review-sources-section', 3: 'review-thumbnails-section', 4: 'review-project-section', 5: 'review-file-section', 6: 'review-note-section'});
+  const labels = Object.freeze(['파일 올리기', '썸네일 설정', '소스 확인', '프로젝트 정보', '파일 정보', '바톤 노트 작성']);
+  const anchors = Object.freeze({2: 'review-thumbnails-section', 3: 'review-sources-section', 4: 'review-project-section', 5: 'review-file-section', 6: 'review-note-section'});
   const card = document.querySelector('.step-card');
   const summary = document.getElementById('step-summary');
   const buttons = [...document.querySelectorAll('.step-button[data-step]')];

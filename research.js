@@ -40,7 +40,7 @@
   const seconds = name => marks[name] ? Math.round((marks[name] - started) / 100) / 10 : null;
   function timings() {
     const out = { 진입: 0 };
-    const names = { firstUpload: '첫 파일 업로드', analysisStart: '분석 시작', analysisDone: '분석 완료', step2: '2단계 소스 확인', step3: '3단계 썸네일', step4: '4단계 프로젝트 정보', step5: '5단계 파일 정보', step6: '6단계 바톤 노트', batonCreated: '바톤 완성' };
+    const names = { firstUpload: '첫 파일 업로드', analysisStart: '분석 시작', analysisDone: '분석 완료', step2: '2단계 썸네일', step3: '3단계 소스 확인', step4: '4단계 프로젝트 정보', step5: '5단계 파일 정보', step6: '6단계 바톤 노트', batonCreated: '바톤 완성' };
     for (const [key, label] of Object.entries(names)) out[label] = seconds(key);
     return out;
   }
