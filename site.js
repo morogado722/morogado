@@ -235,7 +235,12 @@
  /* 10/27 필터 모달(filter-modal.js)이 지금 검색어·조건을 읽고, '검색'을 누르면 여기로 넘겨요 */
  window.MorogadoSite={state:()=>({query,adv:filter.adv||null}),apply(q,adv){query=q||'';filter={category:'전체',artifacts:[],sort:'recommended',kind:'all',adv:adv||null};resetHomeScroll=true;homeScroll=0;navigate('/explore');}};
  document.getElementById('search-form').onsubmit=e=>{e.preventDefault();query=document.getElementById('site-search').value.trim();filter.kind='all';resetHomeScroll=true;homeScroll=0;navigate('/explore');};
- addEventListener('hashchange',renderRoute);addEventListener('scroll',updateDockVisibility,{passive:true});addEventListener('resize',updateDockVisibility);addEventListener('morogado:changed',()=>{updateChrome().catch(error=>toast(error.message));});
+ /* 10/27 메뉴 화면끼리(홈·탐색·커뮤니티·저장·내 바톤·바톤센터) 넘어갈 때 뚝 끊기지 않게: 헤더는 그대로, 본문만 부드럽게 바뀌어요 */
+ const SMOOTH_ROUTE=/^#?\/?(explore|community|saved|my|center)?(\?.*)?$/;
+ addEventListener('hashchange',()=>{const smooth=SMOOTH_ROUTE.test(location.hash)&&SMOOTH_ROUTE.test('#'+lastRoute)&&!matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(smooth&&document.startViewTransition){document.startViewTransition(()=>renderRoute());return;}
+  if(smooth){main.classList.remove('route-in');void main.offsetWidth;main.classList.add('route-in');}
+  renderRoute();});addEventListener('scroll',updateDockVisibility,{passive:true});addEventListener('resize',updateDockVisibility);addEventListener('morogado:changed',()=>{updateChrome().catch(error=>toast(error.message));});
  document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
  (async()=>{try{const r=await fetch('assets/figma/manifest.json?v=fm1');manifest=await r.json();makeExamples();await renderRoute();}catch(e){main.innerHTML=`<div class="empty-state"><h1>모로가도를 열지 못했어요.</h1><p>${E(e.message)}</p><p>함께 제공된 실행 파일로 로컬 서버를 켜 주세요.</p></div>`;}})();
 })();

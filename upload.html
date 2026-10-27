@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="./fonts.css">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./header.css?v=1011s">
-  <link rel="stylesheet" href="./refinement.css?v=1018a">
+  <link rel="stylesheet" href="./refinement.css?v=1027a">
   <link rel="stylesheet" href="./loading.css">
   <link rel="stylesheet" href="./buttons.css">
   <link rel="stylesheet" href="./review.css?v=1012g">
@@ -39,7 +39,7 @@
   <script src="./config.js"></script>
   <script src="./size-warning.js?v=1012a" defer></script>
   <script src="./progress-boost.js?v=1012c" defer></script>
-  <script src="./app.js?v=1012b" defer></script>
+  <script src="./app.js?v=1027a" defer></script>
   <script src="./header.js?v=1011p" defer></script>
   <script src="./loading.js?v=1011p" defer></script>
   <script src="./file-analysis.js?v=1012a" defer></script>
@@ -119,8 +119,8 @@
     <main class="workspace" aria-labelledby="page-title">
       <div class="intro">
         <h1 id="page-title" data-node-id="3421:2097">
-          <span class="greeting">방문자님,</span>
-          <span><strong>어떤 멋진 바톤</strong>을 갖고 계신가요?</span>
+          <span class="greeting">전 세계 디자이너가 기다리는 그 파일,</span>
+          <span><strong>일단 올려서</strong> 시작해 보세요!</span>
         </h1>
         <fieldset class="project-switch" data-node-id="3463:26802">
           <legend class="sr-only">프로젝트 유형</legend>
@@ -209,7 +209,7 @@
             <button class="dropzone" id="file-dropzone" type="button" aria-label="바톤 파일 선택" aria-describedby="drop-message local-note" data-node-id="3421:2133">
               <span class="drop-content">
                 <span class="upload-art-slot"><img src="./assets/upload.svg" class="upload-art" alt="" data-node-id="3421:2135"></span>
-                <span id="drop-message" class="drop-message"><span class="drop-title" id="drop-title">파일을 업로드하면 내 바톤 메이킹이 시작돼요!</span><span class="drop-detail" id="drop-detail">어떤 파일이든 올려보세요:)</span><span class="drop-limit" id="drop-limit">PNG·JPG·PDF·AI·PSD 지원 · 파일당 50MB(AI·PSD 150MB) · 최대 20개</span></span>
+                <span id="drop-message" class="drop-message"><span class="drop-title" id="drop-title">끌어다 놓기만 하면 바로 시작돼요!</span><span class="drop-detail" id="drop-detail">완성하고 싶은 파일을 여기에 올려 주세요:)</span><span class="drop-limit" id="drop-limit">PNG·JPG·PDF·AI·PSD 지원 · 파일당 50MB(AI·PSD 150MB) · 최대 20개</span></span>
               </span>
             </button>
             <p id="local-note" class="sr-only">파일을 클릭해서 선택하거나 이 영역으로 끌어다 놓으세요. 기본 실행에서는 브라우저 안에서 확인해요. 분석 서버로 실행하면 다음 단계에서 파일을 서버로 보내며, AI 도움은 별도 동의 후 진행해요.</p>
@@ -228,7 +228,7 @@
             <div class="url-field" id="url-field" data-node-id="3421:2167">
               <span class="link-icon-slot" aria-hidden="true"><img src="./assets/link.svg" alt="" data-node-id="3421:2169"></span>
               <label class="sr-only" for="url-input">추가할 URL</label>
-              <input id="url-input" name="url" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="웹 주소를 붙여 넣어 주세요" aria-describedby="url-error">
+              <input id="url-input" name="url" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="피그마, 노션, 비핸스 같은 외부 웹 주소를 붙여 넣어 주시면 돼요. 없다면 넘어가도 좋아요:)" aria-describedby="url-error">
             </div>
             <p class="field-error" id="url-error" role="alert" hidden></p>
           </form>

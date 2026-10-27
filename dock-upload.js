@@ -25,7 +25,7 @@
         <div class="dock-drop-head"><strong>FILE</strong><span class="dock-drop-count">0</span></div>
         <button type="button" class="dock-drop-zone" aria-label="업로드 화면으로 가서 파일 올리기">
           <img src="assets/upload.svg" alt="" width="77" height="77">
-          <span>파일을 업로드하면 내 바톤 메이킹이 시작돼요!<br>어떤 파일이든 올려보세요:)</span>
+          <span>끌어다 놓기만 하면 바로 시작돼요!<br>완성하고 싶은 파일을 여기에 올려 주세요:)</span>
         </button>
         <input type="file" multiple hidden>
       </div>`;

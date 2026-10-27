@@ -61,6 +61,13 @@
     </a>`;
   }
 
+  /* 10/27 검색 결과 카드: 앞면 왼쪽 아래에 들어 있는 파일 형태(.ai .pdf …) */
+  function fileChips(r) {
+    let list = window.MorogadoFilterModal?.exts(r) || [];
+    if (!list.length) list = (r.displayTools?.length ? r.displayTools : r.tools || []).map(t => '.' + String(t).toLowerCase().replace(/[^a-z0-9]/g, '')).filter(x => x.length > 1);
+    list = [...new Set(list)].slice(0, 4);
+    return list.length ? `<span class="fh-card-files">${list.map(x => `<span>${E(x)}</span>`).join('')}</span>` : '';
+  }
   function feedCard(r, i, ctx, keySuffix = '') {
     const t = r.thumbnails?.[0];
     const tools = (r.displayTools?.length ? r.displayTools : [...new Set(r.tools || [])]).slice(0, 3);
@@ -81,7 +88,7 @@
     return `<article class="fh-card" data-baton="${E(r.id)}" data-key="${E(r.id + keySuffix)}" style="--i:${i % 10}">
       <a class="fh-card-link" href="#/baton/${encodeURIComponent(r.id)}" aria-label="${E(r.title)} 상세 보기. 계승 ${relay}개, 다운로드 ${comments}회.">
         <span class="fh-flip">
-          <span class="fh-card-base fh-face fh-front"><span class="fh-card-img">${img}</span></span>
+          <span class="fh-card-base fh-face fh-front"><span class="fh-card-img">${img}</span>${ctx.searching ? fileChips(r) : ''}</span>
           <span class="fh-face fh-back" aria-hidden="true">
             <span class="fh-back-bg">${thumb}</span><span class="fh-back-veil"></span>
             <span class="fh-back-in">
@@ -105,9 +112,18 @@
     const chips = [['all', `${ICON.user}<span>For ${E(nickname)}</span>`], ['deadline', '기한 있는 바톤'], ['first', '첫 계승을 기다리는 바톤'], ['deep', '족보 깊은 바톤'], ['reborn', '다시 태어난 바톤']];
     /* 10/27 검색어나 필터 모달 조건이 있으면 'TOP5'는 숨기고 검색 결과만 보여 줘요 */
     const searching = !!query || !!filter.adv;
-    const feedTitle = query ? `‘${E(query)}’ 검색 결과` : filter.adv ? '고른 조건으로 찾은 바톤' : `<u>${E(nickname)}님</u>이 마음에 들어하실 만한 바톤`;
+    ctx.searching = searching;
+    let feedTitle = `<u>${E(nickname)}님</u>이 마음에 들어하실 만한 바톤`;
+    if (searching) {
+      const picked = [...(query ? [query] : []), ...(window.MorogadoFilterModal?.labels(filter.adv) || [])];
+      const shown = picked.slice(0, 4), more = picked.length - shown.length;
+      const last = String(more ? '개' : shown.at(-1) || '').trim().slice(-1), code = last.charCodeAt(0) - 0xAC00;
+      const josa = code >= 0 && code < 11172 && code % 28 && code % 28 !== 8 ? '으로' : '로';
+      feedTitle = `${shown.map(x => `‘${E(x)}’`).join(', ')}${more ? ` 외 ${more}개` : ''}${josa} 찾은 바톤`;
+    }
     main.innerHTML = `<div class="fh-home${searching ? ' is-searching' : ''}">
       <div class="fh-deco" aria-hidden="true"><svg viewBox="0 0 1440 1100" preserveAspectRatio="none"><image href="assets/director-reference/home-vector-0.svg" x="713" y="708" width="357" height="544"/><image href="assets/director-reference/home-vector-1.svg" x="0" y="637" width="262" height="189"/><image href="assets/director-reference/home-vector-2.svg" x="996" y="0" width="444" height="204"/><image href="assets/director-reference/home-vector-3.svg" x="1137" y="558" width="303" height="239"/><image href="assets/director-reference/home-vector-4.svg" x="0" y="48" width="609" height="273"/></svg></div>
+      ${searching ? `<button type="button" class="fh-back-main" data-action="reset-search">${ICON.arrow}<span>탐색 메인으로 돌아가기</span></button>` : ''}
       <section class="fh-hero" aria-labelledby="fh-hero-title">
         <h1 class="fh-h1" id="fh-hero-title">지난 주,<br>가장 많이 이어받은 바톤&nbsp; TOP5</h1>
         <div class="fh-hero-strip" data-count="5"></div>
@@ -115,7 +131,7 @@
       </section>
       <section class="fh-feed${defaultFeed ? '' : ' is-filtered'}" aria-labelledby="fh-feed-title">
         <div class="fh-feed-tab" aria-hidden="true"></div>
-        <h2 class="fh-h2" id="fh-feed-title">${feedTitle}${searching ? ` <span class="fh-result-n">${items.length}개</span>` : ''}</h2>${searching ? '<button type="button" class="fh-result-reset" data-action="reset-search">검색 지우기</button>' : ''}
+        <h2 class="fh-h2" id="fh-feed-title">${feedTitle}${searching ? ` <span class="fh-result-n">${items.length}개</span>` : ''}</h2>
         <div class="fh-chips">${chips.map(([k, label]) => `<button class="fh-chip${k === 'all' ? ' fh-chip-for' : ''}" data-feed-filter="${k}" aria-pressed="${filter.kind === k}">${label}</button>`).join('')}<button class="fh-chip fh-chip-filter" data-action="filter" aria-label="분야·산출물·정렬 필터">${ICON.filter}</button></div>
         <div class="fh-grid" role="list"></div>
         <div class="fh-sentinel" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -123,6 +139,8 @@
     </div>`;
 
     const grid = main.querySelector('.fh-grid');
+    /* 검색 결과 제목이 길면 패널 위 탭도 제목만큼 늘려요 */
+    if (searching) requestAnimationFrame(() => { const h2 = main.querySelector('#fh-feed-title'), tab = main.querySelector('.fh-feed-tab'); if (h2 && tab) { const u = Math.min(1, Math.max(.72, innerWidth / 1700)); tab.style.width = Math.max(565 * u, h2.scrollWidth + 82 * u) + 'px'; } });
     const strip = main.querySelector('.fh-hero-strip');
     const infinite = !!defaultFeed;
     rand = seeded(FEED_SEED);

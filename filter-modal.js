@@ -269,5 +269,19 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireHeader); else wireHeader();
   addEventListener('hashchange', () => close(true));
 
-  window.MorogadoFilterModal = { open, close, match, isBlank };
+  /* 검색 결과 제목에 쓰는 '고른 값' 목록 */
+  function labels(a) {
+    if (isBlank(a)) return [];
+    const out = [];
+    if (a.type !== 'all') out.push(TYPES.find(t => t[0] === a.type)[1]);
+    out.push(...a.fields, ...a.exts);
+    a.stages.forEach(v => out.push(STAGES.find(x => x[0] === v)[1].split(' · ').pop()));
+    a.struct.forEach(v => out.push(STRUCT.find(x => x[0] === v)[1]));
+    if (a.logPreset) out.push(LOG_PRESETS.find(x => x[0] === a.logPreset)[1].replace(' 바톤', ''));
+    else if (a.logMin !== 0 || a.logMax !== 5) out.push(`로그 ${a.logMin}~${a.logMax}${a.logMax === 5 ? '번 이상' : '번'}`);
+    if (a.deadline) out.push('기한 있음');
+    return out;
+  }
+  function extsOfRecord(r) { return [...extsOf(r)]; }
+  window.MorogadoFilterModal = { open, close, match, isBlank, labels, exts: extsOfRecord };
 })();

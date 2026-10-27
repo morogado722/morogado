@@ -461,9 +461,9 @@
     required('completion-hint').textContent = hasFiles
       ? '파일을 올리면 절반이 완성돼요.' : '파일을 올리면 절반이 완성돼요.';
     required('drop-title').textContent = hasFiles
-      ? '파일을 올린 것만으로 벌써 절반!' : '파일을 업로드하면 내 바톤 메이킹이 시작돼요!';
+      ? '파일을 올린 것만으로 벌써 절반!' : '끌어다 놓기만 하면 바로 시작돼요!';
     required('drop-detail').textContent = hasFiles
-      ? '더 많은 파일을 올릴수록 바톤이 상세해져요:)' : '어떤 파일이든 올려보세요:)';
+      ? '더 많은 파일을 올릴수록 바톤이 상세해져요:)' : '완성하고 싶은 파일을 여기에 올려 주세요:)';
     ui.dropzone.setAttribute('aria-label', hasFiles ? '바톤 파일 더 선택' : '바톤 파일 선택');
     // These are the two original Figma glow exports, not approximated gradients.
     const top = document.querySelector('.glow-top');

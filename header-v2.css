@@ -85,3 +85,13 @@ html body .site-header .hd-icon,html body .site-header .hd-avatar,html body[data
 
 /* 10/27 예전 헤더의 메뉴 밑줄(::after)이 all:unset 때문에 헤더 폭만큼 길게 그어지던 것 — 새 헤더엔 밑줄 없음 */
 html body .site-header .hd-nav a::after,html body .site-header .hd-nav button::after{content:none!important;display:none!important}
+
+/* 10/27 화면 전환: 헤더는 고정, 본문만 살짝 페이드·올라오기 */
+html body .site-header{view-transition-name:site-header}
+::view-transition-old(root){animation:mg-route-out .2s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(root){animation:mg-route-in .42s cubic-bezier(.22,.9,.24,1) both}
+::view-transition-group(site-header){animation:none}
+@keyframes mg-route-out{to{opacity:0;transform:translateY(-6px)}}
+@keyframes mg-route-in{from{opacity:0;transform:translateY(10px)}}
+#main.route-in{animation:mg-route-in .42s cubic-bezier(.22,.9,.24,1) both}
+@media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root),#main.route-in{animation:none}}

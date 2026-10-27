@@ -285,3 +285,6 @@ body::before {
 
 /* 10/18 토스트: 사이트와 같은 작고 반투명한 알약 모양 */
 .toast{padding:9px 18px!important;border-radius:999px!important;background:rgba(38,38,38,.62)!important;-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);color:#fff!important;font-size:13px!important;font-weight:500;line-height:1.45!important;box-shadow:0 6px 20px rgba(38,38,38,.14)!important;max-width:min(420px,calc(100vw - 32px))!important;text-align:center}
+
+/* 10/27 분석 중 화면의 '파일 올리기로 돌아가기' 버튼은 숨겨요(loading.js가 요소를 찾으니 지우지 않고 가려요) */
+.analysis-return{display:none!important}
