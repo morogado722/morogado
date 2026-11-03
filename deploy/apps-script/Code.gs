@@ -401,6 +401,28 @@ function 연결_테스트() {
 }
 
 
+// 11/3 편집기에서 실행: AI 분석이 안 될 때 원인을 한 번에 확인해요. 결과는 아래 '실행 로그'에 떠요.
+function AI_점검() {
+  const key = prop('OPENAI_API_KEY');
+  const lines = [];
+  lines.push('1) OpenAI 키: ' + (key ? '설정됨 (' + key.slice(0, 7) + '…)' : '없음 → 스크립트 속성에 OPENAI_API_KEY를 넣어 주세요'));
+  const left = aiRemaining();
+  lines.push('2) 오늘 남은 AI 횟수: ' + (left === null ? '상한 없음' : left + '회 (AI_DAILY_LIMIT ' + aiLimit() + ')'));
+  if (key) {
+    const res = UrlFetchApp.fetch('https://api.openai.com/v1/responses', { method: 'post', contentType: 'application/json', headers: { Authorization: 'Bearer ' + key },
+      payload: JSON.stringify({ model: prop('OPENAI_MODEL') || DEFAULT_MODEL, store: false, input: '한 단어로만 답해 주세요: 안녕', max_output_tokens: 16 }), muteHttpExceptions: true });
+    const code = res.getResponseCode();
+    let why = '';
+    try { why = (JSON.parse(res.getContentText()).error || {}).message || ''; } catch (e) { why = res.getContentText().slice(0, 200); }
+    const hint = code === 200 ? '정상이에요 ✅' : code === 401 ? '키가 틀렸거나 지워졌어요 → 새 키를 만들어 넣어 주세요'
+      : code === 429 ? '결제 잔액이 없거나 한도를 넘었어요 → platform.openai.com 결제(Billing)를 확인해 주세요'
+      : code === 404 ? '모델 이름을 확인해 주세요(OPENAI_MODEL)' : '응답 오류';
+    lines.push('3) OpenAI 실제 호출: ' + code + ' · ' + hint + (code === 200 ? '' : (why ? ' · ' + why : '')));
+  }
+  lines.push('4) 졸전 바톤 저장 시트: ' + (prop('BATON_SHEET_ID') ? '연결됨' : '아직 없음(첫 바톤을 올리면 만들어져요)'));
+  Logger.log(lines.join('\n'));
+}
+
 // 편집기에서 한 번 실행: 사용성 평가 설문(구글 폼)을 만들고, 응답이 이 시트에 쌓이게 연결해요.
 // 실행 후 '새 버전으로 배포'까지 하면 바톤 완성 화면에 설문 버튼이 나타나요.
 function 설문_만들기() {
