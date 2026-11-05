@@ -29,7 +29,8 @@
   const hero = () => `<nav class="rl-mtabs" aria-label="바톤 기록 메뉴"><a href="#/community"${current && current.tab === 'talk' ? '' : ' aria-current="page"'}>바톤 로그</a><a href="#/community/talk"${current && current.tab === 'talk' ? ' aria-current="page"' : ''}>주니어 디자이너 커뮤니티</a></nav><header class="rl-hero"><h1><b>멈췄던 작업,</b> 그 뒤로<br><b>어디까지 달렸을까요?</b></h1></header>`;
 
   function block(b) {
-    const tiles = b.steps.slice(1).map((s, i) => `<span class="rl-tile" tabindex="0" style="--i:${i + 1}" data-label="${E(s)} 상세"><span class="rl-face"><img src="${A}${b.id}${i + 2}.webp${V}" alt="${E(s)}" loading="lazy"></span><img class="rl-card" src="${A}card-${b.id}${i + 2}.webp${V}" alt="" aria-hidden="true" loading="lazy"></span>`).join('');
+    const nodes = b.steps.map((s, i) => { const n = i + 1, img = i ? `${A}${b.id}${n}.webp${V}` : `${A}${b.id}1.webp${V}`, card = i ? `${A}card-${b.id}${n}.webp${V}` : `${A}card-${b.id}.webp${V}`;
+      return `<span class="rl-node" data-i="${i}" tabindex="0" aria-label="${n}번째 러너 · ${E(s)}"><span class="rl-face"><img src="${img}" alt="" ${i > 1 ? 'loading="lazy"' : ''}></span><img class="rl-card" src="${card}" alt="" aria-hidden="true" ${i > 1 ? 'loading="lazy"' : ''}></span>`; }).join('');
     return `<article class="rl-block" tabindex="-1">
       <div class="rl-info">
         <div class="rl-name"><h3>${E(b.title)}</h3><p>${E(b.meta)}</p></div>
@@ -39,12 +40,7 @@
           <a class="rl-join" href="#/upload"><span class="rl-join-bg" aria-hidden="true"></span><span class="rl-join-ic" aria-hidden="true"><i class="rl-chev">${ICON.chev}</i><i class="rl-arrow">${ICON.arrow}</i></span><span class="rl-join-tx">나도 이어달리기</span></a>
         </div>
       </div>
-      <div class="rl-panel" aria-label="${E(b.title)} 릴레이 로그">
-        <div class="rl-rail">
-          <span class="rl-first" tabindex="0"><span class="rl-first-tile"><img src="${A}${b.id}1.webp${V}" alt="${E(b.steps[0])}"></span><img class="rl-card" src="${A}card-${b.id}.webp${V}" alt="" aria-hidden="true"></span>
-          ${tiles}
-        </div>
-      </div>
+      <div class="rl-panel" aria-label="${E(b.title)} 릴레이 로그"><div class="rl-rail">${nodes}</div></div>
     </article>`;
   }
 
@@ -58,6 +54,7 @@
         <div class="rl-sec-head"><div><h2><span>다양한 아이디어가</span><b>가장 많이 쏟아진 바톤</b></h2></div></div>
         ${block(BATONS[2])}
       </section></section>`;
+    root.querySelectorAll('.rl-panel').forEach(setupPanel);
   }
 
   /* ===== 주니어 디자이너 커뮤니티 ===== */
@@ -157,68 +154,85 @@
     if (!current || current.tab !== 'talk' || !e.target.matches('[data-q]')) return;
     clearTimeout(qTimer); const v = e.target.value; qTimer = setTimeout(() => { ui.q = v; draw(); const i = current.main.querySelector('[data-q]'); if (i) { i.focus(); i.setSelectionRange(v.length, v.length); } }, 220);
   }
-  // 로그 가로 넘기기: 패널 위에서 휠을 굴리면 옆으로, 끝에 닿으면 페이지가 내려가요. 끌어서도 넘겨요
-  document.addEventListener('wheel', e => {
-    const rail = e.target.closest?.('.rl-rail'); if (!rail || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-    const max = rail.scrollWidth - rail.clientWidth; if (max <= 0) return;
-    const next = rail.scrollLeft + e.deltaY; if ((e.deltaY < 0 && rail.scrollLeft <= 0) || (e.deltaY > 0 && rail.scrollLeft >= max - 1)) return;
-    e.preventDefault(); rail.scrollLeft = Math.max(0, Math.min(max, next));
-  }, { passive: false });
-  let drag = null;
-  document.addEventListener('pointerdown', e => { const rail = e.target.closest?.('.rl-rail'); if (!rail || e.button !== 0) return; drag = { rail, x: e.clientX, left: rail.scrollLeft, moved: false }; });
-  addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x; if (Math.abs(dx) > 4) { drag.moved = true; drag.rail.classList.add('is-drag'); } drag.rail.scrollLeft = drag.left - dx; });
-  addEventListener('pointerup', () => { if (drag) drag.rail.classList.remove('is-drag'); drag = null; });
-  // 훑어보기: 블록에 들어오면 1번부터 천천히 흘러가며 가운데 오는 칸이 카드로 커졌다 작아져요(rAF로 부드럽게).
-  // 휠·끌기·클릭이 있으면 멈추고 자유롭게 볼 수 있어요. 자유 모드에선 패널 양 끝에 마우스를 두면 그쪽으로 스르륵 넘어가요.
-  const auto = new WeakMap(), PER = 1500, HOLD = 900;
-  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  function stopAuto(block) {
-    const a = auto.get(block); if (!a) return; cancelAnimationFrame(a.raf); auto.delete(block);
-    const rail = block.querySelector('.rl-rail'); rail.classList.remove('is-auto'); rail.querySelectorAll('.is-on').forEach(x => x.classList.remove('is-on'));
+  /* 로그 엔진 — 상세페이지 릴레이 로그(figma-log.js)와 같은 방식.
+     칸마다 --x/--y/--w/--h로 자리를 잡고 transform 560ms(.16,1,.3,1)로 움직여요.
+     마우스 x에 가장 가까운 칸이 카드로 커지고 바로 옆 칸도 조금 커져요(돋보기). 넘기기는 offset을 0.12씩 따라가는 lerp.
+     블록에 처음 들어오면 1번부터 천천히 한 칸씩 훑고, 휠·끌기·마우스를 움직이면 바로 자유롭게. 패널 양 끝에 두면 그쪽으로 스르륵. */
+  const S = { base: 150, near: 176, cw: 262, ch: 301, gap: 18, left: 48, right: 96, H: 380 };
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  function setupPanel(panel) {
+    const rail = panel.querySelector('.rl-rail'), nodes = [...rail.querySelectorAll('.rl-node')], block = panel.closest('.rl-block');
+    const st = { offset: 0, target: 0, hover: -1, raf: 0, drag: null, auto: null, edge: 0, edgeRaf: 0, timer: 0 };
+    const u = () => panel.clientWidth / 736;
+    const size = i => st.hover < 0 ? S.base : Math.abs(i - st.hover) === 0 ? null : Math.abs(i - st.hover) === 1 ? S.near : S.base;
+    const widthOf = i => size(i) === null ? S.cw : size(i);
+    const total = () => nodes.reduce((t, _, i) => t + widthOf(i) + S.gap, S.left - S.gap) + S.right;
+    const maxOff = () => Math.max(0, total() - 736);
+    function layout() {
+      const k = u(); let x = S.left;
+      nodes.forEach((n, i) => {
+        const sz = size(i), w = sz === null ? S.cw : sz, h = sz === null ? S.ch : sz;
+        n.style.cssText = `--x:${(x - st.offset) * k}px;--y:${(S.H - h) / 2 * k}px;--w:${w * k}px;--h:${h * k}px;--z:${st.hover === i ? 5 : Math.abs(i - st.hover) === 1 ? 3 : 1}`;
+        n.classList.toggle('is-on', sz === null);
+        x += w + S.gap;
+      });
+      panel.classList.toggle('is-scrolled', st.offset > 4);
+      panel.classList.toggle('is-end', st.offset >= maxOff() - 4);
+    }
+    function animate() {
+      if (st.raf) return;
+      const step = () => {
+        const d = st.target - st.offset; st.offset += reduce.matches ? d : d * 0.12;
+        if (Math.abs(d) < 0.4) st.offset = st.target;
+        layout(); st.raf = st.offset !== st.target ? requestAnimationFrame(step) : 0;
+      };
+      st.raf = requestAnimationFrame(step);
+    }
+    const scrollTo = t => { st.target = Math.max(0, Math.min(maxOff(), t)); animate(); };
+    const setHover = i => { if (i === st.hover) return; st.hover = i; st.target = Math.min(st.target, maxOff()); layout(); animate(); };
+    const centerOn = i => { let x = S.left; for (let k = 0; k < i; k++) x += widthOf(k) + S.gap; scrollTo(x + S.cw / 2 - 736 / 2); };
+    function nodeAt(clientX) {
+      const r = panel.getBoundingClientRect(), k = u(), px = (clientX - r.left) / k + st.offset; let x = S.left, best = -1, dist = Infinity;
+      nodes.forEach((_, i) => { const w = widthOf(i), c = x + w / 2, d = Math.abs(px - c); if (d < dist) { dist = d; best = i; } x += w + S.gap; });
+      return dist < S.cw * .75 ? best : -1;
+    }
+    // 훑어보기
+    function stopAuto() { if (!st.auto) return; st.auto.forEach(clearTimeout); st.auto = null; }
+    function playAuto() {
+      if (st.auto || reduce.matches) return;
+      const STEP = 1100; st.auto = [];
+      nodes.forEach((_, i) => st.auto.push(setTimeout(() => { setHover(i); centerOn(i); }, 200 + i * STEP)));
+      st.auto.push(setTimeout(() => { st.hover = -1; layout(); scrollTo(0); st.auto = null; }, 200 + nodes.length * STEP + 400));
+    }
+    // 양 끝 호버로 넘기기
+    const ZONE = 150, MAXV = 6;
+    function edgeLoop() { st.edgeRaf = 0; if (!st.edge || st.auto) return; scrollTo(st.target + st.edge); st.edgeRaf = requestAnimationFrame(edgeLoop); }
+    let enteredAt = 0;
+    block.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { enteredAt = performance.now(); playAuto(); } });
+    block.addEventListener('pointerleave', () => { stopAuto(); clearTimeout(st.timer); st.edge = 0; st.hover = -1; layout(); animate(); });
+    panel.addEventListener('pointermove', e => {
+      if (st.drag) { const dx = e.clientX - st.drag.x; if (Math.abs(dx) > 4) { st.drag.moved = true; panel.classList.add('is-drag'); } st.target = Math.max(0, Math.min(maxOff(), st.drag.o - dx / u())); st.offset = st.target; layout(); return; }
+      if (e.pointerType !== 'mouse') return;
+      if (st.auto) { if (performance.now() - enteredAt < 700 || Math.abs(e.movementX) + Math.abs(e.movementY) < 3) return; stopAuto(); }
+      const r = panel.getBoundingClientRect(), x = e.clientX - r.left, w = r.width, k = u();
+      st.edge = x > w - ZONE * k ? Math.pow((x - (w - ZONE * k)) / (ZONE * k), 2) * MAXV : x < ZONE * k && st.target > 0 ? -Math.pow((ZONE * k - x) / (ZONE * k), 2) * MAXV : 0;
+      if (st.edge && !st.edgeRaf) st.edgeRaf = requestAnimationFrame(edgeLoop);
+      clearTimeout(st.timer); const cx = e.clientX; st.timer = setTimeout(() => setHover(nodeAt(cx)), 60);
+    });
+    panel.addEventListener('pointerdown', e => { if (e.button !== 0) return; stopAuto(); st.drag = { x: e.clientX, o: st.target, moved: false }; });
+    addEventListener('pointerup', () => { if (st.drag) { st.drag = null; panel.classList.remove('is-drag'); } });
+    panel.addEventListener('wheel', e => {
+      stopAuto();
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if ((st.target <= 0 && dx < 0) || (st.target >= maxOff() && dx > 0)) return;
+      e.preventDefault(); scrollTo(st.target + dx * 0.9 / u());
+      clearTimeout(st.timer); const cx = e.clientX; st.timer = setTimeout(() => setHover(nodeAt(cx)), 120);
+    }, { passive: false });
+    nodes.forEach((n, i) => n.addEventListener('focus', () => { stopAuto(); setHover(i); centerOn(i); }));
+    panel.addEventListener('focusout', e => { if (!panel.contains(e.relatedTarget)) { st.hover = -1; layout(); } });
+    new ResizeObserver(() => layout()).observe(panel);
+    layout();
   }
-  function playAuto(block) {
-    if (auto.has(block) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const rail = block.querySelector('.rl-rail'); if (!rail) return;
-    const items = [...rail.querySelectorAll('.rl-first,.rl-tile')], n = items.length, a = { t0: performance.now(), raf: 0 }; auto.set(block, a);
-    rail.classList.add('is-auto');
-    const run = n * PER, total = run + HOLD + 1400; let on = -1;
-    const center = it => it.offsetLeft + it.offsetWidth / 2 - rail.clientWidth / 2;
-    const tick = now => {
-      const t = Math.max(0, now - a.t0); let target;
-      if (t < run) {
-        const f = ease(Math.min(1, t / run)) * (n - 1), i = Math.round(f);
-        if (i !== on) { on = i; items.forEach((x, k) => x.classList.toggle('is-on', k === i)); }
-        const lo = Math.floor(f), hi = Math.min(n - 1, lo + 1);
-        target = center(items[lo]) + (center(items[hi]) - center(items[lo])) * (f - lo);
-      } else if (t < run + HOLD) { target = center(items[n - 1]); }
-      else { if (on !== -2) { on = -2; items.forEach(x => x.classList.remove('is-on')); } target = 0; }
-      rail.scrollLeft += (Math.max(0, target) - rail.scrollLeft) * .07;
-      if (t < total) a.raf = requestAnimationFrame(tick); else { auto.delete(block); rail.classList.remove('is-auto'); }
-    };
-    a.raf = requestAnimationFrame(tick);
-  }
-  document.addEventListener('mouseover', e => { const b = e.target.closest?.('.rl-block'); if (b && !b.contains(e.relatedTarget)) playAuto(b); });
-  document.addEventListener('mouseout', e => { const b = e.target.closest?.('.rl-block'); if (b && !b.contains(e.relatedTarget)) { stopAuto(b); edge.rail = null; } });
-  document.addEventListener('wheel', e => { const b = e.target.closest?.('.rl-block'); if (b) stopAuto(b); }, { passive: true, capture: true });
-  document.addEventListener('pointerdown', e => { const b = e.target.closest?.('.rl-block'); if (b) stopAuto(b); }, true);
-  // 양 끝 호버로 넘기기
-  const edge = { rail: null, v: 0, raf: 0 };
-  const ZONE = 170, MAXV = 7;
-  function edgeLoop() {
-    edge.raf = 0; const r = edge.rail; if (!r || !edge.v) return;
-    const b = r.closest('.rl-block'); if (auto.has(b)) return;
-    r.scrollLeft += edge.v; edge.raf = requestAnimationFrame(edgeLoop);
-  }
-  document.addEventListener('pointermove', e => {
-    const panel = e.target.closest?.('.rl-panel'); if (!panel || drag?.moved) { edge.v = 0; return; }
-    const rail = panel.querySelector('.rl-rail'), r = panel.getBoundingClientRect(), x = e.clientX - r.left;
-    let v = 0;
-    if (x > r.width - ZONE) v = Math.pow((x - (r.width - ZONE)) / ZONE, 2) * MAXV;
-    else if (x < ZONE && rail.scrollLeft > 0) v = -Math.pow((ZONE - x) / ZONE, 2) * MAXV;
-    edge.rail = rail; edge.v = v;
-    if (v) { const b = rail.closest('.rl-block'); if (auto.has(b) && performance.now() - auto.get(b).t0 > 600) stopAuto(b); if (!edge.raf) edge.raf = requestAnimationFrame(edgeLoop); }
-  });
-  document.addEventListener('pointerleave', () => { edge.v = 0; });
   addEventListener('scroll', () => { document.body.classList.toggle('rl-scrolled', scrollY > 40); }, { passive: true });
   document.addEventListener('click', onClick);
   document.addEventListener('submit', onSubmit);
