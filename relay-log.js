@@ -29,7 +29,7 @@
   const hero = () => `<nav class="rl-mtabs" aria-label="바톤 기록 메뉴"><a href="#/community"${current && current.tab === 'talk' ? '' : ' aria-current="page"'}>바톤 로그</a><a href="#/community/talk"${current && current.tab === 'talk' ? ' aria-current="page"' : ''}>주니어 디자이너 커뮤니티</a></nav><header class="rl-hero"><h1><b>멈췄던 작업,</b> 그 뒤로<br><b>어디까지 달렸을까요?</b></h1></header>`;
 
   function block(b) {
-    const tiles = b.steps.slice(1).map((s, i) => `<span class="rl-tile" tabindex="0" data-label="${E(s)} 상세"><img src="${A}${b.id}${i + 2}.webp" alt="${E(s)}" loading="lazy"></span>`).join('');
+    const tiles = b.steps.slice(1).map((s, i) => `<span class="rl-tile" tabindex="0" style="--i:${i + 1}" data-label="${E(s)} 상세"><span class="rl-face"><img src="${A}${b.id}${i + 2}.webp" alt="${E(s)}" loading="lazy"></span><img class="rl-card" src="${A}card-${b.id}${i + 2}.webp" alt="" aria-hidden="true" loading="lazy"></span>`).join('');
     return `<article class="rl-block" tabindex="-1">
       <div class="rl-info">
         <div class="rl-name"><h3>${E(b.title)}</h3><p>${E(b.meta)}</p></div>
@@ -164,7 +164,20 @@
 
   function syncSub(tab) {
     document.querySelectorAll('.hd-sub [data-sub]').forEach(a => { const on = a.dataset.sub === tab; a.toggleAttribute('aria-current', on); if (on) a.setAttribute('aria-current', 'page'); });
+    placeSub();
   }
+  // 하위 메뉴 글자를 위 메뉴 '바톤 기록' 글자와 같은 x에서 시작하고, '바톤 올리기' 버튼과 같은 높이 가운데에 놓아요
+  function placeSub() {
+    const sub = document.querySelector('.site-header .hd-sub'), head = document.getElementById('site-header');
+    const nav = document.querySelector('.site-header .hd-nav [data-nav="community"]'), up = document.querySelector('.site-header .hd-upload');
+    if (!sub || !head || !nav || !up || getComputedStyle(sub).display === 'none') return;
+    const h = (sub.offsetParent || head).getBoundingClientRect(), n = nav.getBoundingClientRect(), u = up.getBoundingClientRect(), first = sub.querySelector('a');
+    sub.style.left = '0px'; const lead = first.getBoundingClientRect().left - sub.getBoundingClientRect().left;
+    sub.style.left = Math.round(n.left - h.left - lead) + 'px';
+    sub.style.top = Math.round(u.top - h.top + u.height / 2 - sub.offsetHeight / 2) + 'px';
+  }
+  addEventListener('resize', () => { if (current) placeSub(); });
+  document.fonts?.ready?.then(() => { if (current) placeSub(); });
 
   window.MorogadoRelay = {
     render(main, { tab = 'log' } = {}) {
