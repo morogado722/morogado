@@ -168,6 +168,30 @@
   document.addEventListener('pointerdown', e => { const rail = e.target.closest?.('.rl-rail'); if (!rail || e.button !== 0) return; drag = { rail, x: e.clientX, left: rail.scrollLeft, moved: false }; });
   addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x; if (Math.abs(dx) > 4) { drag.moved = true; drag.rail.classList.add('is-drag'); } drag.rail.scrollLeft = drag.left - dx; });
   addEventListener('pointerup', () => { if (drag) drag.rail.classList.remove('is-drag'); drag = null; });
+  // 훑어보기: 블록에 들어오면 1번부터 한 장씩 카드가 됐다 돌아가며 옆으로 넘어가요. 휠·끌기·마우스 움직임이 있으면 바로 멈추고 자유롭게 볼 수 있어요
+  const auto = new WeakMap();
+  function stopAuto(block) {
+    const a = auto.get(block); if (!a) return; a.timers.forEach(clearTimeout); auto.delete(block);
+    const rail = block.querySelector('.rl-rail'); rail.classList.remove('is-auto'); rail.querySelectorAll('.is-on').forEach(x => x.classList.remove('is-on'));
+  }
+  function playAuto(block) {
+    if (auto.has(block) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const rail = block.querySelector('.rl-rail'); if (!rail) return;
+    const items = [...rail.querySelectorAll('.rl-first,.rl-tile')], a = { timers: [], t0: performance.now() }; auto.set(block, a);
+    rail.classList.add('is-auto');
+    const STEP = 560, card = () => 262 * Math.min(1, Math.max(.72, innerWidth / 1440));
+    items.forEach((it, i) => a.timers.push(setTimeout(() => {
+      items.forEach(x => x.classList.toggle('is-on', x === it));
+      rail.scrollTo({ left: Math.max(0, it.offsetLeft - (rail.clientWidth - card()) / 2), behavior: 'smooth' });
+    }, 120 + i * STEP)));
+    a.timers.push(setTimeout(() => { items.forEach(x => x.classList.remove('is-on')); rail.scrollTo({ left: 0, behavior: 'smooth' }); }, 120 + items.length * STEP));
+    a.timers.push(setTimeout(() => { auto.delete(block); rail.classList.remove('is-auto'); }, 120 + items.length * STEP + 500));
+  }
+  document.addEventListener('mouseover', e => { const b = e.target.closest?.('.rl-block'); if (b && !b.contains(e.relatedTarget)) playAuto(b); });
+  document.addEventListener('mouseout', e => { const b = e.target.closest?.('.rl-block'); if (b && !b.contains(e.relatedTarget)) stopAuto(b); });
+  document.addEventListener('pointermove', e => { const b = e.target.closest?.('.rl-block'), a = b && auto.get(b); if (a && performance.now() - a.t0 > 350 && (Math.abs(e.movementX) + Math.abs(e.movementY) > 2) && e.target.closest('.rl-panel')) stopAuto(b); });
+  document.addEventListener('wheel', e => { const b = e.target.closest?.('.rl-block'); if (b) stopAuto(b); }, { passive: true, capture: true });
+  document.addEventListener('pointerdown', e => { const b = e.target.closest?.('.rl-block'); if (b) stopAuto(b); }, true);
   addEventListener('scroll', () => { document.body.classList.toggle('rl-scrolled', scrollY > 40); }, { passive: true });
   document.addEventListener('click', onClick);
   document.addEventListener('submit', onSubmit);
@@ -185,7 +209,7 @@
     const h = (sub.offsetParent || head).getBoundingClientRect(), n = nav.getBoundingClientRect(), u = up.getBoundingClientRect(), first = sub.querySelector('a');
     sub.style.left = '0px'; const lead = first.getBoundingClientRect().left - sub.getBoundingClientRect().left;
     sub.style.left = Math.round(n.left - h.left - lead) + 'px';
-    sub.style.top = Math.round(u.top - h.top + u.height / 2 - sub.offsetHeight / 2) + 'px';
+    sub.style.top = Math.round(u.top - h.top + u.height / 2 - sub.offsetHeight / 2 + 10 * Math.min(1, Math.max(.72, innerWidth / 1440))) + 'px';
   }
   addEventListener('resize', () => { if (current) placeSub(); });
   document.fonts?.ready?.then(() => { if (current) placeSub(); });
