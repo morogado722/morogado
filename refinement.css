@@ -353,3 +353,20 @@ body::before {
 .upload-actions .next-button{border-radius:26px 14px 26px 26px;
   box-shadow:inset 0 0 0 2px rgb(255 255 255 / 80%),inset 3px -4px 0 rgb(255 255 255 / 92%),inset 0 -12px 18px rgb(255 255 255 / 50%),0 12px 30px rgb(0 201 127 / 28%)}
 .upload-actions .next-button:hover{box-shadow:inset 0 0 0 2px rgb(255 255 255 / 85%),inset 3px -4px 0 rgb(255 255 255 / 95%),inset 0 -12px 18px rgb(255 255 255 / 55%),0 16px 36px rgb(0 201 127 / 36%)}
+
+/* 11/5 3차 '다음으로' 인터랙션(레퍼런스 영상: 테두리를 따라 빛줄기가 계속 돌아요).
+   하얀 빛머리 + 민트·청록 꼬리. .mg-orbit(흐림)이 바깥 빛 번짐, ::before가 또렷한 선. 마우스를 올리면 빛이 더 번져요 */
+@property --mg-orbit{syntax:'<angle>';inherits:true;initial-value:0deg}
+.upload-actions .next-button,.upload-actions:not([hidden]) .next-button{overflow:visible;--mg-orbit-speed:3.2s;animation:mg-next-pop .7s cubic-bezier(.22,1.4,.36,1) both,mg-orbit var(--mg-orbit-speed) linear infinite}
+.upload-actions .next-button::before,.upload-actions .next-button .mg-orbit i{content:"";position:absolute;border-radius:inherit;pointer-events:none;
+  background:conic-gradient(from var(--mg-orbit),
+    transparent 0deg 40deg,rgb(0 213 224 / 0%) 44deg,#00D5E0 92deg,#00C97F 114deg,#FFFFFF 126deg,transparent 134deg,
+    transparent 220deg,rgb(0 213 224 / 0%) 224deg,#00D5E0 272deg,#00C97F 294deg,#FFFFFF 306deg,transparent 314deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.upload-actions .next-button::before{inset:-1px;padding:2px;z-index:2}
+.upload-actions .next-button .mg-orbit{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;filter:blur(6px);opacity:.9;transition:opacity .3s ease,filter .3s ease}
+.upload-actions .next-button .mg-orbit i{inset:-4px;padding:5px}
+.upload-actions .next-button > span:first-child{position:relative;z-index:3}
+.upload-actions .next-button:hover .mg-orbit{filter:blur(9px);opacity:1}
+@keyframes mg-orbit{to{--mg-orbit:360deg}}
+@media (prefers-reduced-motion:reduce){.upload-actions .next-button{animation:none}}
