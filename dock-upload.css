@@ -20,3 +20,14 @@ body.is-dock-drop .floating-dock{z-index:70}
 .dock-drop-zone:hover,.dock-drop-zone.is-over{border-color:#00f998;background:#fbfffd}
 .dock-drop-zone:hover img,.dock-drop-zone.is-over img{transform:translateY(-4px)}
 .dock-drop-zone:focus-visible{outline:2px solid rgba(0,214,140,.6);outline-offset:3px}
+
+/* 11/5 하단 독: 아이콘에 마우스를 올리면 같은 알약 안에서 이름(검색 · 저장 · 내 바톤)이 옆으로 펼쳐져요 */
+@media (min-width:768px){
+  body .floating-dock>div a,body .floating-dock>div button{width:auto;min-width:calc(36*var(--u));padding:0 calc(6*var(--u));display:inline-flex;align-items:center;justify-content:center;border-radius:999px;
+    transition:background .35s cubic-bezier(.22,.9,.24,1),padding .45s cubic-bezier(.22,.9,.24,1)}
+  body .floating-dock .dock-label{font:700 calc(15*var(--u))/1 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);font-style:normal;color:#262626;white-space:nowrap;overflow:hidden;
+    max-width:0;opacity:0;margin-left:0;transition:max-width .45s cubic-bezier(.22,.9,.24,1),opacity .3s ease,margin .45s cubic-bezier(.22,.9,.24,1)}
+  body .floating-dock>div a:hover,body .floating-dock>div button:hover,body .floating-dock>div a:focus-visible,body .floating-dock>div button:focus-visible{transform:none;background:#EFEFEF;box-shadow:none;padding:0 calc(16*var(--u)) 0 calc(10*var(--u))}
+  body .floating-dock>div :is(a,button):is(:hover,:focus-visible) .dock-label{max-width:calc(80*var(--u));opacity:1;margin-left:calc(8*var(--u))}
+}
+@media (max-width:767px){body .floating-dock .dock-label{display:none}}
