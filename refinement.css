@@ -384,3 +384,14 @@ body::before {
 .upload-actions .next-button .mg-orbit{opacity:.45;filter:blur(7px)}
 .upload-actions .next-button:hover .mg-orbit{opacity:.7;filter:blur(9px)}
 @keyframes mg-next-flow{to{background-position:100% 50%}}
+
+/* 11/5 5차 '다음으로': 탁해 보이던 원인(연한 세 색 바탕 + 테두리 전체에 색) 정리.
+   바탕은 깨끗한 흰색, 테두리는 연회색 선. 색은 빛줄기 하나에만 — 시딩 블루 → 플랜팅 그린 → 그로잉 옐로우 → 하얀 빛머리 */
+.upload-actions .next-button,.upload-actions:not([hidden]) .next-button{background:#fff;color:#262626;
+  box-shadow:inset 0 0 0 1px #E4E4E4,0 2px 8px rgb(38 38 38 / 5%);
+  animation:mg-next-pop .7s cubic-bezier(.22,1.4,.36,1) both,mg-orbit 3.2s linear infinite}
+.upload-actions .next-button:hover,.upload-actions:not([hidden]) .next-button:hover{background:#fff;box-shadow:inset 0 0 0 1px #DADADA,0 4px 12px rgb(38 38 38 / 7%)}
+.upload-actions .next-button::before,.upload-actions .next-button .mg-orbit i{
+  background:conic-gradient(from var(--mg-orbit),transparent 0deg 150deg,#00FFEE 220deg,#00F998 290deg,#E3EA2D 345deg,#FFFFFF 356deg,transparent 360deg)}
+.upload-actions .next-button .mg-orbit{opacity:.6;filter:blur(6px)}
+.upload-actions .next-button:hover .mg-orbit{opacity:.85;filter:blur(8px)}
