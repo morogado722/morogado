@@ -60,11 +60,12 @@ body[data-route="community"].rl-scrolled .site-header .hd-sub{opacity:0;transfor
 .rl-rail{position:absolute;inset:0;user-select:none;cursor:grab}
 .rl-panel.is-drag .rl-rail{cursor:grabbing}
 .rl-rail img{-webkit-user-drag:none;pointer-events:none}
+.rl-rail{will-change:transform}
 .rl-node{position:absolute;left:0;top:0;width:var(--w);height:var(--h);transform:translate(var(--x),var(--y));z-index:var(--z,1);outline:none;
-  transition:transform 560ms cubic-bezier(.16,1,.3,1),width 560ms cubic-bezier(.16,1,.3,1),height 640ms cubic-bezier(.16,1,.3,1)}
-.rl-face{position:absolute;inset:0;display:grid;place-items:center;border-radius:calc(4*var(--hu));background:#fff;box-shadow:0 calc(2*var(--hu)) calc(6*var(--hu)) rgba(38,38,38,.12);transition:opacity 420ms cubic-bezier(.16,1,.3,1)}
+  transition:transform 1100ms cubic-bezier(.45,.05,.25,1),width 1100ms cubic-bezier(.45,.05,.25,1),height 1100ms cubic-bezier(.45,.05,.25,1)}
+.rl-face{position:absolute;inset:0;display:grid;place-items:center;border-radius:calc(4*var(--hu));background:#fff;box-shadow:0 calc(2*var(--hu)) calc(6*var(--hu)) rgba(38,38,38,.12);transition:opacity 700ms ease}
 .rl-face img{max-width:78%;max-height:78%;object-fit:contain;display:block}
-.rl-card{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;border-radius:calc(12*var(--hu));transition:opacity 420ms cubic-bezier(.16,1,.3,1)}
+.rl-card{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;border-radius:calc(12*var(--hu));transition:opacity 700ms ease .1s,box-shadow 900ms ease}
 .rl-node.is-on .rl-face{opacity:0}
 .rl-node.is-on .rl-card{opacity:1;box-shadow:0 calc(12*var(--hu)) calc(28*var(--hu)) rgba(38,38,38,.18)}
 .rl-node:focus-visible .rl-face,.rl-node:focus-visible .rl-card{outline:2px solid #00c97f;outline-offset:3px}

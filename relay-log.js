@@ -158,7 +158,7 @@
      칸마다 --x/--y/--w/--h로 자리를 잡고 transform 560ms(.16,1,.3,1)로 움직여요.
      마우스 x에 가장 가까운 칸이 카드로 커지고 바로 옆 칸도 조금 커져요(돋보기). 넘기기는 offset을 0.12씩 따라가는 lerp.
      블록에 처음 들어오면 1번부터 천천히 한 칸씩 훑고, 휠·끌기·마우스를 움직이면 바로 자유롭게. 패널 양 끝에 두면 그쪽으로 스르륵. */
-  const S = { base: 150, near: 176, cw: 262, ch: 301, gap: 18, left: 48, right: 96, H: 380 };
+  const S = { base: 150, near: 150, cw: 262, ch: 301, gap: 18, left: 48, right: 96, H: 380 };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   function setupPanel(panel) {
     const rail = panel.querySelector('.rl-rail'), nodes = [...rail.querySelectorAll('.rl-node')], block = panel.closest('.rl-block');
@@ -172,19 +172,21 @@
       const k = u(); let x = S.left;
       nodes.forEach((n, i) => {
         const sz = size(i), w = sz === null ? S.cw : sz, h = sz === null ? S.ch : sz;
-        n.style.cssText = `--x:${(x - st.offset) * k}px;--y:${(S.H - h) / 2 * k}px;--w:${w * k}px;--h:${h * k}px;--z:${st.hover === i ? 5 : Math.abs(i - st.hover) === 1 ? 3 : 1}`;
+        n.style.cssText = `--x:${x * k}px;--y:${(S.H - h) / 2 * k}px;--w:${w * k}px;--h:${h * k}px;--z:${st.hover === i ? 5 : Math.abs(i - st.hover) === 1 ? 3 : 1}`;
         n.classList.toggle('is-on', sz === null);
         x += w + S.gap;
       });
+      rail.style.transform = `translate3d(${-st.offset * k}px,0,0)`;
       panel.classList.toggle('is-scrolled', st.offset > 4);
       panel.classList.toggle('is-end', st.offset >= maxOff() - 4);
     }
+    function moveRail() { rail.style.transform = `translate3d(${-st.offset * u()}px,0,0)`; panel.classList.toggle('is-scrolled', st.offset > 4); panel.classList.toggle('is-end', st.offset >= maxOff() - 4); }
     function animate() {
       if (st.raf) return;
       const step = () => {
-        const d = st.target - st.offset; st.offset += reduce.matches ? d : d * 0.12;
+        const d = st.target - st.offset; st.offset += reduce.matches ? d : d * (st.auto ? 0.045 : 0.09);
         if (Math.abs(d) < 0.4) st.offset = st.target;
-        layout(); st.raf = st.offset !== st.target ? requestAnimationFrame(step) : 0;
+        moveRail(); st.raf = st.offset !== st.target ? requestAnimationFrame(step) : 0;
       };
       st.raf = requestAnimationFrame(step);
     }
@@ -200,9 +202,10 @@
     function stopAuto() { if (!st.auto) return; st.auto.forEach(clearTimeout); st.auto = null; }
     function playAuto() {
       if (st.auto || reduce.matches) return;
-      const STEP = 1100; st.auto = [];
-      nodes.forEach((_, i) => st.auto.push(setTimeout(() => { setHover(i); centerOn(i); }, 200 + i * STEP)));
-      st.auto.push(setTimeout(() => { st.hover = -1; layout(); scrollTo(0); st.auto = null; }, 200 + nodes.length * STEP + 400));
+      const FIRST = 300, STEP = 1500; st.auto = [];
+      nodes.forEach((_, i) => st.auto.push(setTimeout(() => { setHover(i); if (i) centerOn(i); }, FIRST + i * STEP)));
+      st.auto.push(setTimeout(() => { st.hover = -1; layout(); scrollTo(0); }, FIRST + nodes.length * STEP + 300));
+      st.auto.push(setTimeout(() => { st.auto = null; }, FIRST + nodes.length * STEP + 2600));
     }
     // 양 끝 호버로 넘기기
     const ZONE = 150, MAXV = 6;
@@ -211,9 +214,9 @@
     block.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { enteredAt = performance.now(); playAuto(); } });
     block.addEventListener('pointerleave', () => { stopAuto(); clearTimeout(st.timer); st.edge = 0; st.hover = -1; layout(); animate(); });
     panel.addEventListener('pointermove', e => {
-      if (st.drag) { const dx = e.clientX - st.drag.x; if (Math.abs(dx) > 4) { st.drag.moved = true; panel.classList.add('is-drag'); } st.target = Math.max(0, Math.min(maxOff(), st.drag.o - dx / u())); st.offset = st.target; layout(); return; }
+      if (st.drag) { const dx = e.clientX - st.drag.x; if (Math.abs(dx) > 4) { st.drag.moved = true; panel.classList.add('is-drag'); } st.target = Math.max(0, Math.min(maxOff(), st.drag.o - dx / u())); st.offset = st.target; moveRail(); return; }
       if (e.pointerType !== 'mouse') return;
-      if (st.auto) { if (performance.now() - enteredAt < 700 || Math.abs(e.movementX) + Math.abs(e.movementY) < 3) return; stopAuto(); }
+      if (st.auto) return;
       const r = panel.getBoundingClientRect(), x = e.clientX - r.left, w = r.width, k = u();
       st.edge = x > w - ZONE * k ? Math.pow((x - (w - ZONE * k)) / (ZONE * k), 2) * MAXV : x < ZONE * k && st.target > 0 ? -Math.pow((ZONE * k - x) / (ZONE * k), 2) * MAXV : 0;
       if (st.edge && !st.edgeRaf) st.edgeRaf = requestAnimationFrame(edgeLoop);
