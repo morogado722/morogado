@@ -334,3 +334,22 @@ body::before {
 .upload-actions .next-button{border:0;gap:0;justify-content:center;box-shadow:inset 0 -6px 14px rgb(0 160 110 / 18%),0 10px 28px rgb(0 201 127 / 30%)}
 .upload-actions .next-button:hover{box-shadow:inset 0 -6px 14px rgb(0 160 110 / 20%),0 14px 34px rgb(0 201 127 / 38%)}
 .upload-actions .next-button .send-icon-slot{display:none}
+
+/* 11/5 2차 '다음으로': 레퍼런스(유광 젤리 버튼) 느낌 — 왼쪽은 둥글고 오른쪽 위만 살짝 각진 모양,
+   위 가운데 진한 민트 → 가장자리 옅은 민트, 아래 가운데 하얀 빛, 안쪽 하얀 유광 테두리 */
+.upload-actions .next-button{border:0;border-radius:999px 18px 999px 999px;color:#0E3A27;font-weight:700;letter-spacing:.01em;
+  background:
+    radial-gradient(42% 38% at 50% 104%,rgb(255 255 255 / 95%) 0%,rgb(255 255 255 / 0%) 100%),
+    radial-gradient(70% 70% at 50% 18%,#00E68C 0%,rgb(0 249 152 / 80%) 32%,rgb(140 255 205 / 70%) 68%,rgb(225 255 241 / 92%) 100%);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  box-shadow:inset 0 0 0 3px rgb(255 255 255 / 92%),inset 3px 0 6px rgb(255 255 255 / 70%),inset 0 -2px 8px rgb(255 255 255 / 60%),0 12px 30px rgb(0 201 127 / 28%)}
+.upload-actions .next-button::after{display:none}
+.upload-actions .next-button:hover{transform:translateY(-2px);
+  background:
+    radial-gradient(46% 42% at 50% 104%,rgb(255 255 255 / 100%) 0%,rgb(255 255 255 / 0%) 100%),
+    radial-gradient(74% 74% at 50% 16%,#00D883 0%,rgb(0 249 152 / 88%) 34%,rgb(140 255 205 / 74%) 70%,rgb(225 255 241 / 94%) 100%);
+  box-shadow:inset 0 0 0 3px rgb(255 255 255 / 95%),inset 3px 0 6px rgb(255 255 255 / 75%),inset 0 -2px 8px rgb(255 255 255 / 65%),0 16px 36px rgb(0 201 127 / 36%)}
+/* 모서리: 왼쪽·아래는 완전히 둥글게, 오른쪽 위만 살짝(999px를 섞으면 브라우저가 전부 줄여서 각이 날카로워져요) · 하얀 테두리는 왼쪽 아래가 더 두꺼운 유광 */
+.upload-actions .next-button{border-radius:26px 14px 26px 26px;
+  box-shadow:inset 0 0 0 2px rgb(255 255 255 / 80%),inset 3px -4px 0 rgb(255 255 255 / 92%),inset 0 -12px 18px rgb(255 255 255 / 50%),0 12px 30px rgb(0 201 127 / 28%)}
+.upload-actions .next-button:hover{box-shadow:inset 0 0 0 2px rgb(255 255 255 / 85%),inset 3px -4px 0 rgb(255 255 255 / 95%),inset 0 -12px 18px rgb(255 255 255 / 55%),0 16px 36px rgb(0 201 127 / 36%)}
