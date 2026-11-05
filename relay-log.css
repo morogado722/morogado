@@ -176,3 +176,8 @@ html body .site-header .hd-sub a{font-size:max(12px,calc(13.5*var(--hu)))}
 body[data-route="community"] .site-header .hd-sub{gap:calc(20*var(--hu))}
 .site-header .hd-sub svg{width:calc(12*var(--hu));height:calc(12*var(--hu));margin-right:calc(-6*var(--hu))}
 .site-header .hd-sub i{height:calc(12*var(--hu))}
+/* 11/6 커뮤니티 영역을 흰 박스로(로그 블록과 같은 모서리) — 안쪽 댓글·글쓰기 칸은 연회색으로 */
+.tk{background:#fff;border-radius:calc(20*var(--hu));padding:calc(48*var(--hu)) calc(56*var(--hu)) calc(32*var(--hu))}
+.tk .tk-comments,.tk .tk-compose{background:#fafafa}
+.tk .tk-post:last-child{border-bottom:0}
+@media (max-width:767px){.tk{padding:24px 20px}}
