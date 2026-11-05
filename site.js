@@ -240,7 +240,7 @@
  addEventListener('hashchange',()=>{const smooth=SMOOTH_ROUTE.test(location.hash)&&SMOOTH_ROUTE.test('#'+lastRoute)&&!matchMedia('(prefers-reduced-motion:reduce)').matches;
   if(smooth&&document.startViewTransition){document.startViewTransition(()=>renderRoute());return;}
   if(smooth){main.classList.remove('route-in');void main.offsetWidth;main.classList.add('route-in');}
-  renderRoute();});addEventListener('scroll',updateDockVisibility,{passive:true});addEventListener('resize',updateDockVisibility);addEventListener('morogado:changed',()=>{updateChrome().catch(error=>toast(error.message));});
+  renderRoute();});addEventListener('scroll',updateDockVisibility,{passive:true});addEventListener('resize',updateDockVisibility);addEventListener('morogado:remote',()=>{if(document.body.dataset.route==='home'&&!dialog.open&&scrollY<80)renderRoute();});addEventListener('morogado:changed',()=>{updateChrome().catch(error=>toast(error.message));});
  document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
  (async()=>{try{const r=await fetch('assets/figma/manifest.json?v=fm1');manifest=await r.json();makeExamples();await renderRoute();}catch(e){main.innerHTML=`<div class="empty-state"><h1>모로가도를 열지 못했어요.</h1><p>${E(e.message)}</p><p>함께 제공된 실행 파일로 로컬 서버를 켜 주세요.</p></div>`;}})();
 })();

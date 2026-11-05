@@ -95,3 +95,7 @@ html body .site-header{view-transition-name:site-header}
 @keyframes mg-route-in{from{opacity:0;transform:translateY(10px)}}
 #main.route-in{animation:mg-route-in .42s cubic-bezier(.22,.9,.24,1) both}
 @media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root),#main.route-in{animation:none}}
+
+/* 11/5 첫 로딩 문구: 빨리 뜨면 아예 안 보이고, 0.8초 넘게 걸릴 때만 살며시 나타나요 */
+#main .loading-placeholder{opacity:0;animation:mg-loading-in .4s ease .8s forwards}
+@keyframes mg-loading-in{to{opacity:1}}

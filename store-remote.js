@@ -32,8 +32,10 @@
   async function remoteBatons() {
     if (memory && Date.now() - memoryAt < TTL) return memory;
     if (memory) { if (!inflight) inflight = fetchRemote().catch(() => memory).finally(() => { inflight = null; }); return memory; }
-    if (!inflight) inflight = fetchRemote().catch(() => (memory = ls.get(CACHE_KEY, []))).finally(() => { inflight = null; });
-    return inflight;
+    if (!inflight) inflight = fetchRemote().then(list => { if (late) window.dispatchEvent(new CustomEvent('morogado:remote')); return list; }).catch(() => (memory = ls.get(CACHE_KEY, []))).finally(() => { inflight = null; });
+    // 11/5 첫 방문에 서버가 늦으면 화면을 오래 막지 않아요: 1.2초만 기다리고 저장해 둔 목록으로 먼저 그려요(받으면 다시 그려요)
+    let late = false;
+    return Promise.race([inflight, new Promise(r => setTimeout(() => { late = true; r(ls.get(CACHE_KEY, [])); }, 1200))]);
   }
   const mark = r => ({ ...structuredClone(r), remote: true, example: false, mine: mine().has(r.id) });
 
