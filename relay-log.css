@@ -181,3 +181,10 @@ body[data-route="community"] .site-header .hd-sub{gap:calc(20*var(--hu))}
 .tk .tk-comments,.tk .tk-compose{background:#fafafa}
 .tk .tk-post:last-child{border-bottom:0}
 @media (max-width:767px){.tk{padding:24px 20px}}
+/* 11/6 커질 때 흰 칸이 늘어나 찌그러지던 것 — 흰 칸·카드 모두 제 비율 그대로 가운데에서 크기만(scale) 바뀌며 겹쳐 바뀌어요 */
+.rl-node .rl-face{inset:auto;left:50%;top:50%;width:calc(150*var(--hu));height:calc(150*var(--hu));transform:translate(-50%,-50%);
+  transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 600ms ease}
+.rl-node .rl-card{inset:auto;left:50%;top:50%;width:calc(262*var(--hu));height:calc(301*var(--hu));transform:translate(-50%,-50%) scale(.573);
+  transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 650ms ease,box-shadow 1100ms ease}
+.rl-node.is-on .rl-face{transform:translate(-50%,-50%) scale(1.75);opacity:0;transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 300ms ease}
+.rl-node.is-on .rl-card{transform:translate(-50%,-50%) scale(1);opacity:1;transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 650ms ease 120ms,box-shadow 1100ms ease}
