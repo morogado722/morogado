@@ -4,7 +4,7 @@
  *            '나도 이어달리기'가 원 → 알약으로 펼쳐져요. 썸네일에 올리면 살짝 떠오르며 "○○ 상세" 라벨.
  * 커뮤니티: 노트폴리오 커뮤니티 구조. 글·댓글·좋아요는 이 브라우저(localStorage)에 저장돼요. */
 (function () {
-  const A = 'assets/relay/';
+  const A = 'assets/relay/', V = '?v=1106f';
   const E = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const AV = ['avatar-cyan', 'avatar-seed', 'avatar-orange', 'avatar-yellow', 'avatar-cyan'];
   const BATONS = [
@@ -29,7 +29,7 @@
   const hero = () => `<nav class="rl-mtabs" aria-label="바톤 기록 메뉴"><a href="#/community"${current && current.tab === 'talk' ? '' : ' aria-current="page"'}>바톤 로그</a><a href="#/community/talk"${current && current.tab === 'talk' ? ' aria-current="page"' : ''}>주니어 디자이너 커뮤니티</a></nav><header class="rl-hero"><h1><b>멈췄던 작업,</b> 그 뒤로<br><b>어디까지 달렸을까요?</b></h1></header>`;
 
   function block(b) {
-    const tiles = b.steps.slice(1).map((s, i) => `<span class="rl-tile" tabindex="0" style="--i:${i + 1}" data-label="${E(s)} 상세"><span class="rl-face"><img src="${A}${b.id}${i + 2}.webp" alt="${E(s)}" loading="lazy"></span><img class="rl-card" src="${A}card-${b.id}${i + 2}.webp" alt="" aria-hidden="true" loading="lazy"></span>`).join('');
+    const tiles = b.steps.slice(1).map((s, i) => `<span class="rl-tile" tabindex="0" style="--i:${i + 1}" data-label="${E(s)} 상세"><span class="rl-face"><img src="${A}${b.id}${i + 2}.webp${V}" alt="${E(s)}" loading="lazy"></span><img class="rl-card" src="${A}card-${b.id}${i + 2}.webp${V}" alt="" aria-hidden="true" loading="lazy"></span>`).join('');
     return `<article class="rl-block" tabindex="-1">
       <div class="rl-info">
         <div class="rl-name"><h3>${E(b.title)}</h3><p>${E(b.meta)}</p></div>
@@ -41,7 +41,7 @@
       </div>
       <div class="rl-panel" aria-label="${E(b.title)} 릴레이 로그">
         <div class="rl-rail">
-          <span class="rl-first" tabindex="0"><span class="rl-first-tile"><img src="${A}${b.id}1.webp" alt="${E(b.steps[0])}"></span><img class="rl-card" src="${A}card-${b.id}.webp" alt="" aria-hidden="true"></span>
+          <span class="rl-first" tabindex="0"><span class="rl-first-tile"><img src="${A}${b.id}1.webp${V}" alt="${E(b.steps[0])}"></span><img class="rl-card" src="${A}card-${b.id}.webp${V}" alt="" aria-hidden="true"></span>
           ${tiles}
         </div>
       </div>
@@ -168,30 +168,57 @@
   document.addEventListener('pointerdown', e => { const rail = e.target.closest?.('.rl-rail'); if (!rail || e.button !== 0) return; drag = { rail, x: e.clientX, left: rail.scrollLeft, moved: false }; });
   addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x; if (Math.abs(dx) > 4) { drag.moved = true; drag.rail.classList.add('is-drag'); } drag.rail.scrollLeft = drag.left - dx; });
   addEventListener('pointerup', () => { if (drag) drag.rail.classList.remove('is-drag'); drag = null; });
-  // 훑어보기: 블록에 들어오면 1번부터 한 장씩 카드가 됐다 돌아가며 옆으로 넘어가요. 휠·끌기·마우스 움직임이 있으면 바로 멈추고 자유롭게 볼 수 있어요
-  const auto = new WeakMap();
+  // 훑어보기: 블록에 들어오면 1번부터 천천히 흘러가며 가운데 오는 칸이 카드로 커졌다 작아져요(rAF로 부드럽게).
+  // 휠·끌기·클릭이 있으면 멈추고 자유롭게 볼 수 있어요. 자유 모드에선 패널 양 끝에 마우스를 두면 그쪽으로 스르륵 넘어가요.
+  const auto = new WeakMap(), PER = 1500, HOLD = 900;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   function stopAuto(block) {
-    const a = auto.get(block); if (!a) return; a.timers.forEach(clearTimeout); auto.delete(block);
+    const a = auto.get(block); if (!a) return; cancelAnimationFrame(a.raf); auto.delete(block);
     const rail = block.querySelector('.rl-rail'); rail.classList.remove('is-auto'); rail.querySelectorAll('.is-on').forEach(x => x.classList.remove('is-on'));
   }
   function playAuto(block) {
     if (auto.has(block) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const rail = block.querySelector('.rl-rail'); if (!rail) return;
-    const items = [...rail.querySelectorAll('.rl-first,.rl-tile')], a = { timers: [], t0: performance.now() }; auto.set(block, a);
+    const items = [...rail.querySelectorAll('.rl-first,.rl-tile')], n = items.length, a = { t0: performance.now(), raf: 0 }; auto.set(block, a);
     rail.classList.add('is-auto');
-    const STEP = 560, card = () => 262 * Math.min(1, Math.max(.72, innerWidth / 1440));
-    items.forEach((it, i) => a.timers.push(setTimeout(() => {
-      items.forEach(x => x.classList.toggle('is-on', x === it));
-      rail.scrollTo({ left: Math.max(0, it.offsetLeft - (rail.clientWidth - card()) / 2), behavior: 'smooth' });
-    }, 120 + i * STEP)));
-    a.timers.push(setTimeout(() => { items.forEach(x => x.classList.remove('is-on')); rail.scrollTo({ left: 0, behavior: 'smooth' }); }, 120 + items.length * STEP));
-    a.timers.push(setTimeout(() => { auto.delete(block); rail.classList.remove('is-auto'); }, 120 + items.length * STEP + 500));
+    const run = n * PER, total = run + HOLD + 1400; let on = -1;
+    const center = it => it.offsetLeft + it.offsetWidth / 2 - rail.clientWidth / 2;
+    const tick = now => {
+      const t = Math.max(0, now - a.t0); let target;
+      if (t < run) {
+        const f = ease(Math.min(1, t / run)) * (n - 1), i = Math.round(f);
+        if (i !== on) { on = i; items.forEach((x, k) => x.classList.toggle('is-on', k === i)); }
+        const lo = Math.floor(f), hi = Math.min(n - 1, lo + 1);
+        target = center(items[lo]) + (center(items[hi]) - center(items[lo])) * (f - lo);
+      } else if (t < run + HOLD) { target = center(items[n - 1]); }
+      else { if (on !== -2) { on = -2; items.forEach(x => x.classList.remove('is-on')); } target = 0; }
+      rail.scrollLeft += (Math.max(0, target) - rail.scrollLeft) * .07;
+      if (t < total) a.raf = requestAnimationFrame(tick); else { auto.delete(block); rail.classList.remove('is-auto'); }
+    };
+    a.raf = requestAnimationFrame(tick);
   }
   document.addEventListener('mouseover', e => { const b = e.target.closest?.('.rl-block'); if (b && !b.contains(e.relatedTarget)) playAuto(b); });
-  document.addEventListener('mouseout', e => { const b = e.target.closest?.('.rl-block'); if (b && !b.contains(e.relatedTarget)) stopAuto(b); });
-  document.addEventListener('pointermove', e => { const b = e.target.closest?.('.rl-block'), a = b && auto.get(b); if (a && performance.now() - a.t0 > 350 && (Math.abs(e.movementX) + Math.abs(e.movementY) > 2) && e.target.closest('.rl-panel')) stopAuto(b); });
+  document.addEventListener('mouseout', e => { const b = e.target.closest?.('.rl-block'); if (b && !b.contains(e.relatedTarget)) { stopAuto(b); edge.rail = null; } });
   document.addEventListener('wheel', e => { const b = e.target.closest?.('.rl-block'); if (b) stopAuto(b); }, { passive: true, capture: true });
   document.addEventListener('pointerdown', e => { const b = e.target.closest?.('.rl-block'); if (b) stopAuto(b); }, true);
+  // 양 끝 호버로 넘기기
+  const edge = { rail: null, v: 0, raf: 0 };
+  const ZONE = 170, MAXV = 7;
+  function edgeLoop() {
+    edge.raf = 0; const r = edge.rail; if (!r || !edge.v) return;
+    const b = r.closest('.rl-block'); if (auto.has(b)) return;
+    r.scrollLeft += edge.v; edge.raf = requestAnimationFrame(edgeLoop);
+  }
+  document.addEventListener('pointermove', e => {
+    const panel = e.target.closest?.('.rl-panel'); if (!panel || drag?.moved) { edge.v = 0; return; }
+    const rail = panel.querySelector('.rl-rail'), r = panel.getBoundingClientRect(), x = e.clientX - r.left;
+    let v = 0;
+    if (x > r.width - ZONE) v = Math.pow((x - (r.width - ZONE)) / ZONE, 2) * MAXV;
+    else if (x < ZONE && rail.scrollLeft > 0) v = -Math.pow((ZONE - x) / ZONE, 2) * MAXV;
+    edge.rail = rail; edge.v = v;
+    if (v) { const b = rail.closest('.rl-block'); if (auto.has(b) && performance.now() - auto.get(b).t0 > 600) stopAuto(b); if (!edge.raf) edge.raf = requestAnimationFrame(edgeLoop); }
+  });
+  document.addEventListener('pointerleave', () => { edge.v = 0; });
   addEventListener('scroll', () => { document.body.classList.toggle('rl-scrolled', scrollY > 40); }, { passive: true });
   document.addEventListener('click', onClick);
   document.addEventListener('submit', onSubmit);

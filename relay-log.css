@@ -173,9 +173,9 @@ body[data-route="community"].rl-scrolled .site-header .hd-sub{opacity:0;transfor
 .rl-rail:not(.is-auto) .rl-first:is(:hover,:focus-visible) .rl-first-tile,.rl-rail:not(.is-auto) .rl-tile:is(:hover,:focus-visible) .rl-face,.rl-rail .is-on .rl-first-tile,.rl-rail .is-on .rl-face{opacity:0;transition-delay:0ms}
 .rl-rail:not(.is-auto) :is(.rl-first,.rl-tile):is(:hover,:focus-visible) .rl-card,.rl-rail .is-on .rl-card{opacity:1;transform:none;transition-delay:60ms,0ms}
 .rl-rail.is-auto .rl-tile:hover:not(.is-on){transform:none}
-.rl-first,.rl-tile{transition:width .5s cubic-bezier(.22,.9,.24,1),height .5s cubic-bezier(.22,.9,.24,1)}
-.rl-face,.rl-first-tile{transition:opacity .3s ease}
-.rl-tile .rl-card,.rl-card{transition:opacity .3s ease .06s,transform .5s cubic-bezier(.22,.9,.24,1)}
+.rl-first,.rl-tile{transition:width .9s cubic-bezier(.33,1,.68,1),height .9s cubic-bezier(.33,1,.68,1)}
+.rl-face,.rl-first-tile{transition:opacity .5s ease}
+.rl-tile .rl-card,.rl-card{transition:opacity .55s ease .08s,transform .9s cubic-bezier(.33,1,.68,1)}
 .rl-tile::after{display:none}
 .rl-first{outline:none}
 .rl-panel::before{content:"";position:absolute;top:0;left:0;bottom:0;width:calc(48*var(--hu));background:linear-gradient(270deg,rgba(246,246,246,0),#f6f6f6 80%);pointer-events:none;z-index:3}
