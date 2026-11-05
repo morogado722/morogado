@@ -182,9 +182,18 @@ body[data-route="community"] .site-header .hd-sub{gap:calc(20*var(--hu))}
 .tk .tk-post:last-child{border-bottom:0}
 @media (max-width:767px){.tk{padding:24px 20px}}
 /* 11/6 커질 때 흰 칸이 늘어나 찌그러지던 것 — 흰 칸·카드 모두 제 비율 그대로 가운데에서 크기만(scale) 바뀌며 겹쳐 바뀌어요 */
-.rl-node .rl-face{inset:auto;left:50%;top:50%;width:calc(150*var(--hu));height:calc(150*var(--hu));transform:translate(-50%,-50%);
+.rl-node .rl-face{inset:auto;left:50%;top:50%;width:calc(150*var(--hu));height:calc(156*var(--hu));transform:translate(-50%,-50%);
   transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 600ms ease}
-.rl-node .rl-card{inset:auto;left:50%;top:50%;width:calc(262*var(--hu));height:calc(301*var(--hu));transform:translate(-50%,-50%) scale(.573);
+.rl-node .rl-card{inset:auto;left:50%;top:50%;width:calc(232*var(--hu));height:calc(267*var(--hu));transform:translate(-50%,-50%) scale(.672);
   transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 650ms ease,box-shadow 1100ms ease}
-.rl-node.is-on .rl-face{transform:translate(-50%,-50%) scale(1.75);opacity:0;transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 300ms ease}
+.rl-node.is-on .rl-face{transform:translate(-50%,-50%) scale(1.49);opacity:0;transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 300ms ease}
 .rl-node.is-on .rl-card{transform:translate(-50%,-50%) scale(1);opacity:1;transition:transform 1100ms cubic-bezier(.45,.05,.25,1),opacity 650ms ease 120ms,box-shadow 1100ms ease}
+/* 11/6 사용자가 직접 볼 땐 0.75초로 바로 반응, 훑어보기(.is-auto) 땐 1.1초로 천천히 */
+.rl-node,.rl-node .rl-face,.rl-node .rl-card,.rl-node.is-on .rl-face,.rl-node.is-on .rl-card{transition-duration:750ms,750ms,750ms}
+.rl-node{transition:transform 750ms cubic-bezier(.33,1,.68,1),width 750ms cubic-bezier(.33,1,.68,1),height 750ms cubic-bezier(.33,1,.68,1)}
+.rl-node .rl-face{transition:transform 750ms cubic-bezier(.33,1,.68,1),opacity 450ms ease}
+.rl-node .rl-card{transition:transform 750ms cubic-bezier(.33,1,.68,1),opacity 450ms ease,box-shadow 750ms ease}
+.rl-node.is-on .rl-face{transition:transform 750ms cubic-bezier(.33,1,.68,1),opacity 260ms ease}
+.rl-node.is-on .rl-card{transition:transform 750ms cubic-bezier(.33,1,.68,1),opacity 450ms ease 80ms,box-shadow 750ms ease}
+.rl-panel.is-auto .rl-node{transition-duration:1100ms}
+.rl-panel.is-auto .rl-node .rl-face,.rl-panel.is-auto .rl-node .rl-card{transition-duration:1100ms,600ms,1100ms}
