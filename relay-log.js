@@ -41,7 +41,7 @@
       </div>
       <div class="rl-panel" aria-label="${E(b.title)} 릴레이 로그">
         <div class="rl-rail">
-          <span class="rl-first"><span class="rl-first-tile"><img src="${A}${b.id}1.webp" alt="${E(b.steps[0])}"></span><img class="rl-card" src="${A}card-${b.id}.webp" alt="" aria-hidden="true"></span>
+          <span class="rl-first" tabindex="0"><span class="rl-first-tile"><img src="${A}${b.id}1.webp" alt="${E(b.steps[0])}"></span><img class="rl-card" src="${A}card-${b.id}.webp" alt="" aria-hidden="true"></span>
           ${tiles}
         </div>
       </div>
@@ -157,6 +157,17 @@
     if (!current || current.tab !== 'talk' || !e.target.matches('[data-q]')) return;
     clearTimeout(qTimer); const v = e.target.value; qTimer = setTimeout(() => { ui.q = v; draw(); const i = current.main.querySelector('[data-q]'); if (i) { i.focus(); i.setSelectionRange(v.length, v.length); } }, 220);
   }
+  // 로그 가로 넘기기: 패널 위에서 휠을 굴리면 옆으로, 끝에 닿으면 페이지가 내려가요. 끌어서도 넘겨요
+  document.addEventListener('wheel', e => {
+    const rail = e.target.closest?.('.rl-rail'); if (!rail || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    const max = rail.scrollWidth - rail.clientWidth; if (max <= 0) return;
+    const next = rail.scrollLeft + e.deltaY; if ((e.deltaY < 0 && rail.scrollLeft <= 0) || (e.deltaY > 0 && rail.scrollLeft >= max - 1)) return;
+    e.preventDefault(); rail.scrollLeft = Math.max(0, Math.min(max, next));
+  }, { passive: false });
+  let drag = null;
+  document.addEventListener('pointerdown', e => { const rail = e.target.closest?.('.rl-rail'); if (!rail || e.button !== 0) return; drag = { rail, x: e.clientX, left: rail.scrollLeft, moved: false }; });
+  addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x; if (Math.abs(dx) > 4) { drag.moved = true; drag.rail.classList.add('is-drag'); } drag.rail.scrollLeft = drag.left - dx; });
+  addEventListener('pointerup', () => { if (drag) drag.rail.classList.remove('is-drag'); drag = null; });
   addEventListener('scroll', () => { document.body.classList.toggle('rl-scrolled', scrollY > 40); }, { passive: true });
   document.addEventListener('click', onClick);
   document.addEventListener('submit', onSubmit);

@@ -57,21 +57,18 @@ body[data-route="community"].rl-scrolled .site-header .hd-sub{opacity:0;transfor
 /* 로그 패널: 상세페이지 '이 바톤의 릴레이 로그'와 같은 모양 */
 .rl-panel{position:relative;flex:none;width:calc(736*var(--hu));height:calc(380*var(--hu));border-radius:calc(14*var(--hu));background:#f6f6f6;overflow:hidden}
 .rl-panel::after{content:"";position:absolute;top:0;right:0;bottom:0;width:calc(90*var(--hu));background:linear-gradient(90deg,rgba(246,246,246,0),#f6f6f6 85%);pointer-events:none;z-index:3}
-.rl-rail{position:absolute;inset:0;display:flex;align-items:center;gap:calc(18*var(--hu));padding-left:calc(56*var(--hu))}
+.rl-rail{position:absolute;inset:0;display:flex;align-items:center;gap:calc(18*var(--hu));padding:0 calc(120*var(--hu)) 0 calc(56*var(--hu));overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;cursor:grab;user-select:none}
+.rl-rail::-webkit-scrollbar{display:none}
+.rl-rail.is-drag{cursor:grabbing}
+.rl-rail img{-webkit-user-drag:none;pointer-events:none}
 .rl-first{position:relative;flex:none;width:calc(200*var(--hu));height:calc(200*var(--hu));margin-right:calc(6*var(--hu));transition:width .6s cubic-bezier(.22,.9,.24,1),height .6s cubic-bezier(.22,.9,.24,1)}
 .rl-first-tile{position:absolute;inset:0;display:grid;place-items:center;border-radius:calc(4*var(--hu));background:#fff;box-shadow:0 calc(4*var(--hu)) calc(14*var(--hu)) rgba(38,38,38,.16);transition:opacity .35s ease}
 .rl-first-tile img{max-width:76%;max-height:76%;object-fit:contain;display:block}
 .rl-card{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(.9);transform-origin:50% 60%;filter:drop-shadow(0 calc(12*var(--hu)) calc(22*var(--hu)) rgba(38,38,38,.18));transition:opacity .35s ease .08s,transform .6s cubic-bezier(.22,.9,.24,1)}
-.rl-block:hover .rl-first,.rl-block:focus-within .rl-first{width:calc(262*var(--hu));height:calc(301*var(--hu))}
-.rl-block:hover .rl-first-tile,.rl-block:focus-within .rl-first-tile{opacity:0}
-.rl-block:hover .rl-card,.rl-block:focus-within .rl-card{opacity:1;transform:none}
 .rl-tile{position:relative;flex:none;width:calc(138*var(--hu));height:calc(138*var(--hu));outline:none;transition:width .6s cubic-bezier(.22,.9,.24,1) calc(var(--i,0)*45ms),height .6s cubic-bezier(.22,.9,.24,1) calc(var(--i,0)*45ms),transform .35s cubic-bezier(.22,.9,.24,1)}
 .rl-face{position:absolute;inset:0;display:grid;place-items:center;border-radius:calc(4*var(--hu));background:#fff;box-shadow:0 calc(2*var(--hu)) calc(6*var(--hu)) rgba(38,38,38,.12);transition:opacity .3s ease calc(var(--i,0)*45ms),box-shadow .35s ease}
 .rl-face img{max-width:76%;max-height:76%;object-fit:contain;display:block}
 .rl-tile .rl-card{transition:opacity .35s ease calc(80ms + var(--i,0)*45ms),transform .6s cubic-bezier(.22,.9,.24,1) calc(var(--i,0)*45ms),filter .35s ease;filter:drop-shadow(0 calc(4*var(--hu)) calc(10*var(--hu)) rgba(38,38,38,.14))}
-.rl-block:hover .rl-tile,.rl-block:focus-within .rl-tile{width:calc(156*var(--hu));height:calc(179*var(--hu))}
-.rl-block:hover .rl-face,.rl-block:focus-within .rl-face{opacity:0}
-.rl-block:hover .rl-tile .rl-card,.rl-block:focus-within .rl-tile .rl-card{opacity:1;transform:none}
 .rl-tile::after{content:attr(data-label);position:absolute;left:50%;bottom:calc(100% + 14*var(--hu));transform:translate(-50%,4px);padding:calc(5*var(--hu)) calc(10*var(--hu));border:1px solid #c4c4c4;border-radius:2px;background:#efefef;box-shadow:0 2px 4px rgba(38,38,38,.12);font:400 calc(14*var(--hu))/1.4 var(--fh-font);color:#262626;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:4}
 .rl-tile:hover,.rl-tile:focus-visible{transform:translateY(calc(-6*var(--hu)));z-index:2}
 .rl-tile:hover .rl-face,.rl-tile:focus-visible .rl-face{box-shadow:0 calc(8*var(--hu)) calc(20*var(--hu)) rgba(38,38,38,.2)}
@@ -169,3 +166,14 @@ body[data-route="community"].rl-scrolled .site-header .hd-sub{opacity:0;transfor
   .tk-bar{flex-direction:column;align-items:stretch}
   .tk-search{width:100%}
 }
+
+/* 11/6 마우스를 올린 그 칸만 카드로 바뀌고 커져요(같이 바뀌지 않아요). 로그는 가로로 넘겨 볼 수 있어요(휠·끌기) */
+.rl-first:hover,.rl-first:focus-visible,.rl-tile:hover,.rl-tile:focus-visible{width:calc(262*var(--hu));height:calc(301*var(--hu));transform:none}
+.rl-first:hover .rl-first-tile,.rl-first:focus-visible .rl-first-tile,.rl-tile:hover .rl-face,.rl-tile:focus-visible .rl-face{opacity:0;transition-delay:0ms}
+.rl-first:hover .rl-card,.rl-first:focus-visible .rl-card,.rl-tile:hover .rl-card,.rl-tile:focus-visible .rl-card{opacity:1;transform:none;transition-delay:60ms,0ms}
+.rl-first,.rl-tile{transition:width .5s cubic-bezier(.22,.9,.24,1),height .5s cubic-bezier(.22,.9,.24,1)}
+.rl-face,.rl-first-tile{transition:opacity .3s ease}
+.rl-tile .rl-card,.rl-card{transition:opacity .3s ease .06s,transform .5s cubic-bezier(.22,.9,.24,1)}
+.rl-tile::after{display:none}
+.rl-first{outline:none}
+.rl-panel::before{content:"";position:absolute;top:0;left:0;bottom:0;width:calc(48*var(--hu));background:linear-gradient(270deg,rgba(246,246,246,0),#f6f6f6 80%);pointer-events:none;z-index:3}
