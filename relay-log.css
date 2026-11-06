@@ -208,3 +208,8 @@ body[data-route="community"] .site-header .hd-sub{gap:calc(20*var(--hu))}
 .rl-node.is-on .rl-face img{opacity:0}
 .rl-node.is-on .rl-card{opacity:1}
 .rl-panel.is-auto .rl-node .rl-face,.rl-panel.is-auto .rl-node .rl-card{transition-duration:1100ms,280ms}
+/* 11/6 숫자 칩: 탐색 화면 칩(.fh-chip)과 같은 문법 — 테두리 없이 흰 알약 + 옅은 그림자, 글자 500 #555 / 숫자 700 #262626 */
+.rl-pills{gap:calc(10*var(--hu))}
+.rl-pills span{display:inline-flex;align-items:center;gap:calc(6*var(--hu));height:calc(34*var(--hu));padding:0 calc(16*var(--hu));border:0;border-radius:999px;background:#fff;
+  box-shadow:0 calc(2*var(--hu)) calc(4*var(--hu)) rgba(0,0,0,.16);font:500 max(12px,calc(13.5*var(--hu)))/1 var(--fh-font,'Spoqa Han Sans Neo',sans-serif);color:#555;white-space:nowrap}
+.rl-pills b{margin:0;font-weight:700;color:#262626}
