@@ -144,7 +144,8 @@
     const strip = main.querySelector('.fh-hero-strip');
     const infinite = !!defaultFeed;
     rand = seeded(FEED_SEED);
-    const pool = uniqueByImage(infinite ? shuffle(items) : items);
+    /* 11/8 팀원이 올린 진짜 바톤은 맨 앞에 최신순으로, 예시만 섞어요 */
+    const pool = uniqueByImage(infinite ? [...items.filter(r => !r.example), ...shuffle(items.filter(r => r.example))] : items);
     state = { ctx, main, grid, strip, page: 0, pool, queue: pool.slice(), infinite, round: 0, all, observer: null, active: null, timer: null, closeTimers: new Map(), heroActive: null, heroTimer: null, cols: 0, loading: false };
 
     if (!items.length) {

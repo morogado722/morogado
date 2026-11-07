@@ -113,8 +113,13 @@
  async function updateChrome(){bookmarks=new Set(await store.bookmarks());nickname=await store.setting('nickname')||'방문자';const nameEl=document.getElementById('runner-name');if(nameEl)nameEl.textContent=nickname;const named=nickname&&nickname!=='방문자';document.querySelectorAll('.hd-join,.hd-guest,.hd-login').forEach(el=>el.hidden=named);document.querySelectorAll('.hd-me,.hd-me-sep,.hd-my').forEach(el=>el.hidden=!named);const count=document.getElementById('saved-count');if(count){count.hidden=!bookmarks.size;count.textContent=bookmarks.size;}}
  function childrenCount(r,all){return all.filter(x=>x.parentId===r.id).length;}
  async function renderHome(token=routeToken){
-  const all=await store.list(),eligible=all.filter(r=>!r.id.startsWith('feature-')&&!['calendar-red','calendar-peach'].includes(r.id)&&!r.demoRelay);
   const homeOrder=[1,2,3,4,5,7,19,6,8,9,11,12,13,14,15,20,10,16,17,18].map(n=>'example-'+n);
+  /* 11/8 팀원 작업으로 예시 바꾸기: 진짜 바톤(서버·내 브라우저)이 하나 올라올 때마다 예시를 뒤에서부터 하나씩 빼요. 진짜 바톤은 맨 앞(최신순) */
+  const all0=await store.list(),pool=all0.filter(r=>!r.id.startsWith('feature-')&&!['calendar-red','calendar-peach'].includes(r.id)&&!r.demoRelay);
+  const real=pool.filter(r=>!r.example).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))),dummies=pool.filter(r=>r.example);
+  dummies.sort((a,b)=>{const i=homeOrder.indexOf(a.id),j=homeOrder.indexOf(b.id);return (i<0?999:i)-(j<0?999:j);});
+  const keep=new Set(dummies.slice(0,Math.max(0,dummies.length-real.length)).map(r=>r.id));
+  const all=all0.filter(r=>!r.example||!pool.includes(r)||keep.has(r.id)),eligible=[...real,...dummies.filter(r=>keep.has(r.id))];
   const hero=all.filter(r=>r.id.startsWith('feature-')).slice(0,5);
   /* 족보 깊은·다시 태어난 바톤 칩은 이어달린 달력(calendar-red·peach)까지 봐요. 기본 피드에서는 같은 그림이 겹쳐서 빼 둔 것들이에요 (10/16) */
   let items=filter.kind==='deep'||filter.kind==='reborn'?all.filter(r=>!r.id.startsWith('feature-')&&!r.demoRelay):eligible;
@@ -125,7 +130,7 @@
   if(filter.sort==='recent')items.sort((a,b)=>b.createdAt.localeCompare(a.createdAt));if(filter.sort==='name')items.sort((a,b)=>a.title.localeCompare(b.title,'ko'));
   const defaultFeed=!query&&!filter.adv&&filter.category==='전체'&&!filter.artifacts.length&&filter.kind==='all'&&filter.sort==='recommended';
   // 기본 피드는 바톤 전체(홈 화면이 무작위로 섞어 보여 줌), 필터 결과도 자르지 않고 전부
-  if(defaultFeed)items=[...homeOrder.map(id=>all.find(r=>r.id===id)).filter(Boolean),...eligible.filter(r=>!homeOrder.includes(r.id))];
+  if(defaultFeed)items=eligible;
   const commentCounts=await Promise.all(items.map(r=>store.comments(r.id).then(list=>list.length)));
   if(token!==routeToken)return;activeCard=null;
   if(window.MorogadoHome){window.MorogadoHome.render({main,items:items.map((r,i)=>({...r,relayCount:childrenCount(r,all),commentCount:commentCounts[i]})),hero,all,nickname,filter,query,defaultFeed,bookmarks});}
