@@ -328,3 +328,6 @@ html.is-header-v2 .hd-account .hd-me:hover{text-decoration:none}
 html.is-header-v2 .hd-account .hd-avatar{display:block;width:28px;height:28px;border-radius:50%;line-height:0}
 html.is-header-v2 .hd-account .hd-avatar img{width:28px;height:28px;display:block}
 html.is-header-v2 .header-surface,html.is-header-v2 .site-header{filter:none;box-shadow:none}
+
+/* 바톤 노트 속 [라벨] → 칩 (11/7) */
+.bi-note-chip { display: inline-flex; align-items: center; height: 24px; margin-right: 8px; padding: 0 10px; border-radius: 99px; background: #F0F0F0; color: #626262; font-size: 13px; font-weight: 700; line-height: 1; vertical-align: 2px; white-space: nowrap; }

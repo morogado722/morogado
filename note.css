@@ -154,3 +154,12 @@ textarea.guide-example:focus { border-color: #81CEB0; background: #FFF; }
 .ai-pill--large { gap:6px; padding:6px 12px 6px 10px; font-size:12px; line-height:17px; }
 /* 노트 단락 사이 숨 쉴 틈 */
 #baton-note { line-height: 1.75; }
+/* 노트 속 [라벨] → 칩 (note-chips.js). 글 상자 뒤에 같은 글을 그리고, 라벨 자리에 칩을 얹어요 */
+.note-chip-wrap { position:relative;flex:1;min-height:0;display:flex;overflow:hidden; }
+.note-chip-wrap > #baton-note { position:relative;z-index:1;height:100%; }
+#baton-note.has-chips { color:transparent;caret-color:#262626; }
+#baton-note.has-chips::selection { color:transparent;background:rgb(var(--accent-rgb, 0 249 152) / .35); }
+.note-chip-mirror { position:absolute;top:0;left:0;pointer-events:none;box-sizing:border-box;color:#262626;white-space:pre-wrap;overflow-wrap:break-word;will-change:transform; }
+.note-chip { position:relative; }
+.note-chip-raw { color:transparent; }
+.note-chip-face { position:absolute;left:0;right:0;top:50%;height:26px;margin-top:-13px;display:flex;align-items:center;justify-content:center;border-radius:99px;background:rgb(var(--accent-rgb, 0 249 152) / .3);color:var(--accent-ink, #262626);font:700 13px/1 var(--font);letter-spacing:-.01em;white-space:nowrap; }

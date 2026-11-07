@@ -196,7 +196,9 @@
 
     // 바톤 노트 + 레퍼런스
     const note = E('div', 'bi-block');
-    note.append(E('h3', 'bi-label', '바톤 노트'), E('p', 'bi-note' + (v.note ? '' : ' is-empty'), v.note || '아직 노트를 남기지 않았어요.'));
+    const noteP = E('p', 'bi-note' + (v.note ? '' : ' is-empty'), v.note ? undefined : '아직 노트를 남기지 않았어요.');
+    if (v.note) { const re = /\[([^\[\]\n]{1,24})\]\s*/g; let last = 0, m; while ((m = re.exec(v.note))) { noteP.append(v.note.slice(last, m.index), E('span', 'bi-note-chip', m[1].trim())); last = m.index + m[0].length; } noteP.append(v.note.slice(last)); }
+    note.append(E('h3', 'bi-label', '바톤 노트'), noteP);
     body.append(note);
     const ref = E('button', 'bi-ref'); ref.type = 'button'; ref.id = 'open-references';
     if (v.references.length) {
