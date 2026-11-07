@@ -91,10 +91,10 @@
   function contextForAI(){const ctx=review.getContext();return {title:ctx.form.title||'',stage:ctx.form.stage||null,categories:ctx.form.categories||[],tools:ctx.form.tools||[],materials:ctx.form.materials||'',physical:ctx.form.physical??null,summary:ctx.result.mode==='ai'?(ctx.result.summary||''):'',tags:ctx.form.tags||[],stageReason:ctx.result.values?.stageReason||'',images:(()=>{const d=review.getData?.();const th=(d?.selectedThumbnails||[]).map(t=>t?.dataUrl).filter(Boolean);const all=th.length?th:(ctx.result.thumbnails||[]).map(t=>t.dataUrl);return all.filter(u=>/^data:image\//.test(u||'')).slice(0,3);})(),evidence:(ctx.result.evidence||[]).slice(0,35).map((e,i)=>({id:'e'+i,field:e.field,quote:String(e.quote||'').slice(0,1400),location:String(e.location||''),sourceName:ctx.result.sources.find(s=>s.id===e.fileId)?.name||''}))};}
   /* 10/27 AI 추천 방향은 카드로 보여주고 '누르기만 하면 담겨요'(다시 누르면 빠져요) */
   let suggestionCache={fp:null,ideas:[]};
-  function showSuggestions(ideas){suggestionCache={fp:review.getContext()?.fingerprint||null,ideas:ideas.slice(0,3)};paintSuggestions();}
+  function showSuggestions(ideas){suggestionCache={fp:review.getContext()?.fingerprint||null,ideas:ideas.slice(0,3)};write({ideaSuggestions:ideas.slice(0,3)});paintSuggestions();}   // 11/7 새로고침·임시 저장 뒤에도 카드가 남게 저장해요
   function paintSuggestions(){
     const box=$('idea-suggestions');box.replaceChildren();
-    const fp=review.getContext()?.fingerprint||null,ideas=suggestionCache.fp===fp?suggestionCache.ideas:[];
+    const fp=review.getContext()?.fingerprint||null,ideas=suggestionCache.fp===fp&&suggestionCache.ideas.length?suggestionCache.ideas:(Array.isArray(state().ideaSuggestions)?state().ideaSuggestions.filter(v=>typeof v==='string'&&v.trim()).slice(0,3):[]);
     box.hidden=!ideas.length;$('ideas-row')?.classList.toggle('has-suggestions',ideas.length>0);
     const current=(state().nextIdeas||[]).map(v=>String(v).trim());
     for(const text of ideas){

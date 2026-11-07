@@ -362,7 +362,7 @@
     getContext:()=>review?{form:clone(review.form),result:clone(review.result),touched:[...review.touched],fingerprint:review.fingerprint}:null,
     updateNote(values){
       if(!review)return false;
-      for(const key of ['batonNote','nextIdeas','noteChecklist','noteDraft','references'])if(Object.hasOwn(values,key)){review.form[key]=clone(values[key]);persist(key);}
+      for(const key of ['batonNote','nextIdeas','noteChecklist','noteDraft','references','ideaSuggestions'])if(Object.hasOwn(values,key)){review.form[key]=clone(values[key]);persist(key);}
       return true;
     },
     showEditor(step=6){if(!review)return false;showPage(2,{focus:false});requestAnimationFrame(()=>window.MorogaroStepper?.jumpTo(step));return true;},
