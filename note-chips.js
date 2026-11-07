@@ -32,6 +32,7 @@
       // 끝이 줄바꿈이면 마지막 빈 줄 높이를 맞춰요
       mirror.innerHTML = html + '​';
       fit();
+      syncPick();
     };
     const COPY = ['fontFamily','fontSize','fontWeight','lineHeight','letterSpacing','wordSpacing','wordBreak','tabSize','textIndent','paddingTop','paddingLeft','paddingRight'];
     const fit = () => {
@@ -48,6 +49,65 @@
       get() { return desc.get.call(this); },
       set(v) { desc.set.call(this, v); paint(); }
     });
+
+    /* 글 상자 아래 칩 고르기 (피그마 '업로드 페이지 3 · 노트 칩')
+     * 안 넣은 이야기(+)를 누르면 글 끝에 [라벨] 문단을 붙이고,
+     * 이미 넣은 이야기(✓)를 누르면 그 문단으로 커서를 옮겨요. 글은 지우지 않아요. */
+    const TOPICS = ['누구를 위한 건가요','어떤 느낌을 원했나요','어디서 막혔나요','왜 그만뒀나요','하다가 알게 된 점이 있나요','조심해야 할 점이 있나요','어디부터 이어가면 좋을까요'];
+    const PLUS = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 2.5v7M2.5 6h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>';
+    const CHECK = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.2 5 8.6 9.6 3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+    const box = area.closest('.note-box');
+    const pick = document.createElement('div');
+    pick.className = 'note-pick';
+    pick.innerHTML = '<p class="note-pick-head"><strong>어떤 이야기를 남길까요?</strong><span>누르면 글 상자에 칩이 들어가요. 하나만 골라도 괜찮아요</span></p><div class="note-pick-list"></div>';
+    const list = pick.querySelector('.note-pick-list');
+    const chips = TOPICS.map(label => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'note-pick-chip'; b.dataset.label = label;
+      b.innerHTML = '<span class="note-pick-icon"></span><span></span>';
+      b.lastChild.textContent = label;
+      b.addEventListener('click', () => choose(label));
+      list.append(b);
+      return b;
+    });
+    (box || area).insertAdjacentElement('afterend', pick);
+    function syncPick() {
+      const v = area.value;
+      for (const b of chips) {
+        const on = v.includes(`[${b.dataset.label}]`);
+        if (b.classList.contains('is-on') === on && b.firstChild.innerHTML) continue;
+        b.classList.toggle('is-on', on);
+        b.setAttribute('aria-pressed', String(on));
+        b.firstChild.innerHTML = on ? CHECK : PLUS;
+      }
+    }
+    function scrollToCaret(index) {
+      const at = area.value.slice(0, index);
+      const probe = document.createElement('span');
+      mirror.textContent = at; mirror.append(probe);
+      const top = probe.offsetTop;
+      paint();
+      area.scrollTop = Math.max(0, top - area.clientHeight / 2);
+      fit();
+    }
+    function choose(label) {
+      const tag = `[${label}]`, v = area.value;
+      let i = v.indexOf(tag), caret;
+      if (i >= 0) {
+        const rest = v.slice(i);
+        const end = rest.search(/\n\s*\n|\n\[/);
+        caret = end < 0 ? v.length : i + end;
+      } else {
+        const base = v.replace(/\s+$/, '');
+        const next = (base ? base + '\n\n' : '') + tag + ' ';
+        area.value = next;
+        area.dispatchEvent(new Event('input', { bubbles: true }));
+        caret = next.length;
+      }
+      area.focus({ preventScroll: true });
+      area.setSelectionRange(caret, caret);
+      scrollToCaret(caret);
+    }
 
     area.addEventListener('input', paint);
     area.addEventListener('scroll', fit, { passive: true });

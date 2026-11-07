@@ -329,5 +329,8 @@ html.is-header-v2 .hd-account .hd-avatar{display:block;width:28px;height:28px;bo
 html.is-header-v2 .hd-account .hd-avatar img{width:28px;height:28px;display:block}
 html.is-header-v2 .header-surface,html.is-header-v2 .site-header{filter:none;box-shadow:none}
 
-/* 바톤 노트 속 [라벨] → 칩 (11/7) */
-.bi-note-chip { display: inline-flex; align-items: center; height: 24px; margin-right: 8px; padding: 0 10px; border-radius: 99px; background: #F0F0F0; color: #626262; font-size: 13px; font-weight: 700; line-height: 1; vertical-align: 2px; white-space: nowrap; }
+/* 바톤 노트: 문단 첫머리에 칩, 내용은 옆으로 이어서 (11/7, 피그마 '상세페이지 · 바톤 노트 칩 (수정)') */
+.bi-note:not(.is-empty) { font-size: 15px; line-height: 26px; }
+.bi-note-para { display: block; }
+.bi-note-para + .bi-note-para { margin-top: 14px; }
+.bi-note-chip { display: inline-flex; align-items: center; height: 24px; margin-right: 8px; padding: 0 10px; border-radius: 99px; background: rgb(0 249 152 / .3); color: #00874F; font-size: 13px; font-weight: 700; line-height: 1; vertical-align: 1px; white-space: nowrap; }

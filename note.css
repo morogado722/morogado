@@ -163,3 +163,16 @@ textarea.guide-example:focus { border-color: #81CEB0; background: #FFF; }
 .note-chip { position:relative; }
 .note-chip-raw { color:transparent; }
 .note-chip-face { position:absolute;left:0;right:0;top:50%;height:26px;margin-top:-13px;display:flex;align-items:center;justify-content:center;border-radius:99px;background:rgb(var(--accent-rgb, 0 249 152) / .3);color:var(--accent-ink, #262626);font:700 13px/1 var(--font);letter-spacing:-.01em;white-space:nowrap; }
+
+/* 글 상자 아래 칩 고르기 (11/7, 피그마 '업로드 페이지 3 · 노트 칩') */
+.note-pick { margin:14px 0 40px; }
+.note-pick-head { display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin:0 0 10px; }
+.note-pick-head strong { font-size:13px;line-height:19px;font-weight:700;color:#262626; }
+.note-pick-head span { font-size:12px;line-height:17px;font-weight:300;color:#7A7A7A; }
+.note-pick-list { display:flex;flex-wrap:wrap;gap:8px; }
+.note-pick-chip { display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 14px 0 12px;border:1px solid #D9D9D9;border-radius:99px;background:#FFF;color:#626262;font:500 13px/18px var(--font);white-space:nowrap;cursor:pointer;transition:background-color 360ms ease, border-color 360ms ease, color 360ms ease; }
+.note-pick-chip:hover { border-color:#B5B5B5;color:#262626; }
+.note-pick-icon { display:inline-flex;width:12px;height:12px;color:#8A8A8A; }
+.note-pick-chip.is-on { border-color:color-mix(in srgb, var(--accent-ink, #00874F) 55%, var(--accent, #00F998));background:rgb(var(--accent-rgb, 0 249 152) / .3);color:var(--accent-ink, #00874F);font-weight:700; }
+.note-pick-chip.is-on .note-pick-icon { color:inherit; }
+.note-pick-chip:focus-visible { outline:2px solid var(--accent-deep, #0E2A18);outline-offset:2px; }
