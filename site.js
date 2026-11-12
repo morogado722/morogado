@@ -194,47 +194,8 @@
   async notifications(){const items=(await store.list()).filter(r=>!r.example&&(!r.remote||r.mine));modal({title:'알림',html:items.length?items.slice(0,5).map(r=>`<p><a href="#/baton/${r.id}"><strong>${E(r.title)}</strong></a><br>${r.parentId?'계승한 바톤을 저장했어요.':'바톤을 저장했어요.'}</p>`).join(''):'<p>아직 새 알림이 없어요. 바톤을 올리면 저장 결과를 여기에서도 확인할 수 있어요.</p>'});},
   async profile(){modal({title:'전시에서 사용할 이름',html:`<p class="notice">로그인이나 실제 회원 계정이 아니에요. 같은 브라우저에서 사용하는 시연 이름이에요.</p><form id="profile-form"><div class="form-field"><label for="nickname">러너 이름</label><input id="nickname" value="${E(nickname)}" maxlength="30" required autocomplete="nickname"></div><div class="modal-actions"><a class="secondary-button" href="#/my">내 바톤</a><button class="primary-button">이름 저장하기</button></div></form>`,onMount:d=>{const form=d.querySelector('form');form.onsubmit=async e=>{e.preventDefault();const n=form.querySelector('input').value.trim();if(!n)return;try{await store.setting('nickname',n);}catch(error){if(form.isConnected&&d.open)toast(error.message);return;}nickname=n;{const el=document.getElementById('runner-name');if(el)el.textContent=n;}updateChrome().catch(()=>{});if(form.isConnected&&d.open){d.close();toast('전시 이름을 저장했어요.');}if(!dialog.open&&(!location.hash||location.hash==='#/'))renderRoute();};}});},
   menu(){modal({title:'어디로 가볼까요?',html:'<div class="community-list"><a class="secondary-button" href="#/explore">바톤 탐색</a><a class="secondary-button" href="#/community">바톤 기록</a><a class="secondary-button" href="#/center">바톤센터</a><a class="primary-button" href="#/upload">내 바톤 올리기</a><a class="secondary-button" href="#/my">내 바톤</a><button class="secondary-button" data-action="tendency">내 작업성향은?</button></div>'});},
-  tendency(){
-   // Figma 1143:15058: ten original questions. Q3/Q6 choices fill missing UI copy.
-   const scale=['전혀 아니다','아니다','보통이다','그렇다','매우 그렇다'];
-   const questions=[
-    {text:'한 작업이 끝나기 전에 다음 작업이 시작되는 경우가 많다.'},
-    {text:'작업 시간의 대부분은 처음 만든 것을 고치고 다듬는 데 쓰인다.'},
-    {text:'최근 끝낸 작업, 어느 구간에 시간이 가장 많이 들어갔는가?',options:[{value:1,label:'마지막으로 고치고 다듬는 구간'},{value:3,label:'중반에 형태를 만들고 발전시키는 구간'},{value:5,label:'처음 아이디어와 방향을 잡는 구간'}]},
-    {text:'작업 중간 상태를 다른 사람이 보게 되는 일이 자주 있다.'},
-    {text:'작업이 다 끝난 뒤에 한 번에 보여주는 편이 마음이 편하다.'},
-    {text:'방금 완성한 작품, 먼저 하는 행동은?',options:[{value:1,label:'혼자 보관하며 마무리를 확인한다'},{value:3,label:'가까운 사람에게 먼저 보여준다'},{value:5,label:'여러 사람에게 공개하고 반응을 본다'}]},
-    {text:'완성도가 낮다고 느끼면, 마감이 지나도 다시 손을 본다.'},
-    {text:'어느 정도 수준이 되면 더 붙잡고 있기보다 내보내는 편이다.'},
-    {text:'새로운 분야에 손댈 때, 남들이 어떻게 하는지부터 찾아본다.'},
-    {text:'규칙을 잘 몰라도 일단 만들어보면서 익히는 쪽이 재미있다.'}
-   ];
-   const answers=Array(10).fill(null);let cursor=0;
-   const rhythmText=['다듬는 시간에 가장 깊어지는 사람','처음부터 끝까지 고르게 힘을 쓰는 사람','시작하는 순간에 가장 살아나는 사람'];
-   const publicText=['완성될 때까지 문을 닫아두는 편','만드는 내내 문을 열어두는 편'];
-   const identity=[
-    ['마감 직전까지 아무도 모르게 다듬은 뒤, 완결된 형태로만 내놓는다','완성 직후의 반응을 최대치로 즐기며, 그 반응이 다음 작품의 방향을 결정한다'],
-    ['어느 국면에도 치우치지 않지만, 그 균형을 밖으로 드러내지 않는다','시작·중간·마무리를 모두 공개하며, 국면마다 다른 사람과 다르게 협력한다'],
-    ['아이디어를 혼자 여러 개 씨앗처럼 심어두고, 그중 몇 개만 세상에 내보인다','아이디어를 떠올리는 순간 즉시 선언하고, 반응을 연료 삼아 그 방향을 밀어붙인다']
-   ];
-   const result=()=>{
-    if(answers.some(value=>!Number.isInteger(value)||value<1||value>5)){cursor=Math.max(0,answers.findIndex(value=>!value));show();return;}
-    // Original reverse scoring and B/D boundaries: Figma 1143:14715.
-    const b=answers[0]+(6-answers[1])+answers[2],d=answers[3]+(6-answers[4])+answers[5];
-    const a=(answers[6]+(6-answers[7]))/2,c=(answers[8]+(6-answers[9]))/2;
-    const rhythm=b<=7?0:b<=10?1:2,publicity=d<=8?0:1;
-    // Background cutoffs/middle copy are exhibition proposals, not confirmed source.
-    const nuanceA=a>=4?'한번 정한 기준은 좀처럼 낮추지 않는 편이라, 스스로를 오래 붙잡아두기도 합니다.':a<=2?'어느 선을 넘으면 붙잡고 있기보다 내보내는 쪽을 택합니다.':'작업에 따라 기준을 조절하며 마무리할 시점을 정하는 편이에요.';
-    const nuanceC=c>=4?'새로운 걸 시작할 때는 남들이 쌓아둔 방식을 먼저 들여다봅니다.':c<=2?'규칙보다 손이 먼저 움직이는 쪽이고, 만들면서 익히는 걸 즐깁니다.':'먼저 살펴보는 시간과 직접 만들어보는 시간을 함께 쓰는 편이에요.';
-    modal({title:'나의 작업성향',html:`<div class="tendency-panel tendency-result"><p class="eyebrow">10가지 선택으로 돌아본 작업 방식</p><div class="tendency-result-card"><h3>${rhythmText[rhythm]}</h3><p class="tendency-result-subtitle">${publicText[publicity]}</p><p class="tendency-identity">${identity[rhythm][publicity]}</p><p>${nuanceA}</p><p>${nuanceC}</p></div><p class="service-caption">이번 응답을 정해진 기준으로 정리한 전시용 결과예요. 성격이나 능력을 진단하지 않아요. 응답은 이 창을 닫으면 따로 저장되지 않아요.</p><details class="tendency-answer-review"><summary>내가 선택한 답 보기</summary><ol>${questions.map((question,index)=>`<li><p>${E(question.text)}</p><strong>${E(question.options?.find(option=>option.value===answers[index])?.label||scale[answers[index]-1])}</strong></li>`).join('')}</ol></details><section class="tendency-next"><h3>어떤 자료부터 이어받고 싶으세요?</h3><div class="tendency-materials">${[['seeding','방향'],['planting','형태'],['growing','마감'],['blooming','발표']].map(([kind,label])=>`<button class="secondary-button" data-tendency-kind="${kind}">${label} 자료 ${icon('arrow-right')}</button>`).join('')}</div></section><div class="modal-actions"><button type="button" class="secondary-button" id="tendency-edit">선택 수정하기</button><a class="primary-button" href="#/explore">바톤 찾아보기</a></div></div>`,onMount:dialogRoot=>{dialogRoot.querySelector('#tendency-edit').onclick=()=>{cursor=0;show();};dialogRoot.querySelectorAll('[data-tendency-kind]').forEach(button=>button.onclick=()=>{filter={category:'전체',artifacts:[button.dataset.tendencyKind],sort:'recommended',kind:'all'};query='';resetHomeScroll=true;homeScroll=0;dialogRoot.close();navigate('/explore');});}});
-   };
-   const show=()=>{
-    const question=questions[cursor],options=question.options||scale.map((label,index)=>({value:index+1,label}));
-    modal({title:'내 작업성향은?',html:`<div class="tendency-panel"><div class="tendency-progress"><p>${cursor+1} / ${questions.length}</p><progress value="${cursor}" max="${questions.length}" aria-label="답한 질문 ${cursor}개, 전체 ${questions.length}개"></progress></div><form id="tendency-form"><fieldset class="tendency-question"><legend tabindex="-1">${E(question.text)}</legend><p class="service-caption">${question.options?'가장 가까운 상황 하나를 골라주세요.':'평소 작업할 때의 모습을 떠올리고 골라주세요.'}</p><div class="tendency-choices ${question.options?'tendency-scenario':'tendency-scale'}">${options.map(option=>`<label><input type="radio" name="tendency-answer" value="${option.value}" ${answers[cursor]===option.value?'checked':''} required><span>${E(option.label)}</span></label>`).join('')}</div></fieldset><div class="modal-actions tendency-question-actions"><button type="button" class="secondary-button" id="tendency-back">${cursor?'이전 질문':'처음으로'}</button><button class="primary-button" id="tendency-next" ${answers[cursor]===null?'disabled':''}>${cursor===questions.length-1?'결과 보기':'다음 질문'} ${icon('arrow-right')}</button></div></form></div>`,onMount:dialogRoot=>{const form=dialogRoot.querySelector('#tendency-form');form.onchange=event=>{if(event.target.name!=='tendency-answer')return;answers[cursor]=Number(event.target.value);form.querySelector('#tendency-next').disabled=false;};form.onsubmit=event=>{event.preventDefault();if(!form.isConnected||!dialogRoot.open||answers[cursor]===null)return;if(cursor===questions.length-1)result();else{cursor++;show();}};form.querySelector('#tendency-back').onclick=()=>{if(cursor){cursor--;show();}else intro();};form.querySelector('legend').focus({preventScroll:true});}});
-   };
-   const intro=()=>modal({title:'나는 어떻게 작업할까?',html:`<div class="tendency-panel tendency-intro"><p class="eyebrow">내 작업성향은?</p><h3>나의 작업 방식을<br>잠깐 돌아보는 시간</h3><p>새로운 작업을 시작할 때부터 다른 사람에게 보여줄 때까지, 평소의 모습을 떠올려 보세요.</p><p class="tendency-intro-meta"><span>10개의 질문</span><span>3~4분 소요</span></p><p class="service-caption">작업 습관을 돌아보는 전시용 테스트예요. 성격이나 능력을 진단하지 않고, 답변을 외부로 보내거나 저장하지 않아요.</p><div class="modal-actions"><button class="primary-button" id="tendency-start">검사 시작하기 ${icon('arrow-right')}</button></div></div>`,onMount:dialogRoot=>{dialogRoot.querySelector('#tendency-start').onclick=show;}});
-   intro();
-  }
+  /* 11/12 작업성향 검사는 wp-test.js(피그마 'wp 테스트' 4231:12426)로 옮겼어요 */
+  tendency(){if(dialog.open)dialog.close();window.MorogadoWP?.open();}
  };
  document.addEventListener('click',async e=>{const skip=e.target.closest('.skip-link');if(skip){e.preventDefault();main.focus({preventScroll:true});scrollTo({top:Math.max(0,main.offsetTop-document.getElementById('site-header').offsetHeight),behavior:'instant'});return;}const link=e.target.closest('a[href^="#/"]');if(link&&dialog.open)dialog.close();const save=e.target.closest('[data-save-baton]');if(save){try{const on=await store.toggleBookmark(save.dataset.saveBaton);bookmarks=new Set(await store.bookmarks());document.querySelectorAll(`[data-save-baton="${save.dataset.saveBaton}"]`).forEach(b=>{b.setAttribute('aria-pressed',on);const r=examples.find(x=>x.id===save.dataset.saveBaton);b.setAttribute('aria-label',(r?.title||'바톤')+(on?' 저장 해제':' 저장'));});toast(on?'바톤을 저장했어요.':'저장을 해제했어요.');await updateChrome();if(location.hash==='#/saved')renderRoute();}catch(err){toast(err.message);}return;}const f=e.target.closest('[data-feed-filter]');if(f){filter.kind=f.dataset.feedFilter;try{await renderHome();}catch(error){toast(error.message);}return;}const action=e.target.closest('[data-action]')?.dataset.action;if(action&&actions[action])try{await actions[action]();}catch(err){toast(err.message);}});
  /* 10/27 필터 모달(filter-modal.js)이 지금 검색어·조건을 읽고, '검색'을 누르면 여기로 넘겨요 */
