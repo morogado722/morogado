@@ -115,7 +115,8 @@
  async function renderHome(token=routeToken){
   const homeOrder=[1,2,3,4,5,7,19,6,8,9,11,12,13,14,15,20,10,16,17,18].map(n=>'example-'+n);
   /* 11/8 팀원 작업으로 예시 바꾸기: 진짜 바톤(서버·내 브라우저)이 하나 올라올 때마다 예시를 뒤에서부터 하나씩 빼요. 진짜 바톤은 맨 앞(최신순) */
-  const all0=await store.list(),pool=all0.filter(r=>!r.id.startsWith('feature-')&&!['calendar-red','calendar-peach'].includes(r.id)&&!r.demoRelay);
+  /* 11/12 어느 컴퓨터에서나 같은 피드: 서버에 없는 '이 브라우저에만 저장된 바톤'은 탐색에서 빼요(내 바톤에서는 보여요) */
+  const all0=(await store.list()).filter(r=>r.example||r.remote),pool=all0.filter(r=>!r.id.startsWith('feature-')&&!['calendar-red','calendar-peach'].includes(r.id)&&!r.demoRelay);
   const real=pool.filter(r=>!r.example).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||''))),dummies=pool.filter(r=>r.example);
   dummies.sort((a,b)=>{const i=homeOrder.indexOf(a.id),j=homeOrder.indexOf(b.id);return (i<0?999:i)-(j<0?999:j);});
   const keep=new Set(dummies.slice(0,Math.max(0,dummies.length-real.length)).map(r=>r.id));

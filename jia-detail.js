@@ -18,6 +18,9 @@
     const ideas = (Array.isArray(r.nextIdeas) && r.nextIdeas.length ? r.nextIdeas : lines(note.help))
       .map(x => (typeof x === 'string' ? x : x?.text || x?.title || '')).filter(Boolean);
     const stageKey = [...(r.artifacts || [])].filter(a => STAGES.includes(a)).sort((a, b) => STAGES.indexOf(a) - STAGES.indexOf(b)).pop();
+    /* 11/12 예시 바톤: 탐색 카드와 같은 진척도를 보여 주고, 미리보기 이미지를 파일 목록에 넣어요(figma-home.js exampleArts와 같은 규칙) */
+    const exStage = !stageKey && r.example ? ['seeding', 'planting', 'growing'][[...String(r.id)].reduce((n, c) => n + c.charCodeAt(0), 0) % 3] : null;
+    const exFiles = r.example && !(r.files || []).length ? (r.thumbnails || []).filter(t => t?.url).map((t, i) => { const u = abs(t.url), ext = (u.split('?')[0].match(/\.(\w{2,5})$/) || [, 'png'])[1]; return { name: `${r.title}${i ? ' ' + (i + 1) : ''}.${ext}`, size: 0, fileId: 'ex-' + i, url: u }; }) : null;
     const thumbs = (r.thumbnails || []).filter(t => t?.url).map(t => ({ dataUrl: abs(t.url), label: t.label || r.title }));
     const refs = (r.referenceImages || []).map(x => (typeof x === 'string' ? x : x?.url || x?.src || x?.image)).filter(Boolean).map((u, i) => ({ dataUrl: abs(u), label: `레퍼런스 이미지 ${i + 1}` }));
     const urls = [...(r.references || []).filter(x => typeof x === 'string' && /^https?:/i.test(x)), ...(r.fileLinks || []).map(l => l?.url).filter(Boolean)];
@@ -35,10 +38,10 @@
         dimensions: r.dimensions || null,
         fonts: r.fonts || [], materials: r.materials || '', lessons: r.lessons || '',
         startDate: r.startDate || '', endDate: r.endDate || '',
-        stage: stageKey ? stageKey[0].toUpperCase() + stageKey.slice(1) : null,
+        stage: (stageKey || exStage) ? (stageKey || exStage)[0].toUpperCase() + (stageKey || exStage).slice(1) : null,
         urls, provenance: r.provenance?.manualFields ? r.provenance : {}, sources: r.provenance?.sources || [],
       },
-      files: (r.files || []).map(f => ({ name: f.name || f.originalName || '파일', size: Number(f.size) || 0, fileId: f.id })),
+      files: exFiles || (r.files || []).map(f => ({ name: f.name || f.originalName || '파일', size: Number(f.size) || 0, fileId: f.id })),
     };
   }
 
@@ -52,7 +55,7 @@
     const frame = document.createElement('iframe');
     frame.className = 'jia-detail-frame';
     frame.title = `${record.title} 상세`;
-    frame.src = 'baton/index.html?embed=1&site=1';
+    frame.src = 'baton/index.html?embed=1&site=1&v=1112a';
     container.classList.add('jia-detail-host');
     container.replaceChildren(frame);
     body.classList.add('is-jia-detail');
@@ -77,6 +80,11 @@
           case 'morogaro:baton-inherit': M.navigate('/upload?parent=' + encodeURIComponent(record.id)); break;
           case 'morogaro:baton-download': {
             const file = record.files?.[m.index];
+            if (record.example && !(record.files || []).length) {   // 예시 바톤은 미리보기 이미지를 그대로 받아요
+              const conv = toMakerRecord(record, {}), list = m.all || !conv.files[m.index] ? conv.files : [conv.files[m.index]];
+              for (const f of list) { const a = document.createElement('a'); a.href = f.url; a.download = f.name; document.body.append(a); a.click(); a.remove(); }
+              break;
+            }
             if (m.all || !file) await M.store.download(record.id); else await M.store.download(record.id, file.id);
             break;
           }

@@ -78,7 +78,7 @@
     const stage = r.note?.remaining ? r.note.remaining.split(/[.。]/)[0] : pick(STAGE_LINES, i + 3);
     const arts = ['seeding', 'planting', 'growing', 'blooming'];
     const artLabel = { seeding: '방향', planting: '형태', growing: '마감', blooming: '발표' };
-    const have = r.artifacts?.length ? r.artifacts : arts.slice(0, 1 + (i % 3));
+    const have = r.artifacts?.length ? r.artifacts : arts.slice(0, 1 + ([...String(r.id)].reduce((n, c) => n + c.charCodeAt(0), 0) % 3));   // 11/12 상세(jia-detail.js)와 같은 진척도
     const saved = ctx.bookmarks.has(r.id);
     const img = t?.url ? `<img src="${E(t.url)}" alt="" loading="lazy" decoding="async">` : `<span class="fh-empty">미리보기 이미지 없음</span>`;
     const desc = r.note?.remaining ? r.note.remaining.split(/[.。]/)[0] : (r.summary || stage);

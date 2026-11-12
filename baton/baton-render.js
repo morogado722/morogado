@@ -303,7 +303,7 @@
 
     const list = E('div', 'file-list');
     for (const f of v.files) {
-      const label = E('span', 'file-label'); label.append(E('strong', '', f.name), E('small', '', `${f.ext} 파일 · ${formatSize(f.size)}`));
+      const label = E('span', 'file-label'); label.append(E('strong', '', f.name), E('small', '', f.size ? `${f.ext} 파일 · ${formatSize(f.size)}` : `${f.ext} 파일`));
       label.firstChild.title = f.name;
       const type = E('span', 'file-type' + (f.ext.length > 3 ? ' docx' : ''), `${f.ext}.`);
       let row;

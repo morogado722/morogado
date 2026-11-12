@@ -21,6 +21,7 @@
 > - 팀원 작업으로 예시 바꾸기(11/8): 탐색 피드는 진짜 바톤(서버 `r-`·내 브라우저)을 맨 앞 최신순으로, 예시(`example:true`)는 그 뒤에 섞어요(`figma-home.js` pool). 진짜 바톤이 하나 늘 때마다 예시를 `homeOrder` 뒤에서부터 하나씩 빼요(`site.js` renderHome). 서버 바톤 목록은 Sheets MCP로 시트 `1-_ZZsDcaTPmbk4ogB1lq0c_7Kggx-oARZSlzLAXg8VM`('바톤' 탭) 읽어서 확인. 숨기려면 시트 '공개' 체크 해제.
 > - 자동 처음으로(11/12, `idle-reset.js`): 30초 동안 마우스·키보드·스크롤·터치가 없으면 열린 dialog를 다 닫고 `#/`(랜딩)로. 업로드·상세 iframe 안 움직임도 감지. 분석 로딩(`MorogaroLoading.isOpen`)·`[aria-busy=true]`(바톤 만드는 중)·노트 AI 작성 중에는 기다려요. 돌아갈 때 메이커 임시 저장(localStorage `morogaro*`·`upload-step-one`, IndexedDB `morogaro-baton-maker`·`-results`)을 지워 다음 관람객은 처음부터. 주소에 `?noidle` 붙이면 꺼져요(작업·확인용).
 > - 작업성향 검사(11/12, `wp-test.js`·`wp-test.css`, 피그마 'wp 테스트' 4231:12426): 헤더 '내 작업성향은?'(`site.js` actions.tendency) → 자체 dialog. 시작 → 안내 → 질문 12개(축마다 4개) → 분석 중 → 결과 카드 → 자세히 보기(밝은 화면). 유형 8개 = 완성하기/시작하기(E/L) × 설계 먼저/손 먼저(P/R) × 혼자/함께(C/O), 11/5에 16개에서 줄인 이름 그대로. E=이어받는(완성하는) 러너 → 바톤 찾아보기, L=넘기는 러너 → 바톤 넘기기. 공유 주소 `?test`(검사 열기)·`?test=EPC`(유형 열기). 응답은 저장·전송 안 함.
+> - 어디서나 같은 탐색(11/12): 탐색 피드는 서버 바톤(`remote`)+예시만 보여요. 서버에 못 올라가 그 브라우저에만 저장된 바톤은 탐색에서 빼요(`site.js` renderHome, '내 바톤'엔 보임). 예시 바톤 상세: 진척도는 아이디로 정한 값(탐색 카드와 같은 규칙, `figma-home.js`·`jia-detail.js`), 파일 목록엔 미리보기 이미지를 넣어 받을 수 있게.
 > - 주의: `config.js`의 Apps Script URL은 아직 사용성 평가와 **같은 서버·시트**를 써요. 졸전용으로 분리할지 사용자에게 확인 필요.
 >
 > 아래는 ut.upload에서 이어받은 내용이에요. "ut.upload" 주소·저장소 언급은 이 저장소(morogado)로 바꿔 읽으세요.
