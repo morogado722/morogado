@@ -19,7 +19,7 @@
 > - 바톤 기록(11/5, 피그마 4303:455·4315:466): `#/community`는 `relay-log.js`·`relay-log.css`(에셋 `assets/relay/`, 피그마에서 get_screenshot base64로 받은 것). 탭은 헤더 아래 `.hd-sub`(바톤 로그 | 주니어 디자이너 커뮤니티 → `#/community/talk`). 로그 블록에 마우스를 올리면 첫 칸이 대표 카드로 커지고 '나도 이어달리기'가 원→알약. 커뮤니티 글·댓글·좋아요는 localStorage `mg-talk-v1`(서버 아님).
 > - 노트 라벨 칩(11/7): 업로드 노트의 `[라벨]`을 칩으로 보여줘요. `note-chips.js`가 textarea 뒤에 같은 글을 그린 층을 깔고(글자 투명·커서만 보임) 라벨 자리에 칩을 얹어요. 저장 값은 그대로 `[라벨] …`. 상세페이지 노트도 `baton-render.js`에서 같은 칩(`.bi-note-chip`)으로 그려요. 글 상자 아래 '어떤 이야기를 남길까요?' 칩 7개(`.note-pick`, `note-chips.js`): +는 글 끝에 `[라벨] ` 문단 추가, ✓(이미 있음)는 그 문단으로 커서 이동(글은 안 지움). 상세는 빈 줄 기준 문단(`.bi-note-para`)마다 첫머리에 민트 칩, 15px/26px, 문단 간격 14px(피그마 '바톤 노트 칩 시안 (11/7)' 섹션).
 > - 팀원 작업으로 예시 바꾸기(11/8): 탐색 피드는 진짜 바톤(서버 `r-`·내 브라우저)을 맨 앞 최신순으로, 예시(`example:true`)는 그 뒤에 섞어요(`figma-home.js` pool). 진짜 바톤이 하나 늘 때마다 예시를 `homeOrder` 뒤에서부터 하나씩 빼요(`site.js` renderHome). 서버 바톤 목록은 Sheets MCP로 시트 `1-_ZZsDcaTPmbk4ogB1lq0c_7Kggx-oARZSlzLAXg8VM`('바톤' 탭) 읽어서 확인. 숨기려면 시트 '공개' 체크 해제.
-> - 자동 처음으로(11/12, `idle-reset.js`): 30초 동안 마우스·키보드·스크롤·터치가 없으면 열린 dialog를 다 닫고 `#/`(랜딩)로. 업로드·상세 iframe 안 움직임도 감지. 주소에 `?noidle` 붙이면 꺼져요(작업·확인용).
+> - 자동 처음으로(11/12, `idle-reset.js`): 30초 동안 마우스·키보드·스크롤·터치가 없으면 열린 dialog를 다 닫고 `#/`(랜딩)로. 업로드·상세 iframe 안 움직임도 감지. 분석 로딩(`MorogaroLoading.isOpen`)·`[aria-busy=true]`(바톤 만드는 중)·노트 AI 작성 중에는 기다려요. 돌아갈 때 메이커 임시 저장(localStorage `morogaro*`·`upload-step-one`, IndexedDB `morogaro-baton-maker`·`-results`)을 지워 다음 관람객은 처음부터. 주소에 `?noidle` 붙이면 꺼져요(작업·확인용).
 > - 주의: `config.js`의 Apps Script URL은 아직 사용성 평가와 **같은 서버·시트**를 써요. 졸전용으로 분리할지 사용자에게 확인 필요.
 >
 > 아래는 ut.upload에서 이어받은 내용이에요. "ut.upload" 주소·저장소 언급은 이 저장소(morogado)로 바꿔 읽으세요.
