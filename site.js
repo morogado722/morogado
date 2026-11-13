@@ -109,7 +109,7 @@
   const runnerNames=['레고 1891','씨앗 4412','원석 1203','과즙 2087','모래 0730','바람 5521','소금 3304'];
   for(const r of examples){if(r.author&&r.author!=='러너')continue;let h=0;for(const ch of r.id)h=(h*31+ch.charCodeAt(0))>>>0;r.author=runnerNames[h%runnerNames.length];if(!r.credits?.length||r.credits.every(c=>c==='러너'))r.credits=[r.author];}
   /* 11/13 TOP2~5 팀원 작업으로 교체 + 예시 바톤 모두 진척도 붙이기 */
-  {const im=(n,label)=>({url:'assets/top5/'+n+'.webp?v=1113d',originalUrl:'assets/top5/'+n+'.webp?v=1113b',label,source:''});
+  {const im=(n,label)=>({url:'assets/top5/'+n+'.webp?v=1113e',originalUrl:'assets/top5/'+n+'.webp?v=1113b',label,source:''});
    const put=(id,o)=>{const t=examples.find(x=>x.id===id);if(!t)return;Object.assign(t,o);t.credits=[t.author];t.displayTags=[];};
    put('feature-1',{artifacts:['seeding','planting']});
    put('feature-3',{title:'여름 달력',summary:'여름을 30일이 아니라 제철 과일의 \'철\'로 나눈 엽서형 달력',thumbnails:[im('cal-cover','여름 달력'),...[1,2,3,4,5,6].map(i=>im('cal-'+i,['참외 · 1단계','자두 · 2단계','복숭아 · 3단계','수박 · 4단계','포도 · 5단계','무화과 · 끝'][i-1]))],category:['편집·출판'],tags:['달력','과일','컬러플랜','엽서','인쇄'],tools:['.ai','.pdf'],author:'jia choi.',artifacts:['seeding','planting','growing'],materials:'Colorplan 270g · 110×154',
