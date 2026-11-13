@@ -21,7 +21,7 @@
   const HERO_INFO = {
     'feature-0': { tools: ['.3dm', '.ai'], title: 'CUPID Tape Delivery', desc: '누워 있는 큐피드 몸에 테이프를 끼우고 하트 커터로 끊는 테이프 디스펜서예요. 렌더까지 마쳤고, 실제로 쓸 수 있는 시제품이 남았어요.', author: 'chanwoo kim.', followers: '팔로워 1k', posts: '게시물99+', tags: ['제품 디자인', '테이프 디스펜서', '오브제', '프로토타입', '렌더링', '공예'], relay: 2, comments: 18 },
     'feature-1': { tools: ['.glyphs', '.ai'], title: 'RATIO', desc: '라틴 알파벳 타입디자인. 모듈 조합에서 출발해 26자의 알파벳에 긴장과 팽창의 질감을 주고자 한 프로젝트예요. 소문자와 한글 짝은 아직 비어 있어요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['타입디자인', '라틴 알파벳', '폰트', '그래픽', '편집', '포스터'], relay: 1, comments: 34 },
-    'feature-2': { tools: ['.fig', '.pdf'], title: 'YES24 도서상세페이지 개선 제안', desc: '더 쉽고, 더 재밌어질 책 고르기. 길고 들쭉날쭉한 상세페이지를 다시 짰어요. 숏북 모드와 사용성 테스트가 남았어요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['UI·UX', '앱 디자인', '디자인 시스템', '사용자 조사', '도서'], relay: 0, comments: 9 },
+    'feature-2': { tools: ['.ai', '.psd'], title: '첫 단추 카드', desc: '사회초년생의 소비의 첫 단추를 응원하는 하나카드 플레이트예요. H·N·A 단추로 행운과 에너지 두 편을 만들었어요. 패키지와 앱 화면이 남았어요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['브랜딩', '카드 디자인', '키비주얼', '3D', '금융'], relay: 0, comments: 9 },
     'feature-3': { tools: ['.ai', '.pdf'], title: '여름 달력', desc: '여름을 30일이 아니라 제철 과일의 \'철\'로 나눈 엽서형 달력이에요. 여섯 장 디자인을 마쳤고 인쇄 감리와 포장이 남았어요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['편집·출판', '달력', '과일', '컬러플랜', '엽서', '인쇄'], relay: 3, comments: 29 },
     'feature-4': { tools: ['.ai', '.psd'], title: '그린 소주 · 그린-키트', desc: '여우 캐릭터 라벨의 소주에 잔, 플러팅 게임 카드, 키링까지 담은 술자리 키트예요. 카드 게임과 시리즈 확장을 이어 줄 러너를 찾아요.', author: 'chanwoo kim.', followers: '팔로워 1k', posts: '게시물99+', tags: ['패키지', '브랜딩', '캐릭터', '굿즈', '카드 게임'], relay: 1, comments: 27 }
   };
