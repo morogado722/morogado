@@ -125,6 +125,8 @@
    examples.forEach(r=>{if(!r.artifacts?.length){const h=[...String(r.id)].reduce((n,c)=>n+c.charCodeAt(0),0);r.artifacts=['seeding','planting','growing'].slice(0,1+h%3);}});}
   /* 11/13 예시 바톤 정보 채우기(example-info.js): 빈 칸만 채워요 */
   {const I=window.MOROGADO_EXAMPLE_INFO||{};examples.forEach(r=>{const x=I[r.id];if(!x)return;if(x.category)r.category=x.category;if(!r.palette?.length&&x.palette)r.palette=x.palette;if(!r.startDate&&x.startDate){r.startDate=x.startDate;r.endDate=x.endDate;}if(!r.dimensions&&x.dimensions)r.dimensions=x.dimensions;if(!r.materials&&x.materials)r.materials=x.materials;if(x.note&&!(r.note?.intent||'').trim()){r.note=x.note;r.nextIdeas=x.nextIdeas;}});}
+  /* 11/13 지아 요청으로 뺀 예시: 달리는 에너지(유니콘 포스터, 다른 스튜디오 QR이 박힌 이미지) */
+  examples=examples.filter(r=>!['example-2'].includes(r.id));
   store.setExamples(examples);
  }
  async function updateChrome(){bookmarks=new Set(await store.bookmarks());nickname=await store.setting('nickname')||'방문자';const nameEl=document.getElementById('runner-name');if(nameEl)nameEl.textContent=nickname;const named=nickname&&nickname!=='방문자';document.querySelectorAll('.hd-join,.hd-guest,.hd-login').forEach(el=>el.hidden=named);document.querySelectorAll('.hd-me,.hd-me-sep,.hd-my').forEach(el=>el.hidden=!named);const count=document.getElementById('saved-count');if(count){count.hidden=!bookmarks.size;count.textContent=bookmarks.size;}}
