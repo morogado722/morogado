@@ -60,6 +60,7 @@ html.wp-open { overflow: hidden; }
 @keyframes wp-float { 50% { transform: translateY(-4px); } }
 .wp-meta { display: flex; justify-content: center; align-items: center; gap: 10px; color: var(--wp-sub); font-size: 14px; }
 .wp-meta b { color: #fff; }
+.wp-intro .wp-meta { margin-bottom: 18px; }   /* 11/13 안내 문구와 시작 버튼 사이 넉넉히 */
 .wp-meta span { width: 18px; }
 
 /* 진행 표시 */
