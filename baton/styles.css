@@ -2213,7 +2213,7 @@ h1 {
   background:#F2F2F2
 }
 .related-card { cursor:pointer }
-/* 11/13 추천 이유는 바톤 노트와 같은 민트 칩으로 */
+/* 11/13 추천 이유는 회색 칩으로 */
 .related-caption.is-chip {
   left:16px;
   top:9px;
@@ -2222,10 +2222,18 @@ h1 {
   align-items:center;
   padding:0 10px;
   border-radius:99px;
-  background:rgb(0 249 152 / .3);
+  background:#F2F2F2;
   box-shadow:none;
-  color:#00874F;
+  color:#626262;
   font-size:11px;
   font-weight:700;
   line-height:1
 }
+
+/* 11/13 푸터는 넓은 화면에서도 좌우·아래 끝까지 꽉 차게(배경만 늘려요, 글자 위치는 그대로) */
+.footer {
+  box-shadow:0 0 0 100vmax #E6E6E6;
+  clip-path:inset(0 -100vmax -100vmax -100vmax)
+}
+/* 푸터 배경이 .page(1440) 밖으로 나가게 가로만 풀어요. 세로는 그대로 잘라요 */
+.page { overflow-x:visible; overflow-y:clip }
