@@ -334,3 +334,34 @@ html.is-header-v2 .header-surface,html.is-header-v2 .site-header{filter:none;box
 .bi-note-para { display: block; }
 .bi-note-para + .bi-note-para { margin-top: 14px; }
 .bi-note-chip { display: inline-flex; align-items: center; height: 24px; margin-right: 8px; padding: 0 10px; border-radius: 99px; background: rgb(0 249 152 / .3); color: #00874F; font-size: 13px; font-weight: 700; line-height: 1; vertical-align: 1px; white-space: nowrap; }
+/* 11/13 작성자 줄 정렬: 이름을 말풍선 글과 같은 왼쪽선(16px)에, 말풍선 글은 위아래 가운데 */
+.is-live .author-name { left: 16px; }
+.is-live .author-bubble { display: flex; align-items: center; padding: 12px 16px; }
+
+/* 11/13 바톤 문의 채팅창 (baton-chat.js) */
+.bc-panel { position: fixed; right: 24px; bottom: 24px; z-index: 300; width: 360px; height: min(540px, calc(100vh - 120px)); display: flex; flex-direction: column; border: 1px solid #E0E0E0; border-radius: 20px; background: #fff; color: #262626; font-family: inherit; opacity: 0; transform: translateY(12px); transition: opacity 260ms ease, transform 360ms cubic-bezier(.22,1,.36,1); }
+.bc-panel.is-open { opacity: 1; transform: none; }
+.bc-head { display: flex; align-items: center; gap: 12px; padding: 18px 18px 16px 20px; border-bottom: 1px solid #F0F0F0; }
+.bc-avatar { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 50%; background: #E6E6E6; color: #626262; font-size: 14px; font-weight: 700; }
+.bc-head div { flex: 1; min-width: 0; }
+.bc-head strong { display: block; font-size: 15px; font-weight: 700; line-height: 1.4; }
+.bc-head small { display: block; margin-top: 2px; color: #8A8A8A; font-size: 12px; line-height: 1.4; }
+.bc-close { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #626262; cursor: pointer; }
+.bc-close:hover { background: #F2F2F2; }
+.bc-list { flex: 1; overflow-y: auto; list-style: none; margin: 0; padding: 18px 18px 8px; display: flex; flex-direction: column; gap: 10px; }
+.bc-msg { max-width: 78%; padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; white-space: pre-wrap; animation: bc-in 320ms cubic-bezier(.22,1,.36,1); }
+.bc-msg.is-them { align-self: flex-start; background: #F2F2F2; border-top-left-radius: 6px; }
+.bc-msg.is-me { align-self: flex-end; background: #262626; color: #fff; border-top-right-radius: 6px; }
+.bc-msg.is-typing { display: flex; gap: 4px; padding: 14px 16px; }
+.bc-msg.is-typing span { width: 6px; height: 6px; border-radius: 50%; background: #A6A6A6; animation: bc-dot 1.2s ease-in-out infinite; }
+.bc-msg.is-typing span:nth-child(2) { animation-delay: .15s; } .bc-msg.is-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes bc-in { from { opacity: 0; transform: translateY(6px); } }
+@keyframes bc-dot { 0%, 60%, 100% { opacity: .35; } 30% { opacity: 1; } }
+.bc-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 18px 10px; }
+.bc-quick[hidden] { display: none; }
+.bc-quick button { padding: 8px 12px; border: 0; border-radius: 99px; background: #F2F2F2; color: #626262; font: inherit; font-size: 12px; line-height: 1; cursor: pointer; }
+.bc-quick button:hover { background: #E6E6E6; color: #262626; }
+.bc-form { display: flex; align-items: center; gap: 8px; margin: 0 14px 14px; padding: 6px 6px 6px 16px; border-radius: 99px; background: #F2F2F2; }
+.bc-form input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 13px; line-height: 1.5; color: #262626; outline: none; }
+.bc-form input::placeholder { color: #A6A6A6; }
+.bc-form button { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border: 0; border-radius: 50%; background: #262626; color: #fff; cursor: pointer; }

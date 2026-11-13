@@ -28,6 +28,7 @@
 > - 예시 바톤 정보·파일(11/13): `example-info.js`(빌드 때 파이썬으로 뽑은 값: 미리보기 팔레트·규격, 아이디 해시 기간, example-1~20·more-01~25 노트·다음 아이디어·재료·카테고리 교정)를 `site.js`가 빈 칸에만 채워요. 예시 파일 목록은 `제목.pdf`(편집·그래픽·패키지 등, 모든 장을 한 PDF로)+`제목_NN.png`. 받을 때 `baton-render.js` convertDownload가 캔버스로 PNG·PDF(JPEG 넣은 손수 PDF)로 바꿔 내려줘요(`convert:true`, `pages`).
 > - 추천 바톤(11/13): 상세 아래 '이 바톤도 마음에 드실 거예요'는 `jia-detail.js` relatedFor가 탐색과 같은 바톤(서버+예시, feature·calendar-red/peach·demoRelay 제외) 10개를 골라 `record.related`로 보내요(같은 분야·태그 6개 + 나머지, 아이디 해시 순서). `baton-data.js`가 social.related를 덮고, `baton/app.js`가 실제 이미지(`.related-art.is-live`)로 그려 누르면 부모 주소 해시를 바로 바꿔 이동(안 되면 `site-nav {to}`). 추천 이유는 회색 칩(`.related-caption.is-chip`). 상세 푸터는 넓은 화면에서도 꽉 차게(`baton/styles.css` 끝: `.footer` box-shadow·clip-path + `.page{overflow-x:visible}`).
 > - 예시 댓글(11/13, `sample-comments.js`): 댓글(aiComments)이 없는 바톤에 분야별 댓글 3개(셋째는 '이어받은 사람')를 아이디 해시로 골라 `jia-detail.js`가 `data.aiComments`로 넘겨요. 실제 aiComments가 있으면 그대로. 사람 이름은 예시 러너 이름.
+> - 바톤 문의 채팅(11/13, `baton/baton-chat.js`·`baton-live.css` 끝): 상세 '바톤 문의하기'(내 바톤의 '수정하기'는 제외)를 누르면 오른쪽 아래 채팅창. 서버 없이 작성자 답장은 키워드별 미리 쓴 말로 1~3초 뒤 도착, 빠른 질문 칩 3개. 대화는 화면에만(새로고침하면 사라짐). 작성자 줄 정렬: 이름 left 16px = 말풍선 글 왼쪽선, 말풍선 글 세로 가운데.
 > - 전시장 자동 새로고침(11/13, `auto-update.js`): 1분마다 `index.html`을 no-store로 받아 처음과 다르면(새 배포) 랜딩(`#/`)에서 30초 조용할 때 `location.reload()`. 같은 조건에서 3시간마다도 새로고침. 서버에 못 닿으면 안 함. `?noupdate`로 끔. 그래서 `index.html`의 `?v=`를 올려야 전시장에 반영돼요.
 > - 주의: `config.js`의 Apps Script URL은 아직 사용성 평가와 **같은 서버·시트**를 써요. 졸전용으로 분리할지 사용자에게 확인 필요.
 >
