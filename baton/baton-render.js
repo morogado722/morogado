@@ -301,8 +301,10 @@
     all.addEventListener('click', () => {
       if (siteHost) {
         const urls = v.files.filter(f => !f.isFont && f.blob?.url);
-        if (urls.length === 1) return openFile(urls[0].blob.url, urls[0].name);
+        if (urls.length === 1) return openFile(urls[0].blob.url, urls[0].name, urls[0].blob);
         if (urls.length > 1 && folderUrl) return openFile(folderUrl);
+        // 예시 바톤: PDF가 있으면 그 한 파일(모든 장이 들어 있어요), 없으면 이미지를 차례로 받아요
+        if (urls.length > 1 && urls.every(f => f.blob.convert)) { const pdf = urls.find(f => /\.pdf$/i.test(f.name)); if (pdf) return openFile(pdf.blob.url, pdf.name, pdf.blob); urls.forEach((f, i) => setTimeout(() => openFile(f.blob.url, f.name, f.blob), i * 400)); return; }
         return post({ type: 'morogaro:baton-download', all: true });
       }
       return window.MOROGARO_SITE ? toast(SITE_DOWNLOAD_NOTE) : downloadAll(v, all);
@@ -319,7 +321,7 @@
         // 졸전 사이트 안(10/16): 사이트 저장소에서 원본을 받아요.
         const index = v.files.indexOf(f);
         row = E('button', 'file-row'); row.type = 'button';
-        row.addEventListener('click', () => f.blob?.url ? openFile(f.blob.url, f.name) : post({ type: 'morogaro:baton-download', index }));
+        row.addEventListener('click', () => f.blob?.url ? openFile(f.blob.url, f.name, f.blob) : post({ type: 'morogaro:baton-download', index }));
         row.append(type, label, img('assets/file-download.svg', '', 26, 21));
       } else if (window.MOROGARO_SITE) {
         // 공유 사이트에서는 브라우저가 다운로드를 막아요. 로컬 실행(index.html)에서는 바로 받을 수 있어요.
@@ -453,10 +455,61 @@
   let siteHost = false;
   /* 11/13 사파리는 기다렸다가 여는 새 창을 막아요. 주소를 아는 파일은 클릭한 그 순간 이 화면에서 바로 열어요 */
   let folderUrl = '';
-  function openFile(url, name) {
+  function openFile(url, name, file) {
+    // 11/13 예시 바톤: 미리보기 이미지(webp)를 받을 때 이름대로 PNG·PDF로 바꿔서 내려줘요
+    if (file?.convert && name && /\.(png|pdf)$/i.test(name)) { convertDownload(file, name); return; }
     const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener';
     if (name) a.download = name;
     document.body.append(a); a.click(); a.remove();
+  }
+  function saveBlob(blob, name) {
+    const u = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = u; a.download = name; document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000);
+  }
+  function loadImg(src) {
+    return new Promise((ok, no) => { const im = new Image(); im.onload = () => ok(im); im.onerror = no; im.src = src; });
+  }
+  function toCanvas(im) {
+    const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight;
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0); return c;
+  }
+  // 이미지 여러 장을 한 장씩 페이지로 담은 PDF (JPEG 그대로 넣는 가장 단순한 PDF)
+  function makePdf(pages) {
+    const enc = new TextEncoder(), parts = [], offsets = []; let len = 0;
+    const push = x => { const b = typeof x === 'string' ? enc.encode(x) : x; parts.push(b); len += b.length; };
+    const n = pages.length, kids = pages.map((_, i) => `${3 + i * 3} 0 R`).join(' ');
+    push('%PDF-1.4\n');
+    offsets[1] = len; push('1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n');
+    offsets[2] = len; push(`2 0 obj<</Type/Pages/Kids[${kids}]/Count ${n}>>endobj\n`);
+    pages.forEach((p, i) => {
+      const o = 3 + i * 3, w = 595, h = Math.round(595 * p.h / p.w);
+      const content = `q ${w} 0 0 ${h} 0 0 cm /Im Do Q`;
+      offsets[o] = len; push(`${o} 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 ${w} ${h}]/Resources<</XObject<</Im ${o + 1} 0 R>>>>/Contents ${o + 2} 0 R>>endobj\n`);
+      offsets[o + 1] = len; push(`${o + 1} 0 obj<</Type/XObject/Subtype/Image/Width ${p.w}/Height ${p.h}/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ${p.bytes.length}>>stream\n`); push(p.bytes); push('\nendstream endobj\n');
+      offsets[o + 2] = len; push(`${o + 2} 0 obj<</Length ${content.length}>>stream\n${content}\nendstream endobj\n`);
+    });
+    const total = 3 + n * 3, xref = len;
+    let t = `xref\n0 ${total}\n0000000000 65535 f \n`;
+    for (let i = 1; i < total; i++) t += String(offsets[i]).padStart(10, '0') + ' 00000 n \n';
+    push(t + `trailer<</Size ${total}/Root 1 0 R>>\nstartxref\n${xref}\n%%EOF`);
+    return new Blob(parts, { type: 'application/pdf' });
+  }
+  async function convertDownload(file, name) {
+    try {
+      if (/\.pdf$/i.test(name)) {
+        const pages = [];
+        for (const src of file.pages || [file.url]) {
+          const c = toCanvas(await loadImg(src));
+          const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.92));
+          pages.push({ w: c.width, h: c.height, bytes: new Uint8Array(await blob.arrayBuffer()) });
+        }
+        saveBlob(makePdf(pages), name);
+      } else {
+        const c = toCanvas(await loadImg(file.url));
+        saveBlob(await new Promise(r => c.toBlob(r, 'image/png')), name);
+      }
+    } catch { const a = document.createElement('a'); a.href = file.url; a.download = name; document.body.append(a); a.click(); a.remove(); }
   }
   function start(record, ownerName, site, viewerName) {
     folderUrl = record.folderUrl || '';

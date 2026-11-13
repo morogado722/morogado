@@ -20,7 +20,14 @@
     const stageKey = [...(r.artifacts || [])].filter(a => STAGES.includes(a)).sort((a, b) => STAGES.indexOf(a) - STAGES.indexOf(b)).pop();
     /* 11/12 예시 바톤: 탐색 카드와 같은 진척도를 보여 주고, 미리보기 이미지를 파일 목록에 넣어요(figma-home.js exampleArts와 같은 규칙) */
     const exStage = !stageKey && r.example ? ['seeding', 'planting', 'growing'][[...String(r.id)].reduce((n, c) => n + c.charCodeAt(0), 0) % 3] : null;
-    const exFiles = r.example && !(r.files || []).length ? (r.thumbnails || []).filter(t => t?.url).map((t, i) => { const u = abs(t.url), ext = (u.split('?')[0].match(/\.(\w{2,5})$/) || [, 'png'])[1]; return { name: `${r.title}${i ? ' ' + (i + 1) : ''}.${ext}`, size: 0, fileId: 'ex-' + i, url: u }; }) : null;
+    /* 11/13 예시 파일 목록은 PNG(이미지 한 장씩)와 PDF(모든 장을 한 파일로)로 보여줘요. 받을 때 baton-render.js가 실제로 바꿔 내려줘요 */
+    const exUrls = r.example && !(r.files || []).length ? (r.thumbnails || []).filter(t => t?.url).map(t => abs(t.url)) : null;
+    const exPdf = exUrls && (r.category || []).some(c => /편집|출판|그래픽|타이포|브랜딩|패키지|UI|일러스트|기획/.test(c));
+    const exName = String(r.title || '바톤').replace(/[\\/:*?"<>|]/g, ' ').trim();
+    const exFiles = exUrls ? [
+      ...(exPdf ? [{ name: `${exName}.pdf`, size: 0, fileId: 'ex-pdf', url: exUrls[0], pages: exUrls, convert: true }] : []),
+      ...exUrls.map((u, i) => ({ name: `${exName}${exUrls.length > 1 ? '_' + String(i + 1).padStart(2, '0') : ''}.png`, size: 0, fileId: 'ex-' + i, url: u, convert: true })),
+    ] : null;
     const thumbs = (r.thumbnails || []).filter(t => t?.url).map(t => ({ dataUrl: abs(t.url), label: t.label || r.title }));
     const refs = (r.referenceImages || []).map(x => (typeof x === 'string' ? x : x?.url || x?.src || x?.image)).filter(Boolean).map((u, i) => ({ dataUrl: abs(u), label: `레퍼런스 이미지 ${i + 1}` }));
     const urls = [...(r.references || []).filter(x => typeof x === 'string' && /^https?:/i.test(x)), ...(r.fileLinks || []).map(l => l?.url).filter(Boolean)];
@@ -57,7 +64,7 @@
     const frame = document.createElement('iframe');
     frame.className = 'jia-detail-frame';
     frame.title = `${record.title} 상세`;
-    frame.src = 'baton/index.html?embed=1&site=1&v=1113c';
+    frame.src = 'baton/index.html?embed=1&site=1&v=1113d';
     container.classList.add('jia-detail-host');
     container.replaceChildren(frame);
     body.classList.add('is-jia-detail');

@@ -123,6 +123,8 @@
    /* 11/13 TOP5도 아래 격자에 다른 대표 이미지로 한 번 더 보여줘요 */
    [['feature-1','ratio-cover'],['feature-3','cal-1'],['feature-4','soju-2'],['feature-0','cupid-01'],['feature-2','hana-1']].forEach(([id,cover],i)=>{const t=examples.find(x=>x.id===id);if(!t)return;const c=JSON.parse(JSON.stringify(t));c.id='top-grid-'+(i+1);const first=c.thumbnails.find(x=>x.url.includes('/'+cover+'.webp'));c.thumbnails=[first||im(cover,c.title),...c.thumbnails.filter(x=>x!==first)];examples.push(c);});
    examples.forEach(r=>{if(!r.artifacts?.length){const h=[...String(r.id)].reduce((n,c)=>n+c.charCodeAt(0),0);r.artifacts=['seeding','planting','growing'].slice(0,1+h%3);}});}
+  /* 11/13 예시 바톤 정보 채우기(example-info.js): 빈 칸만 채워요 */
+  {const I=window.MOROGADO_EXAMPLE_INFO||{};examples.forEach(r=>{const x=I[r.id];if(!x)return;if(x.category)r.category=x.category;if(!r.palette?.length&&x.palette)r.palette=x.palette;if(!r.startDate&&x.startDate){r.startDate=x.startDate;r.endDate=x.endDate;}if(!r.dimensions&&x.dimensions)r.dimensions=x.dimensions;if(!r.materials&&x.materials)r.materials=x.materials;if(x.note&&!(r.note?.intent||'').trim()){r.note=x.note;r.nextIdeas=x.nextIdeas;}});}
   store.setExamples(examples);
  }
  async function updateChrome(){bookmarks=new Set(await store.bookmarks());nickname=await store.setting('nickname')||'방문자';const nameEl=document.getElementById('runner-name');if(nameEl)nameEl.textContent=nickname;const named=nickname&&nickname!=='방문자';document.querySelectorAll('.hd-join,.hd-guest,.hd-login').forEach(el=>el.hidden=named);document.querySelectorAll('.hd-me,.hd-me-sep,.hd-my').forEach(el=>el.hidden=!named);const count=document.getElementById('saved-count');if(count){count.hidden=!bookmarks.size;count.textContent=bookmarks.size;}}
