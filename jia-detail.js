@@ -46,6 +46,7 @@
         fonts: r.fonts || [], materials: r.materials || '', lessons: r.lessons || '',
         startDate: r.startDate || '', endDate: r.endDate || '',
         stage: (stageKey || exStage) ? (stageKey || exStage)[0].toUpperCase() + (stageKey || exStage).slice(1) : null,
+        aiComments: window.MorogadoSampleComments?.for(r) || [],   // 11/13 댓글 없는 바톤엔 예시 댓글(sample-comments.js)
         urls, provenance: r.provenance?.manualFields ? r.provenance : {}, sources: r.provenance?.sources || [],
       },
       // 11/13 url도 같이 넘겨요: 상세(iframe)가 클릭 순간 바로 열어야 사파리가 막지 않아요
@@ -86,7 +87,7 @@
     const frame = document.createElement('iframe');
     frame.className = 'jia-detail-frame';
     frame.title = `${record.title} 상세`;
-    frame.src = 'baton/index.html?embed=1&site=1&v=1113g';
+    frame.src = 'baton/index.html?embed=1&site=1&v=1113h';
     container.classList.add('jia-detail-host');
     container.replaceChildren(frame);
     body.classList.add('is-jia-detail');
