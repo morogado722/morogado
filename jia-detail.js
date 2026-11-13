@@ -54,6 +54,28 @@
     };
   }
 
+  /* 11/13 '이 바톤도 마음에 드실 거예요': 탐색 탭과 같은 바톤(서버+예시) 중 10개. 같은 분야·태그를 먼저, 나머지는 아이디로 정한 순서로 채워요 */
+  async function relatedFor(record) {
+    try {
+      const all = (await window.Morogado.store.list()).filter(r => (r.example || r.remote) && r.id !== record.id && !r.id.startsWith('feature-') && !['calendar-red', 'calendar-peach'].includes(r.id) && !r.demoRelay && r.thumbnails?.[0]?.url && r.title !== record.title);
+      const cats = new Set(record.category || []), tags = new Set([...(record.tags || []), ...(record.displayTags || [])]);
+      const seed = [...String(record.id)].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 7);
+      const rank = r => [...String(r.id)].reduce((n, c) => (n * 33 + c.charCodeAt(0)) >>> 0, seed) % 1000;
+      const why = r => {
+        const c = (r.category || []).find(x => cats.has(x)); if (c) return `같은 ${c} 바톤이에요`;
+        const t = [...(r.tags || []), ...(r.displayTags || [])].find(x => tags.has(x)); if (t) return `'${t}' 태그가 같아요`;
+        return ['이어달릴 러너를 기다려요', '파일 구성이 비슷해요', '발표 자료가 아직 없어요'][rank(r) % 3];
+      };
+      const score = r => ((r.category || []).some(x => cats.has(x)) ? 2 : 0) + ([...(r.tags || []), ...(r.displayTags || [])].some(x => tags.has(x)) ? 1 : 0);
+      const seen = new Set();
+      const uniq = all.filter(r => !seen.has(r.title) && seen.add(r.title));
+      const near = uniq.filter(r => score(r) > 0).sort((a, b) => score(b) - score(a) || rank(a) - rank(b)).slice(0, 6);
+      const rest = uniq.filter(r => !near.includes(r)).sort((a, b) => rank(a) - rank(b)).slice(0, 10 - near.length);
+      return [...near, ...rest].sort((a, b) => rank(a) - rank(b))
+        .map(r => [why(r), Math.max(1, Math.min(4, (r.artifacts || []).length || 1)), { id: r.id, title: r.title, src: abs(r.thumbnails[0].url) }]);
+    } catch { return []; }
+  }
+
   async function render(container, record) {
     const M = window.Morogado;
     const body = document.body;
@@ -64,7 +86,7 @@
     const frame = document.createElement('iframe');
     frame.className = 'jia-detail-frame';
     frame.title = `${record.title} 상세`;
-    frame.src = 'baton/index.html?embed=1&site=1&v=1113d';
+    frame.src = 'baton/index.html?embed=1&site=1&v=1113e';
     container.classList.add('jia-detail-host');
     container.replaceChildren(frame);
     body.classList.add('is-jia-detail');
@@ -77,7 +99,7 @@
       try {
         switch (m.type) {
           case 'morogaro:baton-ready':
-            send({ type: 'morogaro:baton', record: toMakerRecord(record, { bookmarked, owner }), ownerName: record.author || nickname, viewerName: document.getElementById('runner-name')?.textContent?.trim() || nickname, site: true });
+            send({ type: 'morogaro:baton', record: { ...toMakerRecord(record, { bookmarked, owner }), related: await relatedFor(record) }, ownerName: record.author || nickname, viewerName: document.getElementById('runner-name')?.textContent?.trim() || nickname, site: true });
             break;
           case 'morogaro:baton-bookmark': {
             const now = await M.store.isBookmarked(record.id);

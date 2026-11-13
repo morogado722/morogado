@@ -114,7 +114,7 @@
       stageStatements: stageStatements(d, files.length),
       files,
       links: (d.urls || []).map(safeLink).filter(Boolean),
-      social: liveSocial(d.aiComments),
+      social: Object.assign(liveSocial(d.aiComments), Array.isArray(record.related) && record.related.length ? { related: record.related } : {}),
     };
   }
 

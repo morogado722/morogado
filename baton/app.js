@@ -1128,13 +1128,16 @@
     ['같은 일러스트예요',2], ['같은 편집 디자인이에요',4], ['발표 자료가 아직 없어요',3], ['같은 편집 디자인이에요',1], ['파일 구성이 비슷해요',3],
     ['같은 편집 디자인이에요',2], ['발표 자료가 아직 없어요',3], ['파일 구성이 비슷해요',3], ['발표 자료가 아직 없어요',1], ['같은 일러스트예요',4],
   ];
-  related.forEach(([caption, progress], i) => {
+  related.forEach(([caption, progress, item], i) => {   // item: 11/13 사이트 탐색 바톤 { id, src, title }
     const button = document.createElement('button'); button.type = 'button'; button.className = 'related-card'; button.setAttribute('aria-label', `${caption}. 추천 바톤 ${i + 1} 이미지 보기`);
-    const img = new Image(); img.className = 'related-art'; img.src = asset(`assets/related-${i + 1}.svg`); img.alt = ''; img.width = 246; img.height = 246;
+    const img = new Image(); img.className = 'related-art' + (item ? ' is-live' : ''); img.src = item ? item.src : asset(`assets/related-${i + 1}.svg`); img.alt = ''; img.width = 246; img.height = 246; img.loading = 'lazy';
+    if (item) button.setAttribute('aria-label', `${item.title} 바톤 보기. ${caption}`);
     const label = document.createElement('span'); label.className = 'related-caption'; label.textContent = caption;
     const bars = document.createElement('span'); bars.className = 'mini-progress'; bars.setAttribute('aria-hidden', 'true');
     for (let s = 0; s < 4; s++) { const bar = document.createElement('i'); if (s < progress) bar.className = 'done'; bars.append(bar); }
-    button.append(img, label, bars); button.addEventListener('click', () => showImages('바톤 미리보기', [{ src: `assets/related-${i + 1}.svg`, alt: caption }])); $('#related-grid').append(button);
+    button.append(img, label, bars);
+    button.addEventListener('click', () => item ? window.parent.postMessage({ type: 'morogaro:site-nav', to: '/baton/' + encodeURIComponent(item.id) }, '*') : showImages('바톤 미리보기', [{ src: `assets/related-${i + 1}.svg`, alt: caption }]));
+    $('#related-grid').append(button);
   });
   go(location.hash === '#log' ? 'log' : 'detail', { updateHash: false, instant: true });
   // Explicit development hooks for verifying endpoint geometry and integration.

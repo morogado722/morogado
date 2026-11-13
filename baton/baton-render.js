@@ -95,7 +95,7 @@
 
   function loadApp() {
     const script = document.createElement('script');
-    script.src = 'app.js?v=1113a';
+    script.src = 'app.js?v=1113b';
     script.onload = () => {
       document.documentElement.classList.remove('is-waiting-baton');
       if (embedded) post({ type: 'morogaro:baton-rendered', stage: window.MorogaroLive?.view.stage || null });

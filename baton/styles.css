@@ -2201,3 +2201,15 @@ h1 {
    painted during the existing two-way page transition. */
 .page[data-view="log"] .detail-folder-nametag { visibility:hidden; }
 .page[data-transitioning="true"] .detail-folder-nametag { visibility:visible; }
+
+/* 11/13 추천 바톤: 사이트 탐색 바톤의 실제 이미지 */
+.related-art.is-live {
+  left:16px;
+  top:38px;
+  width:212px;
+  height:194px;
+  object-fit:cover;
+  border-radius:10px;
+  background:#F2F2F2
+}
+.related-card { cursor:pointer }
