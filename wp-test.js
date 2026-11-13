@@ -35,7 +35,7 @@
   /* 8유형 */
   const TYPES = {
     EPC: {
-      emoji: '🧘', name: '묵묵한 계승자', runner: '완성하는 러너', stages: ['Growing', 'Blooming'],
+      name: '묵묵한 계승자', runner: '완성하는 러너', stages: ['Growing', 'Blooming'],
       line: '누군가 멈춘 자리에서 <b>조용히 이어받아</b>, 형식 안에서 <b>끝까지 완성</b>하는 사람이에요.',
       short: '시작보다 마무리에서 힘이 나고, 혼자 몰입할 때 가장 단단한 결과물을 만들어요.',
       body: ['당신은 마지막 디테일을 다듬는 시간에 가장 깊어지는 창작자예요. 장르와 형식의 문법을 먼저 익히고, 그 안에서 완성도를 끝까지 끌어올려요.',
@@ -47,7 +47,7 @@
       jobs: '편집 디자이너, 북 디자이너, 후반 작업 전문가, 아트 디렉터, 기술 감수자, 리터칭·마스터링 전문가'
     },
     EPO: {
-      emoji: '🎧', name: '완성 전문 DJ', runner: '완성하는 러너', stages: ['Growing', 'Blooming'],
+      name: '완성 전문 DJ', runner: '완성하는 러너', stages: ['Growing', 'Blooming'],
       line: '남이 남긴 트랙을 받아 <b>완성도 있게 믹스</b>하고, <b>함께 듣는 자리</b>까지 만드는 사람이에요.',
       short: '끝을 보는 힘과 나누는 힘을 함께 가졌어요. 반응이 다음 작업의 연료가 돼요.',
       body: ['당신은 작업의 마무리 단계에서 에너지가 올라오고, 완성된 순간의 성취감을 가장 크게 느끼는 창작자예요. 형식과 문법 안에서 자기 색을 찾는 데 능숙해요.',
@@ -59,7 +59,7 @@
       jobs: '크리에이티브 디렉터, 콘텐츠 프로듀서, 브랜드 디자이너, 출판 편집자, 영상 감독, 커뮤니케이션 디자이너'
     },
     ERC: {
-      emoji: '🪄', name: '숨겨진 연금술사', runner: '완성하는 러너', stages: ['Planting', 'Growing'],
+      name: '숨겨진 연금술사', runner: '완성하는 러너', stages: ['Planting', 'Growing'],
       line: '넘겨받은 재료를 <b>예상 못 한 방향</b>으로 바꿔, <b>혼자 조용히</b> 완성해 내는 사람이에요.',
       short: '실험에서 출발하지만 허술하게 끝내진 않아요. 혼자 깊이 몰입할 때 가장 독창적이에요.',
       body: ['당신은 감각과 이미지에서 작업이 출발하고, 만들면서 방향을 찾아가는 창작자예요. 그러면서도 마지막 단계에서는 디테일을 끝까지 붙잡아요.',
@@ -71,7 +71,7 @@
       jobs: '타이포그래퍼, 인터랙티브 아티스트, 실험 영상 작가, 독립 출판 작가, 개념 미술가, 크리에이티브 연구원'
     },
     ERO: {
-      emoji: '🌊', name: '예측 불가 서퍼', runner: '완성하는 러너', stages: ['Growing', 'Blooming'],
+      name: '예측 불가 서퍼', runner: '완성하는 러너', stages: ['Growing', 'Blooming'],
       line: '실험적인 바톤을 받아 <b>흐름을 타며 완성</b>하고, <b>세상에 내보이는</b> 사람이에요.',
       short: '실험과 완성도, 나누고 싶은 마음이 함께 있는 복합적인 유형이에요.',
       body: ['당신은 형식을 깨고 본 적 없는 걸 만들고 싶어 하면서도, 마무리 단계에서 집중력이 올라오는 창작자예요.',
@@ -83,7 +83,7 @@
       jobs: '브랜드 경험 디자이너, 뮤직비디오 감독, 전시 기획자, 미디어 아티스트, 크리에이티브 전략가'
     },
     LPC: {
-      emoji: '🌷', name: '1인 정원사', runner: '넘기는 러너', stages: ['Seeding', 'Planting'],
+      name: '1인 정원사', runner: '넘기는 러너', stages: ['Seeding', 'Planting'],
       line: '구조가 또렷한 씨앗을 <b>혼자 차근차근 심어 두는</b> 사람이에요.',
       short: '시작할 때 가장 설레고, 충분히 준비한 뒤 첫발을 내디뎌요.',
       body: ['당신은 새로운 것을 시작하는 순간 가장 힘이 나는 창작자예요. 그렇다고 무작정 뛰어들진 않아요. 레퍼런스를 모으고 구조를 잡은 뒤 출발해요.',
@@ -95,7 +95,7 @@
       jobs: '프로젝트 기획자, 브랜드 아이덴티티 디자이너, 콘텐츠 전략가, 교육 콘텐츠 개발자, 시나리오 작가'
     },
     LPO: {
-      emoji: '🧳', name: '씨앗 보부상', runner: '넘기는 러너', stages: ['Seeding', 'Planting'],
+      name: '씨앗 보부상', runner: '넘기는 러너', stages: ['Seeding', 'Planting'],
       line: '방향이 뚜렷한 씨앗을 <b>빠르게 꺼내</b> <b>여기저기 나눠 주는</b> 사람이에요.',
       short: '선언하듯 시작하고, 그 작업이 세상과 연결되길 바라요.',
       body: ['당신은 아이디어가 떠오르면 빠르게 행동으로 옮기고, 형식과 구조 안에서 탄탄하게 만들어 가는 창작자예요. 시작부터 방향이 뚜렷해요.',
@@ -107,7 +107,7 @@
       jobs: '크리에이티브 디렉터, 브랜드 전략가, 콘텐츠 크리에이터, 창업가, 미디어 기획자'
     },
     LRC: {
-      emoji: '🔥', name: '고요한 방화범', runner: '넘기는 러너', stages: ['Seeding', 'Planting'],
+      name: '고요한 방화범', runner: '넘기는 러너', stages: ['Seeding', 'Planting'],
       line: '아무도 모르게 <b>실험적인 불씨</b>를 피워 두는, <b>가장 강력한 바톤 공급자</b>예요.',
       short: '형식을 깨는 시작에 가장 신이 나고, 혼자 깊이 몰입할 때 독창적인 게 나와요.',
       body: ['당신은 새로운 작업을 시작하는 순간 에너지가 넘치고, 본 적 없는 걸 만들고 싶은 마음이 강한 창작자예요. 감각에서 출발해 만들면서 방향을 찾아요.',
@@ -119,7 +119,7 @@
       jobs: '개념 미술가, 게임 아트 디렉터, 인터랙티브 아티스트, 실험 음악가, 독립 영화 감독, 크리에이티브 연구원'
     },
     LRO: {
-      emoji: '🐙', name: '창작 생태계의 문어', runner: '넘기는 러너', stages: ['Seeding', 'Planting'],
+      name: '창작 생태계의 문어', runner: '넘기는 러너', stages: ['Seeding', 'Planting'],
       line: '여러 다리로 <b>실험을 동시에 벌이고</b>, <b>빠르게 나누는</b> 생태계의 중심이에요.',
       short: '시작과 실험, 나눔이 모두 에너지가 되는 유형이에요.',
       body: ['당신은 새로운 걸 시작하는 순간이 가장 즐겁고, 형식에 얽매이지 않고 손이 먼저 움직이는 창작자예요.',
@@ -192,8 +192,8 @@
 
   function intro() {
     show(`<div class="wp-intro">
-      <div class="wp-intro-head"><span class="wp-emoji" aria-hidden="true">🎨</span><p class="wp-kicker">★ 모로가도 러너 유형 검사</p><h2 tabindex="-1">나는 어떻게 작업할까?</h2></div>
-      <ul class="wp-intro-types" aria-label="8가지 러너 유형">${ORDER.map(c => `<li title="${E(TYPES[c].name)}">${TYPES[c].emoji}</li>`).join('')}</ul>
+      <div class="wp-intro-head"><p class="wp-kicker">★ 모로가도 러너 유형 검사</p><h2 tabindex="-1">나는 어떻게 작업할까?</h2></div>
+      <ul class="wp-intro-types" aria-label="8가지 러너 유형">${ORDER.map(c => `<li>${E(TYPES[c].name)}</li>`).join('')}</ul>
       <div class="wp-foot"><p class="wp-meta">질문 <b>${QUESTIONS.length}개</b><span></span>걸리는 시간 <b>3분</b></p><button type="button" class="wp-btn" data-go="guide" data-focus>검사 시작하기</button></div>
     </div>`, { mount: s => s.querySelector('[data-go]').onclick = guide });
   }
@@ -262,7 +262,7 @@
       ${brand}
       <h3 tabindex="-1">나의 러너 유형은-?</h3>
       <div class="wp-stack"><article class="wp-card">
-        <header><span class="wp-emoji" aria-hidden="true">${t.emoji}</span><div><h2>${E(t.name)}</h2><p>${polesOf(code).join(' · ')}</p></div></header>
+        <header><div><h2>${E(t.name)}</h2><p>${polesOf(code).join(' · ')}</p></div></header>
         <p class="wp-line">${t.line}</p>
         ${bars(code, mineSums)}
         <div class="wp-what"><p>이 유형은?</p><p>${E(t.short)} 모로가도에서는 <b>${E(t.runner)}</b>예요.</p></div>
@@ -284,13 +284,13 @@
     show(`<div class="wp-detail">
       <div class="wp-detail-top"><button type="button" class="wp-crumb">${backArrow}<span>${mine ? '내 결과로' : '검사 처음으로'}</span></button><button type="button" class="wp-icon" data-share-type aria-label="이 유형 공유하기"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.2M8.3 13.2l7.4 4.2"/></svg></button></div>
       <h3 tabindex="-1">${own ? '내 유형 자세히 보기' : '이런 유형이에요'}</h3>
-      <div class="wp-hero"><span class="wp-emoji" aria-hidden="true">${t.emoji}</span><div><h2>${E(t.name)}</h2><ul>${polesOf(code).map(p => `<li>${p}</li>`).join('')}</ul></div></div>
+      <div class="wp-hero"><div><h2>${E(t.name)}</h2><ul>${polesOf(code).map(p => `<li>${p}</li>`).join('')}</ul></div></div>
       <section><h4>이 유형은?</h4>${t.body.map(p => `<p>${E(p)}</p>`).join('')}</section>
       <section><h4>모로가도에서는 ${E(t.runner)}</h4><p>${E(t.role)}</p><ul class="wp-stages" aria-label="잘 맞는 진척도">${Object.keys(STAGES).map(k => `<li class="${t.stages.includes(k) ? 'is-on' : ''}" style="--c:${STAGES[k]}"><i></i>${k}</li>`).join('')}</ul></section>
-      <section><h4>함께 이어 달리면 좋은 유형</h4><div class="wp-mates">${t.synergy.map(([c, why]) => `<button type="button" class="wp-mate" data-type="${c}"><span class="wp-emoji" aria-hidden="true">${TYPES[c].emoji}</span><span><b>${E(TYPES[c].name)}</b><small>${polesOf(c).join(' · ')}</small><span>${E(why)}</span></span></button>`).join('')}</div></section>
+      <section><h4>함께 이어 달리면 좋은 유형</h4><div class="wp-mates">${t.synergy.map(([c, why]) => `<button type="button" class="wp-mate" data-type="${c}"><span><b>${E(TYPES[c].name)}</b><small>${polesOf(c).join(' · ')}</small><span>${E(why)}</span></span></button>`).join('')}</div></section>
       <section><h4>이런 일이 잘 어울려요</h4><p>${E(t.jobs)}</p></section>
       <div class="wp-detail-actions"><a class="wp-btn" href="${cta[0]}">${cta[1]} ${arrow}</a><button type="button" class="wp-btn wp-btn-line" data-share-type>결과 공유하기</button>${mine ? '' : '<button type="button" class="wp-btn wp-btn-line" data-start>나도 검사해 보기</button>'}</div>
-      <section class="wp-others"><h4>다른 유형도 둘러보세요</h4><div class="wp-grid">${ORDER.filter(c => c !== code).map(c => `<button type="button" class="wp-chip-type" data-type="${c}"><span aria-hidden="true">${TYPES[c].emoji}</span>${E(TYPES[c].name)}</button>`).join('')}</div></section>
+      <section class="wp-others"><h4>다른 유형도 둘러보세요</h4><div class="wp-grid">${ORDER.filter(c => c !== code).map(c => `<button type="button" class="wp-chip-type" data-type="${c}">${E(TYPES[c].name)}</button>`).join('')}</div></section>
     </div>`, {
       light: true,
       mount: s => {
