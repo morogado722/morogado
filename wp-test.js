@@ -146,6 +146,7 @@
     return { code, sums };
   }
 
+  let autoTimer = 0;
   let dialog, stage, answers, cursor, mine = null, mineSums = null, swapTimer = 0;
 
   function build() {
@@ -229,8 +230,13 @@
     answers[cursor] = v;
     s.querySelectorAll('.wp-dot').forEach(b => b.setAttribute('aria-checked', String(Number(b.dataset.v) === v)));
     s.querySelector('.wp-next').disabled = false;
+    // 11/13 고르면 동그라미가 채워지는 걸 잠깐 보여준 뒤 다음 질문으로 넘어가요
+    clearTimeout(autoTimer);
+    const at = cursor;
+    autoTimer = setTimeout(() => { if (cursor === at && s.isConnected) advance(); }, 450);
   }
   function advance() {
+    clearTimeout(autoTimer);
     if (!answers[cursor]) return;
     if (cursor < QUESTIONS.length - 1) { cursor++; question(); return; }
     const r = score(answers); mine = r.code; mineSums = r.sums;
