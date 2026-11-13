@@ -120,13 +120,15 @@
      note:{intent:'[누구를 위한 건가요] 책상 위에 사랑스러운 물건 하나 두고 싶은 사람을 위한 테이프 디스펜서예요. 누워 있는 큐피드의 몸에 테이프를 끼우고, 화살 끝으로 테이프를 끊어요.\n\n[어떤 느낌을 원했나요] 손에 쥐면 웃음이 나는 물건이요. 그래서 하트 모양 커터를 넣고, 털·가죽·세라믹·실리콘·금속으로 질감을 바꿔 봤어요.',done:'[하다가 알게 된 점이 있나요] 스케치에서 폼 목업, 털 프로토타입까지 만들어 보니 테이프를 당길 때 몸이 뒤로 밀리지 않게 무게중심을 잡는 게 생각보다 어려웠어요.',remaining:'[어디부터 이어가면 좋을까요] 렌더와 분해도까지 했고 실제로 쓸 수 있는 시제품이 남았어요. 무게추와 커터 부품을 이어서 다듬어 줄 러너를 찾아요.',help:'무게중심 잡는 구조 다듬기\n하트 커터 실물로 만들어 보기'}});
    put('feature-2',{title:'첫 단추 카드 · 하나카드 플레이트',summary:'부~자 되는 소비의 첫 단추 꿰기',thumbnails:[im('hana-cover','첫 단추 카드'),im('hana-1','첫 단추 카드'),im('hana-2','키비주얼'),im('hana-3','행운 가득 첫단추 · GREY/MINT'),im('hana-4','에너지 가득 첫단추 · GREY/ORANGE')],category:['브랜딩'],tags:['카드 디자인','브랜딩','키비주얼','3D','금융'],tools:['.ai','.psd'],author:'jia choi.',artifacts:['seeding','planting','growing'],
      note:{intent:'[누구를 위한 건가요] 첫 월급으로 첫 소비를 시작하는 사회초년생을 위한 하나카드 플레이트예요. 단추를 잘 꿰듯 소비의 첫 단추를 잘 끼우자는 뜻을 담았어요.\n\n[어떤 느낌을 원했나요] 알파벳 H·N·A 모양으로 실을 꿴 단추 네 개를 행운 편은 네잎클로버로, 에너지 편은 번개 모양으로 놓았어요. 하나카드 민트와 초록을 그대로 살렸어요.',done:'',remaining:'[어디부터 이어가면 좋을까요] 카드 앞뒷면 네 가지 버전까지 만들었어요. 카드 패키지나 앱 속 카드 화면처럼 이 단추 세계를 넓혀 줄 러너를 찾아요.',help:'카드 패키지·봉투 디자인\n앱 속 카드 화면과 발급 축하 화면'}});
+   /* 11/13 TOP5도 아래 격자에 다른 대표 이미지로 한 번 더 보여줘요 */
+   [['feature-1','ratio-cover'],['feature-3','cal-1'],['feature-4','soju-2'],['feature-0','cupid-01'],['feature-2','hana-1']].forEach(([id,cover],i)=>{const t=examples.find(x=>x.id===id);if(!t)return;const c=JSON.parse(JSON.stringify(t));c.id='top-grid-'+(i+1);const first=c.thumbnails.find(x=>x.url.includes('/'+cover+'.webp'));c.thumbnails=[first||im(cover,c.title),...c.thumbnails.filter(x=>x!==first)];examples.push(c);});
    examples.forEach(r=>{if(!r.artifacts?.length){const h=[...String(r.id)].reduce((n,c)=>n+c.charCodeAt(0),0);r.artifacts=['seeding','planting','growing'].slice(0,1+h%3);}});}
   store.setExamples(examples);
  }
  async function updateChrome(){bookmarks=new Set(await store.bookmarks());nickname=await store.setting('nickname')||'방문자';const nameEl=document.getElementById('runner-name');if(nameEl)nameEl.textContent=nickname;const named=nickname&&nickname!=='방문자';document.querySelectorAll('.hd-join,.hd-guest,.hd-login').forEach(el=>el.hidden=named);document.querySelectorAll('.hd-me,.hd-me-sep,.hd-my').forEach(el=>el.hidden=!named);const count=document.getElementById('saved-count');if(count){count.hidden=!bookmarks.size;count.textContent=bookmarks.size;}}
  function childrenCount(r,all){return all.filter(x=>x.parentId===r.id).length;}
  async function renderHome(token=routeToken){
-  const homeOrder=[1,2,3,4,5,7,19,6,8,9,11,12,13,14,15,20,10,16,17,18].map(n=>'example-'+n);
+  const homeOrder=[...[1,2,3,4,5].map(n=>'top-grid-'+n),...[1,2,3,4,5,7,19,6,8,9,11,12,13,14,15,20,10,16,17,18].map(n=>'example-'+n)];
   /* 11/8 팀원 작업으로 예시 바꾸기: 진짜 바톤(서버·내 브라우저)이 하나 올라올 때마다 예시를 뒤에서부터 하나씩 빼요. 진짜 바톤은 맨 앞(최신순) */
   /* 11/12 어느 컴퓨터에서나 같은 피드: 서버에 없는 '이 브라우저에만 저장된 바톤'은 탐색에서 빼요(내 바톤에서는 보여요) */
   const all0=(await store.list()).filter(r=>r.example||r.remote),pool=all0.filter(r=>!r.id.startsWith('feature-')&&!['calendar-red','calendar-peach'].includes(r.id)&&!r.demoRelay);

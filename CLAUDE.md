@@ -24,6 +24,7 @@
 > - 어디서나 같은 탐색(11/12): 탐색 피드는 서버 바톤(`remote`)+예시만 보여요. 서버에 못 올라가 그 브라우저에만 저장된 바톤은 탐색에서 빼요(`site.js` renderHome, '내 바톤'엔 보임). 예시 바톤 상세: 진척도는 아이디로 정한 값(탐색 카드와 같은 규칙, `figma-home.js`·`jia-detail.js`), 파일 목록엔 미리보기 이미지를 넣어 받을 수 있게.
 > - 파일 받기 사파리 대응(11/13): 상세 파일 목록·전체다운은 주소(`files[].url`, 여러 개면 `folderUrl`)를 iframe이 클릭 순간 바로 열어요(`baton-render.js` openFile). 예전처럼 사이트로 메시지 보낸 뒤 `window.open`하면 사파리가 팝업으로 막아요. 탭 전환도 `baton-render.js` 끝에 app.js와 별개인 안전장치가 있어요.
 > - TOP5·진척도(11/13): TOP1(RATIO) 대표 썸네일 = ANTIGRID 진(`assets/top5/antigrid-cover.webp`). TOP2 여름 달력(feature-3)·TOP3 그린 소주(feature-4)·TOP4 CUPID Tape Delivery(feature-0)·TOP5 첫 단추 카드·하나카드(feature-2, 11/13 YES24에서 바꿈)으로 교체(`site.js` '11/13 TOP2~5' 블록 + `figma-home.js` HERO_INFO, 순위는 comments 값 그대로). 진척도 없는 예시 바톤은 모두 아이디 해시로 `artifacts`를 넣어 카드·상세·필터가 같은 값. 상세 부제목에서 `[라벨]`은 빼요(`baton-data.js` firstSentence).
+> - TOP5 격자 복제·서버 바톤 정보(11/13): TOP5 다섯 개를 `top-grid-1~5`로 복제해 대표 이미지만 바꿔 아래 격자에도 보여요(`site.js`, `homeOrder` 맨 앞이라 진짜 바톤이 늘어도 안 빠져요). 서버 바톤 6개(시트 '바톤' C~F열)는 Sheets MCP로 제목·작성자·노트(해요체 [라벨] 문단)·다음 아이디어·재료·기간·폰트를 직접 채워 넣었어요. ANTIGRID 진·여름 달력은 jia choi., PARADOX 포스터 2개는 작성자 미확인('방문자').
 > - 전시장 자동 새로고침(11/13, `auto-update.js`): 1분마다 `index.html`을 no-store로 받아 처음과 다르면(새 배포) 랜딩(`#/`)에서 30초 조용할 때 `location.reload()`. 같은 조건에서 3시간마다도 새로고침. 서버에 못 닿으면 안 함. `?noupdate`로 끔. 그래서 `index.html`의 `?v=`를 올려야 전시장에 반영돼요.
 > - 주의: `config.js`의 Apps Script URL은 아직 사용성 평가와 **같은 서버·시트**를 써요. 졸전용으로 분리할지 사용자에게 확인 필요.
 >
