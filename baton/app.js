@@ -1132,11 +1132,17 @@
     const button = document.createElement('button'); button.type = 'button'; button.className = 'related-card'; button.setAttribute('aria-label', `${caption}. 추천 바톤 ${i + 1} 이미지 보기`);
     const img = new Image(); img.className = 'related-art' + (item ? ' is-live' : ''); img.src = item ? item.src : asset(`assets/related-${i + 1}.svg`); img.alt = ''; img.width = 246; img.height = 246; img.loading = 'lazy';
     if (item) button.setAttribute('aria-label', `${item.title} 바톤 보기. ${caption}`);
-    const label = document.createElement('span'); label.className = 'related-caption'; label.textContent = caption;
+    const label = document.createElement('span'); label.className = 'related-caption' + (item ? ' is-chip' : ''); label.textContent = caption;
     const bars = document.createElement('span'); bars.className = 'mini-progress'; bars.setAttribute('aria-hidden', 'true');
     for (let s = 0; s < 4; s++) { const bar = document.createElement('i'); if (s < progress) bar.className = 'done'; bars.append(bar); }
     button.append(img, label, bars);
-    button.addEventListener('click', () => item ? window.parent.postMessage({ type: 'morogaro:site-nav', to: '/baton/' + encodeURIComponent(item.id) }, '*') : showImages('바톤 미리보기', [{ src: `assets/related-${i + 1}.svg`, alt: caption }]));
+    // 11/13 같은 주소라 사이트 주소를 바로 바꿔요(메시지가 막혀도 넘어가게). 안 되면 메시지로 부탁해요
+    const openBaton = () => {
+      const to = '#/baton/' + encodeURIComponent(item.id);
+      try { window.parent.location.hash = to; if (window.parent.location.hash === to) return; } catch { /* 다른 주소 */ }
+      window.parent.postMessage({ type: 'morogaro:site-nav', to: '/baton/' + encodeURIComponent(item.id) }, '*');
+    };
+    button.addEventListener('click', e => { e.stopPropagation(); if (item) openBaton(); else showImages('바톤 미리보기', [{ src: `assets/related-${i + 1}.svg`, alt: caption }]); });
     $('#related-grid').append(button);
   });
   go(location.hash === '#log' ? 'log' : 'detail', { updateHash: false, instant: true });
