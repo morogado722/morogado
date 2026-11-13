@@ -19,11 +19,11 @@
 
   /* 배너 호버 카드 정보 (Figma 5133 형식: 확장자 · 제목 · 소개 · 러너 · 태그 2줄 · 계승/댓글) */
   const HERO_INFO = {
-    'feature-0': { tools: ['.blend', '.psd'], title: '스마트 안경 DreamWalk', desc: '걸으면서 쓰는 안경형 기기를 렌더링까지 해 둔 상태예요. 착용 장면과 패키지는 아직 비어 있어서, 생활 속 장면을 이어서 그려 줄 사람을 찾아요.', author: 'jihoon kang.', followers: '팔로워 820', posts: '게시물 34', tags: ['제품 디자인', '3D', '렌더링', '웨어러블', '브랜딩', '패키지', '공예', '오브제'], relay: 2, comments: 18 },
+    'feature-0': { tools: ['.3dm', '.ai'], title: 'CUPID Tape Delivery', desc: '누워 있는 큐피드 몸에 테이프를 끼우고 하트 커터로 끊는 테이프 디스펜서예요. 렌더까지 마쳤고, 실제로 쓸 수 있는 시제품이 남았어요.', author: 'chanwoo kim.', followers: '팔로워 1k', posts: '게시물99+', tags: ['제품 디자인', '테이프 디스펜서', '오브제', '프로토타입', '렌더링', '공예'], relay: 2, comments: 18 },
     'feature-1': { tools: ['.glyphs', '.ai'], title: 'RATIO', desc: '라틴 알파벳 타입디자인. 모듈 조합에서 출발해 26자의 알파벳에 긴장과 팽창의 질감을 주고자 한 프로젝트예요. 소문자와 한글 짝은 아직 비어 있어요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['타입디자인', '라틴 알파벳', '폰트', '그래픽', '편집', '포스터'], relay: 1, comments: 34 },
-    'feature-2': { tools: ['.ai', '.pdf'], title: '안경테 설계 도면', desc: '치수와 단면까지 정리한 안경테 도면이에요. 3D 모델로 옮기는 단계에서 멈췄어요. 도면을 그대로 모델링해 줄 러너를 기다려요.', author: 'jahyun park.', followers: '팔로워 540', posts: '게시물 21', tags: ['제품 디자인', '도면', 'CAD', '아이웨어', '3D', '공예', '오브제', '브랜딩'], relay: 0, comments: 9 },
-    'feature-3': { tools: ['.psd', '.mp4'], title: '몸의 움직임 포스터', desc: '점프하는 순간을 흑백으로 잘라낸 포스터 시리즈예요. 세 장 중 한 장만 완성했어요. 같은 톤으로 나머지 두 장을 이어 주세요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['그래픽', '포스터', '사진', '모션', '타이포', '편집', '브랜딩', '캠페인'], relay: 3, comments: 29 },
-    'feature-4': { tools: ['.blend', '.zbr'], title: '캐릭터의 표정', desc: '표정 연구용 3D 캐릭터예요. 얼굴은 끝냈고 몸과 의상이 남았어요. 같은 질감으로 전신을 이어서 만들어 볼 분을 찾아요.', author: 'chanwoo kim.', followers: '팔로워 1k', posts: '게시물99+', tags: ['3D', '캐릭터', '모델링', '텍스처', '애니메이션', '오브제', '공예', '그래픽'], relay: 1, comments: 27 }
+    'feature-2': { tools: ['.fig', '.pdf'], title: 'YES24 도서상세페이지 개선 제안', desc: '더 쉽고, 더 재밌어질 책 고르기. 길고 들쭉날쭉한 상세페이지를 다시 짰어요. 숏북 모드와 사용성 테스트가 남았어요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['UI·UX', '앱 디자인', '디자인 시스템', '사용자 조사', '도서'], relay: 0, comments: 9 },
+    'feature-3': { tools: ['.ai', '.pdf'], title: '여름 달력', desc: '여름을 30일이 아니라 제철 과일의 \'철\'로 나눈 엽서형 달력이에요. 여섯 장 디자인을 마쳤고 인쇄 감리와 포장이 남았어요.', author: 'jia choi.', followers: '팔로워 2.3k', posts: '게시물 88', tags: ['편집·출판', '달력', '과일', '컬러플랜', '엽서', '인쇄'], relay: 3, comments: 29 },
+    'feature-4': { tools: ['.ai', '.psd'], title: '그린 소주 · 그린-키트', desc: '여우 캐릭터 라벨의 소주에 잔, 플러팅 게임 카드, 키링까지 담은 술자리 키트예요. 카드 게임과 시리즈 확장을 이어 줄 러너를 찾아요.', author: 'chanwoo kim.', followers: '팔로워 1k', posts: '게시물99+', tags: ['패키지', '브랜딩', '캐릭터', '굿즈', '카드 게임'], relay: 1, comments: 27 }
   };
 
   /* 피드 카드 추가 정보 (호버 때 살짝 더 보여주는 값) */

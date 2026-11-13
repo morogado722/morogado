@@ -53,7 +53,7 @@
   const list = v => (Array.isArray(v) ? v.map(clean).filter(Boolean) : []);
 
   function firstSentence(note) {
-    const text = clean(note);
+    const text = clean(note).replace(/\[[^\[\]\n]{1,24}\]\s*/g, '');   // 11/13 노트 칩 [라벨]은 부제목에서 빼요
     if (!text) return '';
     return (text.match(/^[\s\S]*?[.!?](?=\s|$)/)?.[0] || text.split(/\n/)[0]).trim().slice(0, 80);
   }
