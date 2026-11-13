@@ -95,7 +95,7 @@
 
   function loadApp() {
     const script = document.createElement('script');
-    script.src = 'app.js?v=1027a';
+    script.src = 'app.js?v=1113a';
     script.onload = () => {
       document.documentElement.classList.remove('is-waiting-baton');
       if (embedded) post({ type: 'morogaro:baton-rendered', stage: window.MorogaroLive?.view.stage || null });
@@ -298,7 +298,15 @@
     const strong = E('strong', '', '파일 목록 '); strong.append(E('span', 'file-count', v.files.length));
     const all = E('button', '', '전체다운'); all.type = 'button'; all.id = 'download-all';
     all.disabled = !v.files.some(f => !f.isFont);
-    all.addEventListener('click', () => siteHost ? post({ type: 'morogaro:baton-download', all: true }) : window.MOROGARO_SITE ? toast(SITE_DOWNLOAD_NOTE) : downloadAll(v, all));
+    all.addEventListener('click', () => {
+      if (siteHost) {
+        const urls = v.files.filter(f => !f.isFont && f.blob?.url);
+        if (urls.length === 1) return openFile(urls[0].blob.url, urls[0].name);
+        if (urls.length > 1 && folderUrl) return openFile(folderUrl);
+        return post({ type: 'morogaro:baton-download', all: true });
+      }
+      return window.MOROGARO_SITE ? toast(SITE_DOWNLOAD_NOTE) : downloadAll(v, all);
+    });
     heading.append(strong, all); panel.append(heading);
 
     const list = E('div', 'file-list');
@@ -311,7 +319,7 @@
         // 졸전 사이트 안(10/16): 사이트 저장소에서 원본을 받아요.
         const index = v.files.indexOf(f);
         row = E('button', 'file-row'); row.type = 'button';
-        row.addEventListener('click', () => post({ type: 'morogaro:baton-download', index }));
+        row.addEventListener('click', () => f.blob?.url ? openFile(f.blob.url, f.name) : post({ type: 'morogaro:baton-download', index }));
         row.append(type, label, img('assets/file-download.svg', '', 26, 21));
       } else if (window.MOROGARO_SITE) {
         // 공유 사이트에서는 브라우저가 다운로드를 막아요. 로컬 실행(index.html)에서는 바로 받을 수 있어요.
@@ -443,7 +451,15 @@
     if (form) form.addEventListener('submit', e => { e.preventDefault(); e.stopImmediatePropagation(); post({ type: 'morogaro:site-nav', search: form.querySelector('input')?.value || '' }); }, true);
   }
   let siteHost = false;
+  /* 11/13 사파리는 기다렸다가 여는 새 창을 막아요. 주소를 아는 파일은 클릭한 그 순간 이 화면에서 바로 열어요 */
+  let folderUrl = '';
+  function openFile(url, name) {
+    const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    if (name) a.download = name;
+    document.body.append(a); a.click(); a.remove();
+  }
   function start(record, ownerName, site, viewerName) {
+    folderUrl = record.folderUrl || '';
     if (started) return; started = true;
     siteHost = Boolean(site);
     if (siteHost) {
@@ -510,4 +526,23 @@
   window.addEventListener('pagehide', () => { for (const u of objectURLs) URL.revokeObjectURL(u); });
   document.documentElement.classList.add('is-waiting-baton');
   post({ type: 'morogaro:baton-ready' });
+})();
+
+/* 11/13 파일 목록 탭 안전장치: app.js가 어떤 이유로 늦거나 멈춰도 탭은 꼭 넘어가요.
+ * app.js의 setTab과 같은 일을 하고, 둘 다 실행돼도 결과가 같아요. */
+(() => {
+  function setTab(info) {
+    const folder = document.getElementById('baton-folder'), ip = document.getElementById('info-panel'), fp = document.getElementById('files-panel');
+    if (!folder || !ip || !fp) return;
+    folder.dataset.tab = info ? 'info' : 'files';
+    ip.hidden = !info; fp.hidden = info;
+    for (const [id, on] of [['info-tab', info], ['files-tab', !info]]) {
+      const el = document.getElementById(id);
+      if (el) { el.setAttribute('aria-selected', String(on)); el.tabIndex = on ? 0 : -1; }
+    }
+  }
+  document.addEventListener('click', e => {
+    const t = e.target instanceof Element ? e.target.closest('#info-tab, #files-tab') : null;
+    if (t) setTab(t.id === 'info-tab');
+  }, true);
 })();
