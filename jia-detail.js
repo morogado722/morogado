@@ -87,7 +87,7 @@
     const frame = document.createElement('iframe');
     frame.className = 'jia-detail-frame';
     frame.title = `${record.title} 상세`;
-    frame.src = 'baton/index.html?embed=1&site=1&v=1113j';
+    frame.src = 'baton/index.html?embed=1&site=1&v=1115a';
     container.classList.add('jia-detail-host');
     container.replaceChildren(frame);
     body.classList.add('is-jia-detail');

@@ -365,3 +365,5 @@ html.is-header-v2 .header-surface,html.is-header-v2 .site-header{filter:none;box
 .bc-form input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 13px; line-height: 1.5; color: #262626; outline: none; }
 .bc-form input::placeholder { color: #A6A6A6; }
 .bc-form button { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border: 0; border-radius: 50%; background: #262626; color: #fff; cursor: pointer; }
+/* 11/15 헤더에 '가이드' (사이트 헤더와 같은 순서) */
+html.is-header-v2 .main-nav .nav-guide{order:4;position:static;font-size:14.3px;line-height:22px;font-weight:700;color:rgba(38,38,38,.4);background:none;border:0;padding:0;cursor:pointer}

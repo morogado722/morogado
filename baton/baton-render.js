@@ -447,7 +447,7 @@
     const nav = (selector, message) => { const el = $(selector); if (!el) return; el.removeAttribute('data-unwired'); el.addEventListener('click', e => { e.preventDefault(); post({ type: 'morogaro:site-nav', ...message }); }); };
     nav('.brand', { to: '/' }); nav('.nav-explore', { to: '/explore' }); nav('.nav-community', { to: '/community' });
     const magazine = $('.nav-magazine'); if (magazine) magazine.textContent = '바톤센터';
-    nav('.nav-magazine', { to: '/center' }); nav('.nav-personality', { action: 'tendency' });
+    nav('.nav-magazine', { to: '/center' }); nav('.nav-personality', { action: 'tendency' }); { const g = $('.nav-guide'); if (g) g.hidden = false; } nav('.nav-guide', { to: '/guide' });   // 11/15 가이드
     nav('.account-bookmark', { to: '/saved' }); nav('.account-notification', { action: 'notifications' }); nav('.account-avatar', { action: 'profile' });
     const form = $('#search-form');
     if (form) form.addEventListener('submit', e => { e.preventDefault(); e.stopImmediatePropagation(); post({ type: 'morogaro:site-nav', search: form.querySelector('input')?.value || '' }); }, true);
